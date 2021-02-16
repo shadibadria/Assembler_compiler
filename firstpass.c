@@ -24,3 +24,6 @@ while(fgets(buffer, bufferLength, filePointer)) {
 return 0;
 }
 
+void assemble_parsing(char *line){
+
+}
