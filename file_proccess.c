@@ -7,7 +7,7 @@ check file if it ends with .as
 int check_file(char *file_name){
 
 char *file_ending=strrchr(file_name,'.');
-
+/**/
 
 if(file_ending==NULL){
 
