@@ -1,7 +1,10 @@
+#pragma warning (disable : 4996)
+
 #include<stdio.h>
-#include<string.h>
+#include<string.h> 
 #include"firstpass.h"
 #include"file_proccess.h"
+#include"data.h"
 
 int main(int argc,char *argv[]){
 int i=0;
@@ -35,3 +38,4 @@ if(argc <= 1 ){
 
 return 0;
 }
+
