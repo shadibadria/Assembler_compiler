@@ -57,7 +57,7 @@ void display()
 		}
 		else 
                 {
-			printf("\n--- array[%d] : ---\nkey= %d \nsymbol = %s \nattr=%s \t", i, array[i].key_value,array[i].symbol,array[i].attribute);
+			printf("\nkey= %d \nsymbol = %s \nattr=%s \n", array[i].key_value,array[i].symbol,array[i].attribute);
 		}
 	}
 }

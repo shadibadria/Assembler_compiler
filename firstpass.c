@@ -43,7 +43,37 @@ int parse_line(char* line) {
 				printf("comment\n");
 				return 1;
 			}
+
+			if (line[i] == '.') {	
+				if(line[i+1]=='d'&&line[i+4]=='a'){
+						while(line[i]!='\n'){
+							if(line[i]!=' '&& line[i]!='\t'&& line[i]!=','&& isdigit(line[i])){
+								/*CHECK IF VALUE IS MORE THAN 1 DIGIT AND SUM THE NUMBER*/
+												printf("\n**IC = %d**\n",IC);
+												printf("\nvalue=%c\n",line[i]);
+
+								IC++;
+							}
+							i++;
+						}
+				}
+			}	
+			if(line[i]=='\"'){
+
+				i++;
+
+			while(line[i]!='\"'){
+								printf("\n**ICX = %d**\n",IC);
+
+			IC++;
+			i++;
+
+			}
+		printf("\n**IC = %d**\n",IC);
+
+				IC++;
 			
+			}
 			temp[j++]= line[i];
 			if (line[i] == ':') {
 				temp[j] = '\0';
@@ -57,26 +87,26 @@ int parse_line(char* line) {
 			if ( line[i+1] == ' '&& j!=0 && temp[0]!='.' ) {
 				
 					temp[j] = '\0';
-				printf("[xcommand]>%s\n", temp);
+				/*printf("[xcommand]>%s\n", temp);*/
 				j = 0;
-				printf("**\nIC = %d**\n",IC);
+								printf("\n**IC = %d**\n",IC);
 				IC++;
 
 			}
 			if (line[i] == ',') {
 				temp[j -1] = '\0';
 
-				printf("[xarg1]>%s\n", temp);
+				/*printf("[xarg1]>%s\n", temp);*/
 				j = 0;
-				printf("**\nIC = %d**\n",IC);
+								printf("\n**IC = %d**\n",IC);
 				IC++;
 
 			}
 			if (line[i+1] == '\n'&& temp[0]!='.') {
 				temp[j ] = '\0';
 
-				printf("[xarg2]>%s\n", temp);
-				printf("**\nIC = %d**\n",IC);
+				/*printf("[xarg2]>%s\n", temp);*/
+								printf("\n**IC = %d**\n",IC);
 								IC++;			
 
 			}
@@ -87,12 +117,11 @@ int parse_line(char* line) {
 }
 void assemble_parsing(char *line){
 
-	/*printf("%s\n", line);*/
+	printf("%s\n", line);
 
 	parse_line(line);
 
-	printf("\n----------\n");
-
+	printf("\n\n");
 
 }
 
