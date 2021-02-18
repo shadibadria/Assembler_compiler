@@ -1,15 +1,16 @@
 #pragma warning (disable : 4996)
 
 #include"firstpass.h"
-
-
-int firstpass(char* filename){
-
+#include"data.h"
+#include "symbol_table.h"
 int i=0;
 int IC = 100;
 int DC = 0;
 FILE *filePointer;
 char buffer[bufferLength];
+int firstpass(char* filename){
+
+
 
 filePointer = fopen(filename, "r");
 
@@ -47,6 +48,9 @@ int parse_line(char* line) {
 			if (line[i] == ':') {
 				temp[j] = '\0';
 				printf("[label]>%s\n", temp);
+				/*add it to symbol table*/
+				insert(IC,temp,"code");
+				
 				j = 0;
 			}
 
@@ -55,6 +59,8 @@ int parse_line(char* line) {
 					temp[j] = '\0';
 				printf("[xcommand]>%s\n", temp);
 				j = 0;
+				printf("**\nIC = %d**\n",IC);
+				IC++;
 
 			}
 			if (line[i] == ',') {
@@ -62,11 +68,16 @@ int parse_line(char* line) {
 
 				printf("[xarg1]>%s\n", temp);
 				j = 0;
+				printf("**\nIC = %d**\n",IC);
+				IC++;
+
 			}
 			if (line[i+1] == '\n'&& temp[0]!='.') {
 				temp[j ] = '\0';
 
 				printf("[xarg2]>%s\n", temp);
+				printf("**\nIC = %d**\n",IC);
+								IC++;			
 
 			}
 

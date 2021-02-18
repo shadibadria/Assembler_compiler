@@ -1,4 +1,3 @@
-#pragma warning (disable : 4996)
 
 #include<stdio.h>
 #include<string.h> 
@@ -7,6 +6,10 @@
 #include"data.h"
 
 int main(int argc,char *argv[]){
+
+
+init_array();
+
 int i=0;
 FILE *fp;
 char filename[bufferLength];
@@ -33,7 +36,7 @@ if(argc <= 1 ){
         fclose( fp );
         }
     }
-
+display();
  
 
 return 0;

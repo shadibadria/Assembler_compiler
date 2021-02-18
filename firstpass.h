@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<string.h>
-#define bufferLength 255
+#define bufferLength 1000
 
 
 int firstpass(char* filename);
