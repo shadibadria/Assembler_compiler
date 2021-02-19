@@ -12,13 +12,12 @@ void init_array()
 	array = (struct data*) malloc(capacity_table * sizeof(struct data));
 	for (i = 0; i < capacity_table; i++) 
         {
-		array[i].key_value = 0;
-		array[i].amount = 0;
+		
 	}
 }
  
 /* to insert a key in the hash table */
-void insert(int key,char *symbol,char *attribute)
+void insert(int key,int value,char *symbol,char *attribute)
 {
 	int index = hashcode(key);
 	if (array[index].amount == 0) 
@@ -26,6 +25,8 @@ void insert(int key,char *symbol,char *attribute)
 		/*  key not present, insert it  */
 		array[index].key_value = key;
 		array[index].amount = 1;
+				array[index].value = value;
+
         strcpy(array[index].symbol,symbol);
           strcpy(array[index].attribute,attribute);
 		size_table++;
@@ -57,9 +58,22 @@ void display()
 		}
 		else 
                 {
-			printf("\nkey= %d \nsymbol = %s \nattr=%s \n", array[i].key_value,array[i].symbol,array[i].attribute);
+			printf("\nkey= %d \nvalue = %d\nsymbol = %s \nattr=%s \n", array[i].key_value,array[i].value,array[i].symbol,array[i].attribute);
 		}
 	}
+}
+int checkforduplicate(char *symbol){
+
+    int i;
+	for (i = 0; i < capacity_table; i++)
+        {
+			if(array[i].symbol==symbol){
+				printf("Symbol Already Exsist \n");
+				return 0;
+			}
+		
+	}
+    return 1;
 }
  
  int size_of_hashtable()
