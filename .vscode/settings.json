@@ -13,6 +13,7 @@
         "tuple": "c",
         "type_traits": "c",
         "utility": "c",
-        "file_proccess.h": "c"
+        "file_proccess.h": "c",
+        "string": "c"
     }
 }
