@@ -255,13 +255,55 @@ int check_if_its_data(char *line){
   if(line[i]=='.'){
     if(line[i+1]=='d'&&line[i+2]=='a'&&line[i+3]=='t'&&line[i+4]=='a'){
       printf("its data\n");
-    
+     data_parsing(line);
       return 0;
     }
   }
   i++;
   }
 return 1;
+}
+/*
+param: data line
+functionality: get data input to array
+*/
+void data_parsing(char *line){
+char *p =line;
+long val;
+while (*p) { 
+    if ( isdigit(*p) || ( (*p=='-'||*p=='+') && isdigit(*(p+1)) )) {
+        val = strtol(p, &p, 10); 
+        printf("%ld\n", val); 
+        IC++;
+    } else {       
+        p++;
+    }
+}
+}
+
+/*
+param: string  line
+functionality: get data input to array
+*/
+void string_parsing(char *line,int index){
+
+while (line[index]!='\n'&&line[index]!='\0')
+{
+  if(line[index]=='"'){
+    break;
+  }
+  index++;
+}
+ index++;
+while (line[index]!='"'&&line[index]!='\n'&&line[index]!='\0')
+{
+  printf("\nstr:%c\n",line[index]);
+  index++;
+  IC++;
+}
+
+
+
 }
 /*
 param: line from file
@@ -273,7 +315,7 @@ int check_if_its_string(char *line){
   if(line[i]=='.'){
     if(line[i+1]=='s'&&line[i+2]=='t'&&line[i+3]=='r'&&line[i+4]=='i'&&line[i+5]=='n'&&line[i+6]=='g'){
       printf("its string\n");
-      
+      string_parsing(line,i+7);
       return 0;
     }
   }
