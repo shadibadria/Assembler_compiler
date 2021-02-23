@@ -9,8 +9,8 @@ TASKS WEEK 2: pass 1
 -.entry                 --done--
 -.external              --done--
 23/2
--.data                  
--.string   
+-.data                  --done--
+-.string                --done--
 24/2             
 - commands   
 25/2            
