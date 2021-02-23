@@ -44,7 +44,7 @@ void display() {
     if (array[i].amount == 0) {
 
     } else {
-      printf("\nkey= %d \nvalue = %d\nsymbol = %s \nattr=%s \n", array[i].key_value, array[i].value, array[i].symbol, array[i].attribute);
+      printf("\n--------------------\nkey= %d \nvalue = %d\nsymbol = %s \nattr= %s\n--------------------\n", array[i].key_value, array[i].value, array[i].symbol, array[i].attribute);
     }
   }
 }

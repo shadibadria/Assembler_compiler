@@ -1,0 +1,26 @@
+
+****************
+Assembly project
+****************
+
+TASKS WEEK 2: pass 1
+-------------
+-create labels          --done--
+-.entry                 --done--
+-.external              --done--
+23/2
+-.data                  
+-.string   
+24/2             
+- commands   
+25/2            
+- symbol table  
+26/2      
+- instruction table   
+27/2 
+- pass 1 finish 
+- code optimization
+- Testing
+
+TASK WEEK 3 : PASS 2
+---------------------

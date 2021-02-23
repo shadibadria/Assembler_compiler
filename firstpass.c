@@ -54,7 +54,6 @@ functionality: parse the line to data we needby calling functions
 */
 int parse_line(char * line) {
   int i=0;
-
     line[strlen(line)] = '\0';
      if (line[i] == ';') {
         printf("comment\n");
@@ -109,9 +108,15 @@ break;
   count++;
   line[strlen(line)] = '\0';
 remove_space_tabs(line);
+  printf("\nlineex:%s\n",line);
+
   if (checkforduplicate(line) == 0) {
     printf("ERROR duplicate found \n");
     return 0;
+  }else{
+
+    insert(IC,0,line,"external");
+    IC++;
   }
   printf("\n\nits extern !!!\n");
 return 1;
@@ -157,6 +162,7 @@ remove_space_tabs(line);
     printf("ERROR duplicate found \n");
     return 0;
   }
+  
     printf("\n\nits entry !!!\n");
 return 1;
 }
@@ -228,6 +234,11 @@ while(line[i]!='\n'&&line[i]!='\0'){
   if(line[i]==':'){
     temp[i]='\n';
     printf("label:%s\n",remove_space_tabs(temp));
+    
+
+    insert(IC,IC,remove_space_tabs(temp),"code");
+    IC++;
+ 
     return 0;
   }
 i++;
@@ -244,6 +255,7 @@ int check_if_its_data(char *line){
   if(line[i]=='.'){
     if(line[i+1]=='d'&&line[i+2]=='a'&&line[i+3]=='t'&&line[i+4]=='a'){
       printf("its data\n");
+    
       return 0;
     }
   }
@@ -261,6 +273,7 @@ int check_if_its_string(char *line){
   if(line[i]=='.'){
     if(line[i+1]=='s'&&line[i+2]=='t'&&line[i+3]=='r'&&line[i+4]=='i'&&line[i+5]=='n'&&line[i+6]=='g'){
       printf("its string\n");
+      
       return 0;
     }
   }
