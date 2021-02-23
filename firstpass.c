@@ -1,8 +1,15 @@
-
 #include"firstpass.h"
 #include"data.h"
 #include "symbol_table.h"
 
+/*
+firstpass.c
+
+first iteration of the assembly program
+its porpuse is to add all the labels and data to the symbol table 
+and to the RAM
+
+*/
 
 int IC = 100;
 int DC = 0;
@@ -10,42 +17,42 @@ int count = 0;
 FILE * filePointer;
 char buffer[bufferLength];
 
-
+/*
+param: filename of the assembly 
+functionality: function take file name and scan it and sent line to parsing
+*/
 int firstpass(char * filename) {
-
   filePointer = fopen(filename, "r");
-
   if (filePointer == NULL) {
     printf("\ncant open file \n");
     return 0;
   }
-
   while (fgets(buffer, bufferLength, filePointer)) {
-
-    assemble_parsing(buffer);
-
+  assemble_parsing(buffer);
   }
-  
-
   return 0;
 }
 
+/*
+param: gets line from file
+functionality: send the line to function parse_line after removing spaces and tabs
+at the beginning , and checks if line empty or EOF
+*/
 int assemble_parsing(char * line) {
-
- line=remove_spaces_from_index(line,0);
-
+line=remove_spaces_from_index(line,0);
     if(line[0]=='\n'||line[0]=='\0'){
       return 0;
     } 
   printf("\n******************************\n");
   printf("\nCommand : %s\n", line);
-
-    	parse_line(line);
+  parse_line(line);
 return 1;
-
 }
+/*
+param: line from file
+functionality: parse the line to data we needby calling functions
+*/
 int parse_line(char * line) {
-
   int i=0;
 
     line[strlen(line)] = '\0';
@@ -54,31 +61,31 @@ int parse_line(char * line) {
         return 1;
       }
 
-
     check_if_extern(line);
     check_if_entry(line);
     check_if_label(line);
-check_if_its_data(line);
- check_if_its_string(line);
+    check_if_its_data(line);
+    check_if_its_string(line);
   return 1;
 }
 
+/*
+param: line from file
+functionality: check if the line is .extern 
+*/
+
 int check_if_extern(char * line) {
   int i = 0;
-
   line[strlen(line)]='\n';
   if (strlen(line) < 7) {
     printf("ERROR \n");
     return 0;
   }
-
-
   /*check if its .extern */
   if (line[i] != '.' || line[i + 1] != 'e' || line[i + 2] != 'x' || line[i + 3] != 't' || line[i + 4] != 'e' || line[i + 5] != 'r' || line[i + 6] != 'n' ||(line[i+7]!=' '&&line[i+7]!='\t')) {
     return 0;
   }
-
-    i = i + 7;
+  i = i + 7;
  line=remove_spaces_from_index(line,i);
  i=0;
  while(line[i]!='\n'&&line[i]!='\0'){
@@ -102,19 +109,20 @@ break;
   count++;
   line[strlen(line)] = '\0';
 remove_space_tabs(line);
- 
   if (checkforduplicate(line) == 0) {
     printf("ERROR duplicate found \n");
     return 0;
   }
   printf("\n\nits extern !!!\n");
-
 return 1;
 }
-/*check if entry statment*/
+
+/*
+param: line from file
+functionality: check if its entry line
+*/
 int check_if_entry(char * line) {
   int i = 0;
-
   line[strlen(line)]='\n';
   if (strlen(line) < 7) {
     printf("ERROR \n");
@@ -125,7 +133,6 @@ int check_if_entry(char * line) {
   if (line[i] != '.' || line[i + 1] != 'e' || line[i + 2] != 'n' || line[i + 3] != 't' || line[i + 4] != 'r' || line[i + 5] != 'y'  ||(line[i+6]!=' '&&line[i+6]!='\t')) {
     return 0;
   }
-
     i = i + 6;
  line=remove_spaces_from_index(line,i);
  i=0;
@@ -151,12 +158,13 @@ remove_space_tabs(line);
     return 0;
   }
     printf("\n\nits entry !!!\n");
-
 return 1;
 }
-
+/*
+param: line from file and index of line
+functionality: remove space/tab from index till first non tab/space
+*/
 char *remove_spaces_from_index(char * string,int i){
-  
   char * newstring;
   int j = 0;
   if(string[i]!='\t'&&string[i]!=' '&&string[i]=='\n'){
@@ -183,8 +191,10 @@ char *remove_spaces_from_index(char * string,int i){
   free(newstring);
   return string;
 }
-
-
+/*
+param: line from file
+functionality: remove all space/tabs from line/string
+*/
 char * remove_space_tabs(char * string) {
   char * newstring;
   int j = 0, i = 0;
@@ -206,7 +216,10 @@ char * remove_space_tabs(char * string) {
   return string;
 }
 
-
+/*
+param: line from file
+functionality: check if its label
+*/
 int check_if_label(char * line){
 int i=0,j=0;
 char temp[80];
@@ -214,22 +227,21 @@ while(line[i]!='\n'&&line[i]!='\0'){
   temp[j++]=line[i];
   if(line[i]==':'){
     temp[i]='\n';
-
     printf("label:%s\n",remove_space_tabs(temp));
     return 0;
   }
 i++;
 }
-
 return 0;
 }
+/*
+param: line from file
+functionality: check if its data
+*/
 int check_if_its_data(char *line){
   int i=0;
-
   while(line[i]!='\n'&&line[i]!='\0'){
-
   if(line[i]=='.'){
-
     if(line[i+1]=='d'&&line[i+2]=='a'&&line[i+3]=='t'&&line[i+4]=='a'){
       printf("its data\n");
       return 0;
@@ -238,15 +250,15 @@ int check_if_its_data(char *line){
   i++;
   }
 return 1;
-
 }
+/*
+param: line from file
+functionality: check if its string
+*/
 int check_if_its_string(char *line){
   int i=0;
-
   while(line[i]!='\n'&&line[i]!='\0'){
-
   if(line[i]=='.'){
-
     if(line[i+1]=='s'&&line[i+2]=='t'&&line[i+3]=='r'&&line[i+4]=='i'&&line[i+5]=='n'&&line[i+6]=='g'){
       printf("its string\n");
       return 0;
@@ -255,5 +267,4 @@ int check_if_its_string(char *line){
   i++;
   }
 return 1;
-
 }
