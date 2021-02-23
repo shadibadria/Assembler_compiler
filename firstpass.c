@@ -3,7 +3,7 @@
 #include"data.h"
 #include "symbol_table.h"
 
-int i = 0;
+
 int IC = 100;
 int DC = 0;
 int count = 0;
@@ -25,38 +25,59 @@ int firstpass(char * filename) {
     assemble_parsing(buffer);
 
   }
-  printf("\n\\\\\\\\\\COUNTER: %d\n\n", count);
+  
 
   return 0;
 }
 
-void assemble_parsing(char * line) {
+int assemble_parsing(char * line) {
+
+ line=remove_spaces_from_index(line,0);
+
+    if(line[0]=='\n'||line[0]=='\0'){
+      return 0;
+    } 
   printf("\n******************************\n");
-  printf("\n%s\n", line);
-  check_if_extern(line);
+  printf("\nCommand : %s\n", line);
 
-  /*
-  	parse_line(line);
-
-  	printf("\n\n");*/
-
-
-  
+    	parse_line(line);
+return 1;
 
 }
+int parse_line(char * line) {
+
+  int i=0;
+
+    line[strlen(line)] = '\0';
+     if (line[i] == ';') {
+        printf("comment\n");
+        return 1;
+      }
+
+
+    check_if_extern(line);
+    check_if_entry(line);
+    check_if_label(line);
+check_if_its_data(line);
+ check_if_its_string(line);
+  return 1;
+}
+
 int check_if_extern(char * line) {
   int i = 0;
 
+  line[strlen(line)]='\n';
   if (strlen(line) < 7) {
     printf("ERROR \n");
     return 0;
   }
-  line=remove_spaces_from_index(line,i);
+
+
   /*check if its .extern */
   if (line[i] != '.' || line[i + 1] != 'e' || line[i + 2] != 'x' || line[i + 3] != 't' || line[i + 4] != 'e' || line[i + 5] != 'r' || line[i + 6] != 'n' ||(line[i+7]!=' '&&line[i+7]!='\t')) {
-    printf("Not extern : %s \n",line);
     return 0;
   }
+
     i = i + 7;
  line=remove_spaces_from_index(line,i);
  i=0;
@@ -64,11 +85,15 @@ int check_if_extern(char * line) {
    if(line[i]==' '|| line[i]=='\t'||line[i]=='\n'){
      break;
    }
+   else if(!isalpha(line[i])){
+  printf("paramerter wrong\n");
+    return 0;
+   }
    i++;
  }
   while(line[i]!='\n'&&line[i]!='\0'){
-    if(line[i]!=' '&&line[i]!='\t'&&line[i]!='\n'){
-     printf("\n must be 1 parameter :%c:\n",line[i]);
+    if(line[i]!=' '&&line[i]!='\t'&&line[i]!='\n'&&isalpha(line[i])){
+     printf("\n extern : must be 1 parameter :%c:\n",line[i]);
   return 0;
 break;
     }
@@ -78,17 +103,65 @@ break;
   line[strlen(line)] = '\0';
 remove_space_tabs(line);
  
-  printf("\next:%s\n",line);
   if (checkforduplicate(line) == 0) {
     printf("ERROR duplicate found \n");
     return 0;
   }
+  printf("\n\nits extern !!!\n");
+
 return 1;
 }
+/*check if entry statment*/
+int check_if_entry(char * line) {
+  int i = 0;
+
+  line[strlen(line)]='\n';
+  if (strlen(line) < 7) {
+    printf("ERROR \n");
+    return 0;
+  }
+  line=remove_spaces_from_index(line,i);
+  /*check if its .extern */
+  if (line[i] != '.' || line[i + 1] != 'e' || line[i + 2] != 'n' || line[i + 3] != 't' || line[i + 4] != 'r' || line[i + 5] != 'y'  ||(line[i+6]!=' '&&line[i+6]!='\t')) {
+    return 0;
+  }
+
+    i = i + 6;
+ line=remove_spaces_from_index(line,i);
+ i=0;
+ while(line[i]!='\n'&&line[i]!='\0'){
+   if(line[i]==' '|| line[i]=='\t'||line[i]=='\n'){
+     break;
+   }
+   i++;
+ }
+while(line[i]!='\n'&&line[i]!='\0'){
+    if(line[i]!=' '&&line[i]!='\t'&&line[i]!='\n'&&isalpha(line[i])){
+     printf("\n entry : must be 1 parameter :%c:\n",line[i]);
+  return 0;
+break;
+    }
+    i++;
+  }
+  count++;
+remove_space_tabs(line);
+ 
+  if (checkforduplicate(line) == 0) {
+    printf("ERROR duplicate found \n");
+    return 0;
+  }
+    printf("\n\nits entry !!!\n");
+
+return 1;
+}
+
 char *remove_spaces_from_index(char * string,int i){
   
   char * newstring;
   int j = 0;
+  if(string[i]!='\t'&&string[i]!=' '&&string[i]=='\n'){
+    return 0;
+  }
   newstring = (char * ) malloc(strlen(string) * sizeof(char));
   if (newstring == NULL) {
     printf("Something Went Wrong no memory\n");
@@ -133,102 +206,54 @@ char * remove_space_tabs(char * string) {
   return string;
 }
 
-int parse_line(char * line) {
 
-  int line_length = strlen(line);
-  int i = 0;
-  char temp[80];
-  char number[10];
-  int j = 0, k = 0;
-  for (i = 0; i < line_length; i++) {
-    if (line[i] != ' ' && line[i] != '\t' && line[i] != '\0' && line[i] != '\n') {
+int check_if_label(char * line){
+int i=0,j=0;
+char temp[80];
+while(line[i]!='\n'&&line[i]!='\0'){
+  temp[j++]=line[i];
+  if(line[i]==':'){
+    temp[i]='\n';
 
-      if (line[i] == ';') {
-        printf("comment\n");
-        return 1;
-      }
-
-      if (line[i] == '.') {
-        if (line[i + 1] == 'd' && line[i + 4] == 'a') {
-          while (line[i] != '\n') {
-
-            if (isdigit(line[i])) {
-              /*CHECK IF VALUE IS MORE THAN 1 DIGIT AND SUM THE NUMBER*/
-              number[k++] = line[i];
-
-            }
-            if (line[i] == ',' || line[i + 1] == '\n') {
-              number[k] = '\0';
-
-              printf("\n**IC = %d**\n", IC);
-              printf("\nvaluex=%s\n", number);
-              k = 0;
-
-              IC++;
-
-            }
-            i++;
-          }
-        }
-      }
-      if (line[i] == '\"') {
-
-        i++;
-
-        while (line[i] != '\"') {
-          printf("\n**ICX = %d**\n", IC);
-
-          IC++;
-          i++;
-
-        }
-        printf("\n**IC = %d**\n", IC);
-
-        IC++;
-
-      }
-      temp[j++] = line[i];
-      if (line[i] == ':') {
-        temp[j - 1] = '\0';
-        printf("[label]>%s\n", temp);
-        /*add it to symbol table*/
-
-        insert(IC, IC, temp, "code");
-
-        j = 0;
-      }
-
-      if (line[i + 1] == ' ' && j != 0 && temp[0] != '.') {
-
-        temp[j] = '\0';
-        /*printf("[xcommand]>%s\n", temp);*/
-        j = 0;
-        printf("\n**IC = %d**\n", IC);
-        IC++;
-
-      }
-      if (line[i] == ',') {
-        temp[j - 1] = '\0';
-
-        /*printf("[xarg1]>%s\n", temp);*/
-        j = 0;
-        printf("\n**IC = %d**\n", IC);
-        IC++;
-
-      }
-
-    }
-    if (line[i + 1] == '\n' && temp[0] != '.') {
-      temp[j] = '\0';
-
-      /*printf("[xarg2]>%s\n", temp);*/
-      printf("\n**IC = %d**\n", IC);
-      IC++;
-
-    }
-
+    printf("label:%s\n",remove_space_tabs(temp));
+    return 0;
   }
-  return 1;
+i++;
 }
 
+return 0;
+}
+int check_if_its_data(char *line){
+  int i=0;
 
+  while(line[i]!='\n'&&line[i]!='\0'){
+
+  if(line[i]=='.'){
+
+    if(line[i+1]=='d'&&line[i+2]=='a'&&line[i+3]=='t'&&line[i+4]=='a'){
+      printf("its data\n");
+      return 0;
+    }
+  }
+  i++;
+  }
+return 1;
+
+}
+int check_if_its_string(char *line){
+  int i=0;
+
+  while(line[i]!='\n'&&line[i]!='\0'){
+
+  if(line[i]=='.'){
+
+    if(line[i+1]=='s'&&line[i+2]=='t'&&line[i+3]=='r'&&line[i+4]=='i'&&line[i+5]=='n'&&line[i+6]=='g'){
+      printf("its string\n");
+      return 0;
+    }
+  }
+  i++;
+  }
+return 1;
+
+}

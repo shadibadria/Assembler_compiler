@@ -52,7 +52,7 @@ int checkforduplicate(char * symbol) {
 
   int i;
   for (i = 0; i < capacity_table; i++) {
-    printf("\ndatabase:[%s]=value:[%s]\n",array[i].symbol,symbol);
+   /* printf("\ndatabase:[%s]=value:[%s]\n",array[i].symbol,symbol);*/
     if (array[i].symbol == symbol) {
       printf("Symbol Already Exsist \n");
       return 0;
