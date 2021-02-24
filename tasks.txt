@@ -12,7 +12,8 @@ TASKS WEEK 2: pass 1
 -.data                  --done--
 -.string                --done--
 24/2             
-- commands   
+- commands table        --done--
+- test commands
 25/2            
 - symbol table  
 26/2      

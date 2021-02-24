@@ -17,11 +17,11 @@ mycommands[i].funct=0;
 i++;
 strcpy(mycommands[i].command_name,"add\0");
 mycommands[i].opcode=2;
-mycommands[i].funct=0;
+mycommands[i].funct=10;
 i++;
 strcpy(mycommands[i].command_name,"sub\0");
 mycommands[i].opcode=2;
-mycommands[i].funct=0;
+mycommands[i].funct=11;
 i++;
 strcpy(mycommands[i].command_name,"lea\0");
 mycommands[i].opcode=4;
@@ -30,37 +30,37 @@ i++;
 
 strcpy(mycommands[i].command_name,"clr\0");
 mycommands[i].opcode=5;
-mycommands[i].funct=0;
+mycommands[i].funct=10;
 i++;
 
 strcpy(mycommands[i].command_name,"not\0");
 mycommands[i].opcode=5;
-mycommands[i].funct=0;
+mycommands[i].funct=11;
 i++;
 
 strcpy(mycommands[i].command_name,"inc\0");
 mycommands[i].opcode=5;
-mycommands[i].funct=0;
+mycommands[i].funct=12;
 i++;
 
 strcpy(mycommands[i].command_name,"dec\0");
 mycommands[i].opcode=5;
-mycommands[i].funct=0;
+mycommands[i].funct=13;
 i++;
 
 strcpy(mycommands[i].command_name,"jmp\0");
 mycommands[i].opcode=9;
-mycommands[i].funct=0;
+mycommands[i].funct=10;
 i++;
 
 strcpy(mycommands[i].command_name,"bne\0");
 mycommands[i].opcode=9;
-mycommands[i].funct=0;
+mycommands[i].funct=11;
 i++;
 
 strcpy(mycommands[i].command_name,"jsr\0");
 mycommands[i].opcode=9;
-mycommands[i].funct=0;
+mycommands[i].funct=12;
 i++;
 
 strcpy(mycommands[i].command_name,"red\0");
@@ -91,8 +91,10 @@ int check_command(char *command){
 int i=0;
 for(i=0;i<COMMANDS_AMOUNT;i++){
     if(strcmp(mycommands[i].command_name,command)==0){
-        return mycommands[i].opcode;
+        printf("Command_name :%s\nopcode :%d \nfunct: %d\n ",mycommands[i].command_name,mycommands[i].opcode,mycommands[i].funct);
+        return 1;
     }
 }
 return 0;
 }
+

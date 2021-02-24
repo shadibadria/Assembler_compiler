@@ -356,7 +356,6 @@ i++;
 command[i]='\0';
 
 /*check command*/
-printf("\ncommand:%s\n",command);
-printf("[%d]\n",check_command(command));
+check_command(command);
 return 1;
 }
