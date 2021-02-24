@@ -276,7 +276,7 @@ long val;
 while (*p) { 
     if ( isdigit(*p) || ( (*p=='-'||*p=='+') && isdigit(*(p+1)) )) {
         val = strtol(p, &p, 10); 
-        printf("%ld\n", val); 
+        printf("value:%ld\n", val); 
         IC++;
     } else {       
         p++;
@@ -356,7 +356,7 @@ i++;
 command[i]='\0';
 
 /*check command*/
-printf("%d\n",check_command(command));
 printf("\ncommand:%s\n",command);
+printf("[%d]\n",check_command(command));
 return 1;
 }

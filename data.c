@@ -89,10 +89,9 @@ mycommands[i].funct=0;
 int check_command(char *command){
 
 int i=0;
-printf("com:%s\n",command);
 for(i=0;i<COMMANDS_AMOUNT;i++){
     if(strcmp(mycommands[i].command_name,command)==0){
-        return 1;
+        return mycommands[i].opcode;
     }
 }
 return 0;
