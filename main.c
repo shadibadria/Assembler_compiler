@@ -16,6 +16,7 @@ int main(int argc, char * argv[]) {
     printf("\n**Error : Missing Arguments \n\n");
     return 1;
   }
+ set_commands();
 
   for (i = 1; i < argc; i++) {
     if ((fp = fopen(argv[i], "r")) == NULL) {

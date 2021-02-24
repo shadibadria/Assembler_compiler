@@ -60,11 +60,13 @@ int parse_line(char * line) {
         return 1;
       }
 
-    check_if_extern(line);
-    check_if_entry(line);
-    check_if_label(line);
-    check_if_its_data(line);
-    check_if_its_string(line);
+    if(!check_if_extern(line)&&!check_if_entry(line)){
+    {
+    if(!check_if_its_data(line)&&!check_if_its_string(line)){
+    check_if_command(line,check_if_label(line));
+    }
+    }
+    }
   return 1;
 }
 
@@ -192,6 +194,7 @@ char *remove_spaces_from_index(char * string,int i){
      newstring[j++] = string[i];
   i++;
   }
+
   newstring[j] = '\0';
   strcpy(string, newstring);
   free(newstring);
@@ -239,7 +242,7 @@ while(line[i]!='\n'&&line[i]!='\0'){
     insert(IC,IC,remove_space_tabs(temp),"code");
     IC++;
  
-    return 0;
+    return 1;
   }
 i++;
 }
@@ -256,12 +259,12 @@ int check_if_its_data(char *line){
     if(line[i+1]=='d'&&line[i+2]=='a'&&line[i+3]=='t'&&line[i+4]=='a'){
       printf("its data\n");
      data_parsing(line);
-      return 0;
+      return 1;
     }
   }
   i++;
   }
-return 1;
+return 0;
 }
 /*
 param: data line
@@ -316,10 +319,44 @@ int check_if_its_string(char *line){
     if(line[i+1]=='s'&&line[i+2]=='t'&&line[i+3]=='r'&&line[i+4]=='i'&&line[i+5]=='n'&&line[i+6]=='g'){
       printf("its string\n");
       string_parsing(line,i+7);
-      return 0;
+      return 1;
     }
   }
   i++;
   }
+return 0;
+}
+/*
+param : line from file
+functionality : check if its command
+*/
+int check_if_command(char *line,int islabel){
+
+char command[5]; 
+int i=0,j=0;;
+
+
+i=0;
+if(islabel==1){
+  while(line[i]!=':'){
+i++;
+}
+i++;
+}
+
+line=remove_spaces_from_index(line,i);
+i=0;
+while(line[i]!='\n'&&line[i]!='\0'){
+command[j++]=line[i];
+if(line[i]==' '||i>=5){
+  break;
+}
+i++;
+}
+command[i]='\0';
+
+/*check command*/
+printf("%d\n",check_command(command));
+printf("\ncommand:%s\n",command);
 return 1;
 }

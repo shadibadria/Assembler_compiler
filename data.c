@@ -1,25 +1,99 @@
 #include"data.h"
-action_table table[ACTION_TABLE_MAXSIZE];
-/* all instructions are defined here with the opcode, func and supported addressing methods */
-instruction_descriptor instruction_table[] = {{"mov", 0, 0, {1, 1, 0, 1}, {0, 1, 0, 1}},
-                                              {"cmp", 1, 0, {1, 1, 0, 1}, {1, 1, 0, 1}},
-                                              {"add", 2, 1, {1, 1, 0, 1}, {0, 1, 0, 1}},
-                                              {"sub", 2, 2, {1, 1, 0, 1}, {0, 1, 0, 1}},
-                                              {"lea", 4, 0, {0, 1, 0, 0}, {0, 1, 0, 1}},
-                                              {"clr", 5, 1, {0, 0, 0, 0}, {0, 1, 0, 1}},
-                                              {"not", 5, 2, {0, 0, 0, 0}, {0, 1, 0, 1}},
-                                              {"inc", 5, 3, {0, 0, 0, 0}, {0, 1, 0, 1}},
-                                              {"dec", 5, 4, {0, 0, 0, 0}, {0, 1, 0, 1}},
-                                              {"jmp", 9, 1, {0, 0, 0, 0}, {0, 1, 1, 0}},
-                                              {"bne", 9, 2, {0, 0, 0, 0}, {0, 1, 1, 0}},
-                                              {"jsr", 9, 3, {0, 0, 0, 0}, {0, 1, 1, 0}},
-                                              {"red", 12, 0, {0, 0, 0, 0}, {0, 1, 0, 1}},
-                                              {"prn", 13, 0, {0, 0, 0, 0}, {1, 1, 0, 1}},
-                                              {"rts", 14, 0, {0, 0, 0, 0}, {0, 0, 0, 0}},
-                                              {"stop", 15, 0, {0, 0, 0, 0}, {0, 0, 0, 0}}};
+
+command mycommands[COMMANDS_AMOUNT];
 
 
 
+void set_commands(){
+    int i=0;
+/*setting up commands*/
+strcpy(mycommands[i].command_name,"mov\0");
+mycommands[i].opcode=0;
+mycommands[i].funct=0;
+i++;
+strcpy(mycommands[i].command_name,"cmp\0");
+mycommands[i].opcode=1;
+mycommands[i].funct=0;
+i++;
+strcpy(mycommands[i].command_name,"add\0");
+mycommands[i].opcode=2;
+mycommands[i].funct=0;
+i++;
+strcpy(mycommands[i].command_name,"sub\0");
+mycommands[i].opcode=2;
+mycommands[i].funct=0;
+i++;
+strcpy(mycommands[i].command_name,"lea\0");
+mycommands[i].opcode=4;
+mycommands[i].funct=0;
+i++;
+
+strcpy(mycommands[i].command_name,"clr\0");
+mycommands[i].opcode=5;
+mycommands[i].funct=0;
+i++;
+
+strcpy(mycommands[i].command_name,"not\0");
+mycommands[i].opcode=5;
+mycommands[i].funct=0;
+i++;
+
+strcpy(mycommands[i].command_name,"inc\0");
+mycommands[i].opcode=5;
+mycommands[i].funct=0;
+i++;
+
+strcpy(mycommands[i].command_name,"dec\0");
+mycommands[i].opcode=5;
+mycommands[i].funct=0;
+i++;
+
+strcpy(mycommands[i].command_name,"jmp\0");
+mycommands[i].opcode=9;
+mycommands[i].funct=0;
+i++;
+
+strcpy(mycommands[i].command_name,"bne\0");
+mycommands[i].opcode=9;
+mycommands[i].funct=0;
+i++;
+
+strcpy(mycommands[i].command_name,"jsr\0");
+mycommands[i].opcode=9;
+mycommands[i].funct=0;
+i++;
+
+strcpy(mycommands[i].command_name,"red\0");
+mycommands[i].opcode=12;
+mycommands[i].funct=0;
+i++;
+
+strcpy(mycommands[i].command_name,"prn\0");
+mycommands[i].opcode=13;
+mycommands[i].funct=0;
+i++;
+
+strcpy(mycommands[i].command_name,"rts\0");
+mycommands[i].opcode=14;
+mycommands[i].funct=0;
+i++;
+
+strcpy(mycommands[i].command_name,"stop\0");
+mycommands[i].opcode=15;
+mycommands[i].funct=0;
 
 
 
+}
+
+int check_command(char *command){
+
+int i=0;
+printf("com:%s\n",command);
+for(i=0;i<COMMANDS_AMOUNT;i++){
+    if(strcmp(mycommands[i].command_name,command)==0){
+        return 1;
+    }
+}
+return 0;
+}
