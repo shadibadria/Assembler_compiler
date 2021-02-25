@@ -13,8 +13,9 @@ TASKS WEEK 2: pass 1
 -.string                --done--
 24/2             
 - commands table        --done--
-- test commands
-25/2            
+
+25/2   
+-register         
 - symbol table  
 26/2      
 - instruction table   

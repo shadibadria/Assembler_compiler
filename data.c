@@ -98,3 +98,17 @@ for(i=0;i<COMMANDS_AMOUNT;i++){
 return 0;
 }
 
+int check_if_register(char *line){
+
+int i=0;
+
+while(line[i]!='\n')
+{
+if(line[i]){
+
+}
+i++;
+}
+return 0;
+}
+

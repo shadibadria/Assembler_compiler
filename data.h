@@ -11,5 +11,7 @@ int opcode;
 
 }command;
 
+
 void set_commands();
 int check_command(char *command);
+int check_if_register(char *string);

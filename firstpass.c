@@ -39,12 +39,14 @@ functionality: send the line to function parse_line after removing spaces and ta
 at the beginning , and checks if line empty or EOF
 */
 int assemble_parsing(char * line) {
+ 
 line=remove_spaces_from_index(line,0);
     if(line[0]=='\n'||line[0]=='\0'){
       return 0;
     } 
   printf("\n******************************\n");
-  printf("\nCommand : %s\n", line);
+  
+  /*printf("\ndommand : %s\n", line);*/
   parse_line(line);
 return 1;
 }
@@ -53,20 +55,53 @@ param: line from file
 functionality: parse the line to data we needby calling functions
 */
 int parse_line(char * line) {
-  int i=0;
+  int i=0,j=0;
+
+
+  char temp[80];
     line[strlen(line)] = '\0';
      if (line[i] == ';') {
         printf("comment\n");
         return 1;
       }
 
+
+while(line[i]!='\n'&&line[i]!='\0'){
+if(line[i]!=' '&&line[i]!='\t'){
+  temp[j++]=line[i];
+}else{
+  temp[j]='\0';
+printf("command:%s  \n",temp);
+j=0;
+  temp[j]='\0';
+
+}
+i++;
+if(line[i]=='\n'||line[i]=='\0'){
+    temp[j]='\0';
+  if(strlen(temp)){
+  printf("xxcommand:%s\n",temp);
+
+  }
+
+}
+}
+
+
+i=0;
+/*
     if(!check_if_extern(line)&&!check_if_entry(line)){
     {
     if(!check_if_its_data(line)&&!check_if_its_string(line)){
-    check_if_command(line,check_if_label(line));
+
+    if(check_if_command(line,check_if_label(line))==1){
+        check_if_register(line);
+    }
+
     }
     }
     }
+    */
   return 1;
 }
 
