@@ -46,7 +46,7 @@ line=remove_spaces_from_index(line,0);
     } 
   printf("\n******************************\n");
   
-  /*printf("\ndommand : %s\n", line);*/
+  printf("\nCommand : %s\n", line);
   parse_line(line);
 return 1;
 }
@@ -56,9 +56,8 @@ functionality: parse the line to data we needby calling functions
 */
 int parse_line(char * line) {
   int i=0,j=0;
-
-
   char temp[80];
+
     line[strlen(line)] = '\0';
      if (line[i] == ';') {
         printf("comment\n");
@@ -71,16 +70,26 @@ if(line[i]!=' '&&line[i]!='\t'){
   temp[j++]=line[i];
 }else{
   temp[j]='\0';
-printf("command:%s  \n",temp);
+ if(check_if_label(temp)==1){
+  check_if_its_data(temp);
+  check_if_its_string(temp);
+  check_if_command(temp);
+  
+ }
+ 
+
+
 j=0;
   temp[j]='\0';
-
 }
+
 i++;
 if(line[i]=='\n'||line[i]=='\0'){
     temp[j]='\0';
   if(strlen(temp)){
-  printf("xxcommand:%s\n",temp);
+  check_if_register(temp);
+ 
+
 
   }
 
@@ -89,19 +98,9 @@ if(line[i]=='\n'||line[i]=='\0'){
 
 
 i=0;
-/*
-    if(!check_if_extern(line)&&!check_if_entry(line)){
-    {
-    if(!check_if_its_data(line)&&!check_if_its_string(line)){
 
-    if(check_if_command(line,check_if_label(line))==1){
-        check_if_register(line);
-    }
-
-    }
-    }
-    }
-    */
+  
+   
   return 1;
 }
 
@@ -145,8 +144,8 @@ break;
   count++;
   line[strlen(line)] = '\0';
 remove_space_tabs(line);
-  printf("\nlineex:%s\n",line);
 
+  
   if (checkforduplicate(line) == 0) {
     printf("ERROR duplicate found \n");
     return 0;
@@ -275,8 +274,8 @@ while(line[i]!='\n'&&line[i]!='\0'){
     
 
     insert(IC,IC,remove_space_tabs(temp),"code");
-    IC++;
- 
+
+   
     return 1;
   }
 i++;
@@ -365,32 +364,15 @@ return 0;
 param : line from file
 functionality : check if its command
 */
-int check_if_command(char *line,int islabel){
+int check_if_command(char *line){
 
-char command[5]; 
-int i=0,j=0;;
-
-
-i=0;
-if(islabel==1){
-  while(line[i]!=':'){
-i++;
-}
-i++;
-}
-
-line=remove_spaces_from_index(line,i);
-i=0;
-while(line[i]!='\n'&&line[i]!='\0'){
-command[j++]=line[i];
-if(line[i]==' '||i>=5){
-  break;
-}
-i++;
-}
-command[i]='\0';
 
 /*check command*/
-check_command(command);
+
+if(check_command(line)==0){
+return 0;
+}
+         printf("COMMAND_IC:%d\n",IC);
+IC++;
 return 1;
 }

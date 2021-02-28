@@ -1,10 +1,12 @@
 #include"data.h"
 
+int extern IC;
+
 command mycommands[COMMANDS_AMOUNT];
 
 
 
-void set_commands(){
+void init_commands(){
     int i=0;
 /*setting up commands*/
 strcpy(mycommands[i].command_name,"mov\0");
@@ -87,11 +89,13 @@ mycommands[i].funct=0;
 }
 
 int check_command(char *command){
-
 int i=0;
+command[strlen(command)]='\0';
+
 for(i=0;i<COMMANDS_AMOUNT;i++){
     if(strcmp(mycommands[i].command_name,command)==0){
-        printf("Command_name :%s\nopcode :%d \nfunct: %d\n ",mycommands[i].command_name,mycommands[i].opcode,mycommands[i].funct);
+        
+       /* printf("Command_name :%s\nopcode :%d \nfunct: %d\n ",mycommands[i].command_name,mycommands[i].opcode,mycommands[i].funct);*/
         return 1;
     }
 }
@@ -100,15 +104,101 @@ return 0;
 
 int check_if_register(char *line){
 
-int i=0;
+int i=0,j=0;
+char temp[80];
+int comma_flag=0;
 
-while(line[i]!='\n')
-{
-if(line[i]){
+while(line[i]!='\n'){
 
+temp[j++]=line[i];
+if(line[i]==','){
+        temp[j-1]='\0';
+
+    comma_flag=1;
+    if(check_for_reg(temp)==0){
+        printf("other_IC:%d\n",IC);
+        IC++;
+
+    }
+    temp[0]='\0';
+    j=0;
 }
-i++;
+
+    i++;
 }
+    temp[j-1]='\0';
+
+    if(comma_flag==1){
+ if(check_for_reg(temp)){
+       return 1;
+    }else{
+        i=0;
+          while(temp[i]!='\0'){
+                if((temp[i]=='#'&& isdigit(temp[i+1])!=0)||(temp[i]=='#'&&temp[i+1]=='-'&&isdigit(temp[i+2])!=0)){
+                            printf("number_ic:%d\n",IC);
+
+                      IC++;   
+                    return 1;
+                }
+                i++;
+        }
+        printf("other_IC:%d \n",IC);
+        IC++;
+    }
+    }else{
+        i=0;
+        if(check_for_reg(temp)==1){
+            return 1;
+        }
+        while(temp[i]!='\0'){
+                if((temp[i]=='#'&& isdigit(temp[i+1])!=0)||(temp[i]=='#'&&temp[i+1]=='-'&&isdigit(temp[i+2])!=0)){
+                             printf("number_ic:%d\n",IC);
+
+                            IC++;
+                            return 1;
+                }
+                
+                i++;
+        }
+            i=0;
+            remove_space_tabs(temp);
+            if(temp[0]!='\0'){
+printf("other_IC:%d is:%s\n",IC,temp);
+                    IC++;
+            }
+           
+            
+            
+    }
+
+
+   
+
+
+
 return 0;
 }
 
+int check_for_reg(char *string){
+int i=0;
+for(i=0;i<REGISTERS_COUNT;i++){
+if(!strcmp(reg[i],string)){
+                 printf("Register_IC:%d\n",IC);
+
+    IC++;
+
+return 1;
+}
+}
+return 0;
+}
+void init_registers(){
+reg[0]="r0";
+reg[1]="r1";
+reg[2]="r2";
+reg[3]="r3";
+reg[4]="r4";
+reg[5]="r5";
+reg[6]="r6";
+reg[7]="r7";
+}
