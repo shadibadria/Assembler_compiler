@@ -40,13 +40,12 @@ at the beginning , and checks if line empty or EOF
 */
 int assemble_parsing(char * line) {
  
-line=remove_spaces_from_index(line,0);
     if(line[0]=='\n'||line[0]=='\0'){
       return 0;
     } 
   printf("\n******************************\n");
   
-  printf("\nCommand : %s\n", line);
+  printf("\nCommand :%s\n", line);
   parse_line(line);
 return 1;
 }
@@ -58,29 +57,43 @@ int parse_line(char * line) {
   int i=0,j=0;
   char temp[80];
 
-    line[strlen(line)] = '\0';
+    
      if (line[i] == ';') {
         printf("comment\n");
         return 1;
       }
 
+line[strlen(line)]='\0';
+while(line[i]!='\0'){
 
-while(line[i]!='\n'&&line[i]!='\0'){
+  
 if(line[i]!=' '&&line[i]!='\t'){
   temp[j++]=line[i];
 }else{
+
   temp[j]='\0';
- if(check_if_label(temp)==1){
-  check_if_its_data(temp);
-  check_if_its_string(temp);
-  check_if_command(temp);
+if(j!=0){
+
+
+if(check_if_command(temp)==0){
+if(check_if_label(temp)==0)
+  {
+if(check_if_its_data(temp)==0)
+  {
+
+
+  if(check_if_its_string(temp)==0)
+  {
   
- }
- 
 
-
+  }
+  }
+  }
+  }
+  
+}
 j=0;
-  temp[j]='\0';
+temp[j]='\0';
 }
 
 i++;
@@ -88,19 +101,10 @@ if(line[i]=='\n'||line[i]=='\0'){
     temp[j]='\0';
   if(strlen(temp)){
   check_if_register(temp);
- 
-
-
   }
-
 }
 }
-
-
-i=0;
-
   
-   
   return 1;
 }
 
@@ -368,7 +372,6 @@ int check_if_command(char *line){
 
 
 /*check command*/
-
 if(check_command(line)==0){
 return 0;
 }
