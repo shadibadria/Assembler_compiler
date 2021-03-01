@@ -64,28 +64,37 @@ int parse_line(char * line) {
         return 1;
       }
 
+  if(check_if_extern(line)==1){
+    return 1;
+  }
+   if(check_if_entry(line)==1){
+    return 1;
+  }
 
 while(line[i]!='\0'&&line[i]!='\n'){
-
-  
 if(line[i]!=' '&&line[i]!='\t'){
   temp[j++]=line[i];
 }else{
-
   temp[j]='\0';
 if(j!=0){
+  
 if(check_if_command(temp)==1){
   
 }
+ 
+ 
 if(check_if_label(temp)==1){
 
 }
-if(check_if_its_data(temp)==1){
+if(check_if_its_data(line)==1){
+  return 1;
 }
-  if(check_if_its_string(temp)==1)
+  if(check_if_its_string(line)==1)
   {
+  return 1;
 
   }
+
 }
    
 j=0;
@@ -158,7 +167,7 @@ remove_space_tabs(line);
   }else{
 
     insert(IC,0,line,"external");
-    IC++;
+   
   }
   printf("\n\nits extern !!!\n");
 return 1;
@@ -293,7 +302,9 @@ param: line from file
 functionality: check if its data
 */
 int check_if_its_data(char *line){
+  
   int i=0;
+  
   while(line[i]!='\n'&&line[i]!='\0'){
   if(line[i]=='.'){
     if(line[i+1]=='d'&&line[i+2]=='a'&&line[i+3]=='t'&&line[i+4]=='a'){
@@ -313,17 +324,17 @@ functionality: get data input to array
 void data_parsing(char *line){
 char *p =line;
 long val;
-int i=0;
 line[strlen(line)]='\0';
-while(line[i]!='\0'){
+while(*p){
 
-    if ( isdigit(line[i]) || ( (line[i]=='-'||*p=='+') && isdigit(line[i+1]))) {
+    if ( isdigit(*p) || ( (*p=='-'||*p=='+') && isdigit(*(p+1)))) {
         val = strtol(p, &p, 10); 
         printf("value:%ld\n", val); 
+          printf("IC_DATA [%d]\n",IC);
         IC++;
-    } else {       
-        i++;
-    }
+    }else{
+      p++;
+    } 
 
 }
 
@@ -334,6 +345,7 @@ param: string  line
 functionality: get data input to array
 */
 void string_parsing(char *line,int index){
+
 
 while (line[index]!='\n'&&line[index]!='\0')
 {
@@ -347,9 +359,11 @@ while (line[index]!='"'&&line[index]!='\n'&&line[index]!='\0')
 {
   printf("\nstr:%c\n",line[index]);
   index++;
+  printf("str_IC : %d\n",IC);
   IC++;
 }
-
+printf("str_IC : %d\n",IC);
+  IC++;
 
 
 }
@@ -359,6 +373,7 @@ functionality: check if its string
 */
 int check_if_its_string(char *line){
   int i=0;
+  printf("xtr:%s\n",line);
   while(line[i]!='\n'&&line[i]!='\0'){
   if(line[i]=='.'){
     if(line[i+1]=='s'&&line[i+2]=='t'&&line[i+3]=='r'&&line[i+4]=='i'&&line[i+5]=='n'&&line[i+6]=='g'){
