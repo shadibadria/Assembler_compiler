@@ -29,11 +29,9 @@ int firstpass(char * filename) {
   }
   while (fgets(buffer, bufferLength, filePointer)) {
      
-
   assemble_parsing(buffer);
   
   }
-  fclose(filePointer);
   return 0;
 }
 
@@ -43,12 +41,11 @@ functionality: send the line to function parse_line after removing spaces and ta
 at the beginning , and checks if line empty or EOF
 */
 int assemble_parsing(char * line) {
- 
+
     if(line[0]=='\n'||line[0]=='\0'){
       return 0;
     } 
   printf("\n******************************\n");
-  remove_spaces_from_index(line,0);
   printf("\nCommand :%s\n", line);
   parse_line(line);
 return 1;
@@ -67,46 +64,48 @@ int parse_line(char * line) {
         return 1;
       }
 
-line[strlen(line)]='\0';
-while(line[i]!='\0'){
+
+while(line[i]!='\0'&&line[i]!='\n'){
 
   
-if(line[i]!=' '&&line[i]!='\t'&&line[i]!='\n'){
+if(line[i]!=' '&&line[i]!='\t'){
   temp[j++]=line[i];
 }else{
-  printf("XRR\n");
+
   temp[j]='\0';
-
-
-if(check_if_command(temp)==0){
-if(check_if_label(temp)==0)
-  {
-if(check_if_its_data(temp)==0)
-  {
-
-
-  if(check_if_its_string(temp)==0)
-  {
+if(j!=0){
+if(check_if_command(temp)==1){
   
+}
+if(check_if_label(temp)==1){
+
+}
+if(check_if_its_data(temp)==1){
+}
+  if(check_if_its_string(temp)==1)
+  {
 
   }
-  }
-  }
-  }
-  
-
+}
+   
 j=0;
 temp[j]='\0';
 }
 
 i++;
+}
 if(line[i]=='\n'||line[i]=='\0'){
-    temp[j]='\0';
+  temp[j]='\0';
+
   if(strlen(temp)){
+    if(check_if_command(temp)==0){
   check_if_register(temp);
+
+    }
+    
   }
 }
-}
+
   
   return 1;
 }
@@ -327,7 +326,6 @@ while(line[i]!='\0'){
     }
 
 }
-  printf("XXXXXXXX:%c\n",line[i]);
 
 }
 
@@ -378,7 +376,6 @@ param : line from file
 functionality : check if its command
 */
 int check_if_command(char *line){
-
 
 /*check command*/
 if(check_command(line)==0){
