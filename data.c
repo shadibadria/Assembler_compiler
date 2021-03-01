@@ -108,7 +108,7 @@ int i=0,j=0;
 char temp[80];
 int comma_flag=0;
 
-while(line[i]!='\n'){
+while(line[i]!='\n'&&line[i]!='\0'){
 
 temp[j++]=line[i];
 if(line[i]==','){

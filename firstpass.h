@@ -6,7 +6,7 @@
 
 #include<stdlib.h>
 
-#define bufferLength 1000
+#define bufferLength 80
 
 int firstpass(char * filename);
 int assemble_parsing(char * line);

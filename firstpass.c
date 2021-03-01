@@ -28,8 +28,12 @@ int firstpass(char * filename) {
     return 0;
   }
   while (fgets(buffer, bufferLength, filePointer)) {
+     
+
   assemble_parsing(buffer);
+  
   }
+  fclose(filePointer);
   return 0;
 }
 
@@ -44,7 +48,7 @@ int assemble_parsing(char * line) {
       return 0;
     } 
   printf("\n******************************\n");
-  
+  remove_spaces_from_index(line,0);
   printf("\nCommand :%s\n", line);
   parse_line(line);
 return 1;
@@ -67,12 +71,11 @@ line[strlen(line)]='\0';
 while(line[i]!='\0'){
 
   
-if(line[i]!=' '&&line[i]!='\t'){
+if(line[i]!=' '&&line[i]!='\t'&&line[i]!='\n'){
   temp[j++]=line[i];
 }else{
-
+  printf("XRR\n");
   temp[j]='\0';
-if(j!=0){
 
 
 if(check_if_command(temp)==0){
@@ -91,7 +94,7 @@ if(check_if_its_data(temp)==0)
   }
   }
   
-}
+
 j=0;
 temp[j]='\0';
 }
@@ -213,7 +216,7 @@ functionality: remove space/tab from index till first non tab/space
 char *remove_spaces_from_index(char * string,int i){
   char * newstring;
   int j = 0;
-  if(string[i]!='\t'&&string[i]!=' '&&string[i]=='\n'){
+  if(string[i]!='\t'&&string[i]!=' '&&string[i]=='\n'&&isspace(string[i])){
     return 0;
   }
   newstring = (char * ) malloc(strlen(string) * sizeof(char));
@@ -221,8 +224,8 @@ char *remove_spaces_from_index(char * string,int i){
     printf("Something Went Wrong no memory\n");
     return "bad";
   }
-  while (string[i] != '\n') {
-    if (string[i] != ' ' && string[i] != '\t') {
+  while (string[i] != '\n'&&string[i]!='\0') {
+    if (string[i] != ' ' && string[i] != '\t'&&!isspace(string[i])) {
 
      break;
     }
@@ -251,7 +254,7 @@ char * remove_space_tabs(char * string) {
     printf("Something Went Wrong no memory\n");
     return "bad";
   }
-  while (string[i] != '\n') {
+  while (string[i] != '\n'&&string[i]!='\0') {
     if (string[i] != ' ' && string[i] != '\t') {
       newstring[j++] = string[i];
     }
@@ -311,15 +314,21 @@ functionality: get data input to array
 void data_parsing(char *line){
 char *p =line;
 long val;
-while (*p) { 
-    if ( isdigit(*p) || ( (*p=='-'||*p=='+') && isdigit(*(p+1)) )) {
+int i=0;
+line[strlen(line)]='\0';
+while(line[i]!='\0'){
+
+    if ( isdigit(line[i]) || ( (line[i]=='-'||*p=='+') && isdigit(line[i+1]))) {
         val = strtol(p, &p, 10); 
         printf("value:%ld\n", val); 
         IC++;
     } else {       
-        p++;
+        i++;
     }
+
 }
+  printf("XXXXXXXX:%c\n",line[i]);
+
 }
 
 /*
