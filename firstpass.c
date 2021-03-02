@@ -4,6 +4,7 @@
 
 #include "symbol_table.h"
 
+#include"data_image.h"
 /*
 firstpass.c
 
@@ -18,7 +19,7 @@ int DC = 0;
 int count = 0;
 FILE * filePointer;
 char buffer[bufferLength];
-
+int extern index_of_datatable;
 /*
 param: filename of the assembly 
 functionality: function take file name and scan it and sent line to parsing
@@ -50,6 +51,9 @@ int assemble_parsing(char * line) {
   printf("\n******************************\n");
   printf("\nCommand :%s\n", line);
   parse_line(line);
+  append_to_file("ps.ob",arr[index_of_datatable]);
+  index_of_datatable++;
+  
   return 1;
 }
 /*
@@ -284,7 +288,7 @@ int check_if_label(char * line) {
       printf("label:%s\n", remove_space_tabs(temp));
 
       insert(IC, IC, remove_space_tabs(temp), "code");
-
+      
       return 1;
     }
     i++;
@@ -350,9 +354,13 @@ void string_parsing(char * line, int index) {
   while (line[index] != '"' && line[index] != '\n' && line[index] != '\0') {
     printf("\nstr:%c\n", line[index]);
     index++;
+      sprintf(arr[index_of_datatable].Adress,"%d  ",IC);
+
     printf("str_IC : %d\n", IC);
     IC++;
   }
+    sprintf(arr[index_of_datatable].Adress,"%d  ",IC);
+
   printf("str_IC : %d\n", IC);
   IC++;
 
@@ -386,6 +394,9 @@ int check_if_command(char * line) {
   if (check_command(line) == 0) {
     return 0;
   }
+  sprintf(arr[index_of_datatable].Adress,"%d  ",IC);
+  
+
   printf("COMMAND_IC:%d\n", IC);
   IC++;
   return 1;

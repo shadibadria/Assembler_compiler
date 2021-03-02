@@ -15,6 +15,7 @@
         "utility": "c",
         "file_proccess.h": "c",
         "string": "c",
-        "list": "c"
+        "list": "c",
+        "data_image.h": "c"
     }
 }

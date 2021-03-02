@@ -1,6 +1,7 @@
 #include"data.h"
-
+#include"data_image.h"
 int extern IC;
+int extern index_of_datatable;
 
 command mycommands[COMMANDS_AMOUNT];
 
@@ -112,6 +113,8 @@ int check_if_register(char * line) {
       comma_flag = 1;
       if (check_for_reg(temp) == 0) {
         printf("xother_IC:%d\n", IC);
+          sprintf(arr[index_of_datatable].Adress,"%d  ",IC);
+
         IC++;
 
       }
@@ -133,6 +136,7 @@ int check_if_register(char * line) {
       while (temp[i] != '\0') {
         if ((temp[i] == '#' && isdigit(temp[i + 1]) != 0) || (temp[i] == '#' && temp[i + 1] == '-' && isdigit(temp[i + 2]) != 0)) {
           printf("number_ic:%d\n", IC);
+  sprintf(arr[index_of_datatable].Adress,"%d  ",IC);
 
           IC++;
           return 1;
@@ -151,6 +155,7 @@ int check_if_register(char * line) {
     while (temp[i] != '\0') {
       if ((temp[i] == '#' && isdigit(temp[i + 1]) != 0) || (temp[i] == '#' && temp[i + 1] == '-' && isdigit(temp[i + 2]) != 0)) {
         printf("number_ic:%d\n", IC);
+  sprintf(arr[index_of_datatable].Adress,"%d  ",IC);
 
         IC++;
         return 1;
@@ -162,6 +167,8 @@ int check_if_register(char * line) {
     remove_space_tabs(temp);
     if (temp[0] != '\0') {
       printf("other_IC:%d is:%s\n", IC, temp);
+        sprintf(arr[index_of_datatable].Adress,"%d  ",IC);
+
       IC++;
     }
 
@@ -176,6 +183,7 @@ int check_for_reg(char * string) {
   for (i = 0; i < REGISTERS_COUNT; i++) {
     if (!strcmp(reg[i], string)) {
       printf("Register_IC:%d\n", IC);
+  sprintf(arr[index_of_datatable].Adress,"%d  ",IC);
 
       IC++;
 

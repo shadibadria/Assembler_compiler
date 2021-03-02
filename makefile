@@ -1,8 +1,8 @@
 # replace filenames in the following lists with your own file names
 
 EXEC_FILE = assembler
-C_FILES = main.c firstpass.c file_proccess.c data.c symbol_table.c
-H_FILES = firstpass.h file_proccess.h data.h symbol_table.h
+C_FILES = main.c firstpass.c file_proccess.c data.c symbol_table.c data_image.c
+H_FILES = firstpass.h file_proccess.h data.h symbol_table.h data_image.h
 
 # if there are no header files, change the previous line to: H_FILES =
 
