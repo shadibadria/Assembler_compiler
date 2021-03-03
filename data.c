@@ -91,7 +91,13 @@ int check_command(char * command) {
 
   for (i = 0; i < COMMANDS_AMOUNT; i++) {
     if (strcmp(mycommands[i].command_name, command) == 0) {
+      sprintf(arr[index_of_datatable].Adress,"%d",IC);
+      
+          sprintf(arr[index_of_datatable].code,"%d",mycommands[i].opcode);
 
+        index_of_datatable++;
+        printf("COMMAND_IC:%d\n", IC);
+        IC++;
       /* printf("Command_name :%s\nopcode :%d \nfunct: %d\n ",mycommands[i].command_name,mycommands[i].opcode,mycommands[i].funct);*/
       return 1;
     }
@@ -113,8 +119,8 @@ int check_if_register(char * line) {
       comma_flag = 1;
       if (check_for_reg(temp) == 0) {
         printf("xother_IC:%d\n", IC);
-          sprintf(arr[index_of_datatable].Adress,"%d  ",IC);
-
+         sprintf(arr[index_of_datatable].Adress,"%d",IC);
+  index_of_datatable++;
         IC++;
 
       }
@@ -136,14 +142,16 @@ int check_if_register(char * line) {
       while (temp[i] != '\0') {
         if ((temp[i] == '#' && isdigit(temp[i + 1]) != 0) || (temp[i] == '#' && temp[i + 1] == '-' && isdigit(temp[i + 2]) != 0)) {
           printf("number_ic:%d\n", IC);
-  sprintf(arr[index_of_datatable].Adress,"%d  ",IC);
-
+  sprintf(arr[index_of_datatable].Adress,"%d",IC);
+  index_of_datatable++;
           IC++;
           return 1;
         }
         i++;
       }
       printf("other_IC:%d \n", IC);
+        sprintf(arr[index_of_datatable].Adress,"%d",IC);
+  index_of_datatable++;
       IC++;
     }
   } else {
@@ -155,8 +163,8 @@ int check_if_register(char * line) {
     while (temp[i] != '\0') {
       if ((temp[i] == '#' && isdigit(temp[i + 1]) != 0) || (temp[i] == '#' && temp[i + 1] == '-' && isdigit(temp[i + 2]) != 0)) {
         printf("number_ic:%d\n", IC);
-  sprintf(arr[index_of_datatable].Adress,"%d  ",IC);
-
+  sprintf(arr[index_of_datatable].Adress,"%d",IC);
+  index_of_datatable++;
         IC++;
         return 1;
       }
@@ -167,8 +175,8 @@ int check_if_register(char * line) {
     remove_space_tabs(temp);
     if (temp[0] != '\0') {
       printf("other_IC:%d is:%s\n", IC, temp);
-        sprintf(arr[index_of_datatable].Adress,"%d  ",IC);
-
+        sprintf(arr[index_of_datatable].Adress,"%d",IC);
+  index_of_datatable++;
       IC++;
     }
 
@@ -183,8 +191,8 @@ int check_for_reg(char * string) {
   for (i = 0; i < REGISTERS_COUNT; i++) {
     if (!strcmp(reg[i], string)) {
       printf("Register_IC:%d\n", IC);
-  sprintf(arr[index_of_datatable].Adress,"%d  ",IC);
-
+  sprintf(arr[index_of_datatable].Adress,"%d",IC);
+  index_of_datatable++;
       IC++;
 
       return 1;

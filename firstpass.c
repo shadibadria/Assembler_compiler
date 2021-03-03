@@ -33,6 +33,7 @@ int firstpass(char * filename) {
   while (fgets(buffer, bufferLength, filePointer)) {
 
     assemble_parsing(buffer);
+   
 
   }
   return 0;
@@ -50,9 +51,11 @@ int assemble_parsing(char * line) {
   }
   printf("\n******************************\n");
   printf("\nCommand :%s\n", line);
-  parse_line(line);
-  append_to_file("ps.ob",arr[index_of_datatable]);
-  index_of_datatable++;
+  if(parse_line(line)==1){
+    printf("arrx:%s\n",arr[index_of_datatable].Adress);
+
+  }
+  
   
   return 1;
 }
@@ -66,7 +69,7 @@ int parse_line(char * line) {
 
   if (line[i] == ';') {
     printf("comment\n");
-    return 1;
+    return 0;
   }
 
   if (check_if_extern(line) == 1) {
@@ -328,6 +331,8 @@ void data_parsing(char * line) {
     if (isdigit( * p) || (( * p == '-' || * p == '+') && isdigit( * (p + 1)))) {
       val = strtol(p, & p, 10);
       printf("value:%ld\n", val);
+      sprintf(arr[index_of_datatable].Adress,"%d",IC);
+  index_of_datatable++;
       printf("IC_DATA [%d]\n", IC);
       IC++;
     } else {
@@ -354,13 +359,13 @@ void string_parsing(char * line, int index) {
   while (line[index] != '"' && line[index] != '\n' && line[index] != '\0') {
     printf("\nstr:%c\n", line[index]);
     index++;
-      sprintf(arr[index_of_datatable].Adress,"%d  ",IC);
-
+      sprintf(arr[index_of_datatable].Adress,"%d",IC);
+  index_of_datatable++;
     printf("str_IC : %d\n", IC);
     IC++;
   }
-    sprintf(arr[index_of_datatable].Adress,"%d  ",IC);
-
+    sprintf(arr[index_of_datatable].Adress,"%d",IC);
+  index_of_datatable++;
   printf("str_IC : %d\n", IC);
   IC++;
 
@@ -394,10 +399,7 @@ int check_if_command(char * line) {
   if (check_command(line) == 0) {
     return 0;
   }
-  sprintf(arr[index_of_datatable].Adress,"%d  ",IC);
-  
 
-  printf("COMMAND_IC:%d\n", IC);
-  IC++;
+ 
   return 1;
 }

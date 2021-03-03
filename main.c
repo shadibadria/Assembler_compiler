@@ -6,9 +6,13 @@
 
 #include"file_proccess.h"
 
-#include"data.h"
 
 #include"symbol_table.h"
+
+#include"data.h"
+
+
+#include"data_image.h"
 
 int main(int argc, char * argv[]) {
 
@@ -32,7 +36,19 @@ int main(int argc, char * argv[]) {
 
       if (check_file(filename)) {
         firstpass(argv[i]);
+ printf("\nXXXXXXXXXXXXxx\n");
+    for(i=0;i<100;i++){
+        if(strlen(arr[i].Adress)>=1){
+              printf("\n**********************************\n");
+    append_to_file("ps.ob",arr[i]);
 
+      printf("adress : %s\n",arr[i].Adress);
+            printf("command : %s\n",arr[i].code);
+                          printf("\n**********************************\n");
+
+        }
+    }
+    printf("\nXXXXXXXXXXXXxx\n");
       }
 
       fclose(fp);

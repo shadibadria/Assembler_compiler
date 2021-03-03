@@ -14,6 +14,9 @@ void append_to_file(char *filename,data_image data){
             exit(0);
         }
         fputs(data.Adress,file_pointer);  
+      fputs(" xyz\n",file_pointer);  
+    fclose(file_pointer);
+
 }
 /*from dec to bin */
 
