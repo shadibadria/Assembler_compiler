@@ -4,13 +4,14 @@
 
 #include<string.h>
 
-#define SIZEOFCODE 13
+#define SIZEOFCODE 5
 #define SIZEOFADRESS 5
 
 typedef struct data_image {
 
   char Adress[SIZEOFADRESS]; 
-  char code[SIZEOFCODE];
+  char opcode[SIZEOFCODE];
+  char funct[SIZEOFCODE];
   char TAG;
 }data_image;
 

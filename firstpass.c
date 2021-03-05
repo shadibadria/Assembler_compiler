@@ -52,7 +52,6 @@ int assemble_parsing(char * line) {
   printf("\n******************************\n");
   printf("\nCommand :%s\n", line);
   if(parse_line(line)==1){
-    printf("arrx:%s\n",arr[index_of_datatable].Adress);
 
   }
   

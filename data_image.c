@@ -13,8 +13,13 @@ void append_to_file(char *filename,data_image data){
             printf("error creating file %s \n",filename);
             exit(0);
         }
-        fputs(data.Adress,file_pointer);  
-      fputs(" xyz\n",file_pointer);  
+        fputs(data.Adress,file_pointer);
+        fputs("  ",file_pointer);
+ 
+        fputs(data.opcode,file_pointer);
+        fputs(data.funct,file_pointer);
+          fputs("\n",file_pointer);
+
     fclose(file_pointer);
 
 }

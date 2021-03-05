@@ -43,7 +43,7 @@ int main(int argc, char * argv[]) {
     append_to_file("ps.ob",arr[i]);
 
       printf("adress : %s\n",arr[i].Adress);
-            printf("command : %s\n",arr[i].code);
+            printf("command : %s\n",arr[i].opcode);
                           printf("\n**********************************\n");
 
         }

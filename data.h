@@ -12,8 +12,8 @@
 typedef struct command {
 
   char command_name[COMMAND_NAME_MAX_SIZE];
-  int funct;
-  int opcode;
+  char funct[5];
+  char opcode[5];
 
 }
 command;
@@ -24,3 +24,5 @@ int check_if_register(char * string);
 int check_for_reg(char * string);
 const char * reg[REGISTERS_COUNT];
 void init_registers();
+char command_code[13];
+int code_opcode_parsing(char *command_code,char *command_func);

@@ -9,93 +9,103 @@ void init_commands() {
   int i = 0;
   /*setting up commands*/
   strcpy(mycommands[i].command_name, "mov\0");
-  mycommands[i].opcode = 0;
-  mycommands[i].funct = 0;
+  strcpy(mycommands[i].opcode, "0000\0");
+  strcpy(mycommands[i].funct, "0000\0");
+
+ 
   i++;
   strcpy(mycommands[i].command_name, "cmp\0");
-  mycommands[i].opcode = 1;
-  mycommands[i].funct = 0;
+  strcpy(mycommands[i].opcode, "0001\0");
+  strcpy(mycommands[i].funct, "0000\0");
+ 
   i++;
   strcpy(mycommands[i].command_name, "add\0");
-  mycommands[i].opcode = 2;
-  mycommands[i].funct = 10;
+ strcpy(mycommands[i].opcode, "0010\0");
+  strcpy(mycommands[i].funct, "1010\0");
   i++;
   strcpy(mycommands[i].command_name, "sub\0");
-  mycommands[i].opcode = 2;
-  mycommands[i].funct = 11;
+  strcpy(mycommands[i].opcode, "0010\0");
+  strcpy(mycommands[i].funct, "1011\0");
+ 
   i++;
   strcpy(mycommands[i].command_name, "lea\0");
-  mycommands[i].opcode = 4;
-  mycommands[i].funct = 0;
+  strcpy(mycommands[i].opcode, "0100\0");
+  strcpy(mycommands[i].funct, "0000\0");
+
   i++;
 
   strcpy(mycommands[i].command_name, "clr\0");
-  mycommands[i].opcode = 5;
-  mycommands[i].funct = 10;
+  strcpy(mycommands[i].opcode, "0101\0");
+  strcpy(mycommands[i].funct, "1010\0");
+  
   i++;
 
   strcpy(mycommands[i].command_name, "not\0");
-  mycommands[i].opcode = 5;
-  mycommands[i].funct = 11;
+  strcpy(mycommands[i].opcode, "0101\0");
+  strcpy(mycommands[i].funct, "1011\0");
+ 
   i++;
 
   strcpy(mycommands[i].command_name, "inc\0");
-  mycommands[i].opcode = 5;
-  mycommands[i].funct = 12;
+  strcpy(mycommands[i].opcode, "0101\0");
+  strcpy(mycommands[i].funct, "1100\0");
+ 
   i++;
 
   strcpy(mycommands[i].command_name, "dec\0");
-  mycommands[i].opcode = 5;
-  mycommands[i].funct = 13;
+  strcpy(mycommands[i].opcode, "0101\0");
+  strcpy(mycommands[i].funct, "1101\0");
+
   i++;
 
   strcpy(mycommands[i].command_name, "jmp\0");
-  mycommands[i].opcode = 9;
-  mycommands[i].funct = 10;
+   strcpy(mycommands[i].opcode, "1001\0");
+  strcpy(mycommands[i].funct, "1010\0");
+ 
   i++;
 
   strcpy(mycommands[i].command_name, "bne\0");
-  mycommands[i].opcode = 9;
-  mycommands[i].funct = 11;
+   strcpy(mycommands[i].opcode, "1001\0");
+  strcpy(mycommands[i].funct, "1011\0");
+ 
   i++;
 
   strcpy(mycommands[i].command_name, "jsr\0");
-  mycommands[i].opcode = 9;
-  mycommands[i].funct = 12;
+ strcpy(mycommands[i].opcode, "1001\0");
+  strcpy(mycommands[i].funct, "1100\0");
   i++;
 
   strcpy(mycommands[i].command_name, "red\0");
-  mycommands[i].opcode = 12;
-  mycommands[i].funct = 0;
+  strcpy(mycommands[i].opcode, "1100\0");
+  strcpy(mycommands[i].funct, "0000\0");
   i++;
 
   strcpy(mycommands[i].command_name, "prn\0");
-  mycommands[i].opcode = 13;
-  mycommands[i].funct = 0;
+ strcpy(mycommands[i].opcode, "1101\0");
+  strcpy(mycommands[i].funct, "0000\0");
   i++;
 
   strcpy(mycommands[i].command_name, "rts\0");
-  mycommands[i].opcode = 14;
-  mycommands[i].funct = 0;
+  strcpy(mycommands[i].opcode, "1110\0");
+  strcpy(mycommands[i].funct, "0000\0");
   i++;
 
   strcpy(mycommands[i].command_name, "stop\0");
-  mycommands[i].opcode = 15;
-  mycommands[i].funct = 0;
+  strcpy(mycommands[i].opcode, "1111\0");
+  strcpy(mycommands[i].funct, "0000\0");
 
 }
 
 int check_command(char * command) {
   int i = 0;
+  
   command[strlen(command)] = '\0';
 
   for (i = 0; i < COMMANDS_AMOUNT; i++) {
     if (strcmp(mycommands[i].command_name, command) == 0) {
       sprintf(arr[index_of_datatable].Adress,"%d",IC);
       
-          sprintf(arr[index_of_datatable].code,"%d",mycommands[i].opcode);
-
-        index_of_datatable++;
+        code_opcode_parsing(mycommands[i].opcode,mycommands[i].funct);
         printf("COMMAND_IC:%d\n", IC);
         IC++;
       /* printf("Command_name :%s\nopcode :%d \nfunct: %d\n ",mycommands[i].command_name,mycommands[i].opcode,mycommands[i].funct);*/
@@ -104,7 +114,16 @@ int check_command(char * command) {
   }
   return 0;
 }
+int code_opcode_parsing(char *command_code,char *command_func){
 
+  printf("code:%s , func:%s\n",command_code,command_func);
+      sprintf(arr[index_of_datatable].opcode,"%s",command_code);
+      sprintf(arr[index_of_datatable].funct,"%s",command_func);
+
+
+        index_of_datatable++;
+  return 1;
+}
 int check_if_register(char * line) {
 
   int i = 0, j = 0;
