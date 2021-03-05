@@ -168,7 +168,7 @@ int check_if_extern(char * line) {
     return 0;
   } else {
 
-    insert(IC, 0, line, "external");
+    insert(IC+IC, 0, line, "external");
 
   }
   printf("\n\nits extern !!!\n");

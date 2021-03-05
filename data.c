@@ -114,11 +114,17 @@ int check_command(char * command) {
   }
   return 0;
 }
-int code_opcode_parsing(char *command_code,char *command_func){
+void bin_to_hex(char *bin_number){
 
-  printf("code:%s , func:%s\n",command_code,command_func);
-      sprintf(arr[index_of_datatable].opcode,"%s",command_code);
-      sprintf(arr[index_of_datatable].funct,"%s",command_func);
+}
+
+int code_opcode_parsing(char *command_code,char *command_func){
+  int number_temp=0;
+  number_temp=strtol(command_code,NULL,2);
+    sprintf(arr[index_of_datatable].opcode,"%X",number_temp);
+    number_temp=strtol(command_func,NULL,2);
+
+      sprintf(arr[index_of_datatable].funct,"%X",number_temp);
 
 
         index_of_datatable++;
