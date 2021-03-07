@@ -17,6 +17,7 @@ and to the RAM
 int IC = 100;
 int DC = 0;
 int count = 0;
+int extern symbol_table_counter;
 FILE * filePointer;
 char buffer[bufferLength];
 int extern index_of_datatable;
@@ -142,23 +143,8 @@ int check_if_extern(char * line) {
   i = i + 7;
   line = remove_spaces_from_index(line, i);
   i = 0;
-  while (line[i] != '\n' && line[i] != '\0') {
-    if (line[i] == ' ' || line[i] == '\t' || line[i] == '\n') {
-      break;
-    } else if (!isalpha(line[i])) {
-      printf("paramerter wrong\n");
-      return 0;
-    }
-    i++;
-  }
-  while (line[i] != '\n' && line[i] != '\0') {
-    if (line[i] != ' ' && line[i] != '\t' && line[i] != '\n' && isalpha(line[i])) {
-      printf("\n extern : must be 1 parameter :%c:\n", line[i]);
-      return 0;
-      break;
-    }
-    i++;
-  }
+
+  
   count++;
   line[strlen(line)] = '\0';
   remove_space_tabs(line);
@@ -167,8 +153,8 @@ int check_if_extern(char * line) {
     printf("ERROR duplicate found \n");
     return 0;
   } else {
-
-    insert(IC+IC, 0, line, "external");
+    printf("ic+ic=[%d]\n",IC+IC);
+    insert(symbol_table_counter++, 0, line, "external");
 
   }
   printf("\n\nits extern !!!\n");
@@ -210,7 +196,7 @@ int check_if_entry(char * line) {
   }
   count++;
   remove_space_tabs(line);
-
+  insert(symbol_table_counter++,IC,line,"entry");
   if (checkforduplicate(line) == 0) {
     printf("ERROR duplicate found \n");
     return 0;
@@ -289,7 +275,7 @@ int check_if_label(char * line) {
       temp[i] = '\n';
       printf("label:%s\n", remove_space_tabs(temp));
 
-      insert(IC, IC, remove_space_tabs(temp), "code");
+      insert(symbol_table_counter++, IC, remove_space_tabs(temp), "code");
       
       return 1;
     }

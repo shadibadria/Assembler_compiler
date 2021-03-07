@@ -1,7 +1,8 @@
 #include"symbol_table.h"
 
+int  symbol_table_counter=0;
 int capacity_table = 20;
-int size_table = 0;
+int size_table = 25;
 int hashcode(int key) {
   return (key % capacity_table);
 }
