@@ -14,15 +14,15 @@ typedef struct command {
   char command_name[COMMAND_NAME_MAX_SIZE];
   char funct[5];
   char opcode[5];
-
 }
 command;
 
 void init_commands();
 int check_command(char * command);
-int check_if_register(char * string);
-int check_for_reg(char * string);
+int  check_line(char * line);
 const char * reg[REGISTERS_COUNT];
 void init_registers();
 char command_code[13];
-int code_opcode_parsing(char *command_code,char *command_func);
+int code_opcode_parsing(char * command_code, char * command_func);
+
+int check_for_reg(char * string, int add_to_table_flag);

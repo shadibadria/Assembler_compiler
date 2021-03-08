@@ -21,6 +21,8 @@ int extern symbol_table_counter;
 FILE * filePointer;
 char buffer[bufferLength];
 int extern index_of_datatable;
+  int label_flag=0;
+
 /*
 param: filename of the assembly 
 functionality: function take file name and scan it and sent line to parsing
@@ -34,7 +36,6 @@ int firstpass(char * filename) {
   while (fgets(buffer, bufferLength, filePointer)) {
 
     assemble_parsing(buffer);
-   
 
   }
   return 0;
@@ -52,8 +53,9 @@ int assemble_parsing(char * line) {
   }
   printf("\n******************************\n");
   printf("\nCommand :%s\n", line);
+  label_flag=0;
   if(parse_line(line)==1){
-
+         
   }
   
   
@@ -66,19 +68,19 @@ functionality: parse the line to data we needby calling functions
 int parse_line(char * line) {
   int i = 0, j = 0;
   char temp[80];
-
   if (line[i] == ';') {
     printf("comment\n");
     return 0;
   }
 
   if (check_if_extern(line) == 1) {
-    return 1;
+    return 0;
   }
   if (check_if_entry(line) == 1) {
-    return 1;
+    return 0;
   }
-
+ 
+        label_flag=0;
   while (line[i] != '\0' && line[i] != '\n') {
     if (line[i] != ' ' && line[i] != '\t') {
       temp[j++] = line[i];
@@ -86,21 +88,24 @@ int parse_line(char * line) {
       temp[j] = '\0';
       if (j != 0) {
 
-        if (check_if_command(temp) == 1) {
+     
 
+         if (check_if_label(temp) == 1) {
+           label_flag=1;
         }
+  
 
-        if (check_if_label(temp) == 1) {
-
-        }
         if (check_if_its_data(line) == 1) {
-          return 1;
+          return 0;
         }
         if (check_if_its_string(line) == 1) {
-          return 1;
+          return 0;
 
         }
 
+      if (check_if_command(temp) == 1) {
+         find_adressing_method(line,label_flag);
+         }
       }
 
       j = 0;
@@ -114,7 +119,7 @@ int parse_line(char * line) {
 
     if (strlen(temp)) {
       if (check_if_command(temp) == 0) {
-        check_if_register(temp);
+        check_line(temp);
 
       }
 
@@ -123,7 +128,115 @@ int parse_line(char * line) {
 
   return 1;
 }
+int find_adressing_method(char *string,int label_flag){
 
+ int i=0;
+ char temp[80];
+ char last_bits[5]="0000\n";
+ int j=0,k=0,commaflag=0,number_temp=0;
+  if(label_flag==1){
+     while(string[i]!='\0'){
+       if(string[i]==':'){
+         break;
+       }
+      i++;
+    }
+    i++;
+}
+remove_spaces_from_index(string,i);
+string[strlen(string)]='\0';
+i=0;
+while(string[i]!='\0'){
+  if(string[i]==' '||string[i]=='\t'){
+    break;
+  }
+  i++;
+}
+remove_spaces_from_index(string,i);
+i=0;
+string[strlen(string)]='\0';
+
+printf("[%s]\n",string);
+while(string[i]!='\0'){
+
+  temp[j++]=string[i];
+  if(string[i]==','){
+    temp[j-1]='\0';
+    j=0;
+    commaflag=1;
+    printf("temp=%s\n",temp);
+    if(check_for_reg(temp,0)==1){
+      last_bits[k++]='1';
+      last_bits[k++]='1';
+    }else{
+       last_bits[k++]='0';
+      last_bits[k++]='0';
+    }
+
+
+  }
+    i++;
+     
+}
+
+temp[j]='\0';
+  printf("second:%s\n",temp);
+
+if(commaflag==1){
+  if(check_for_reg(temp,0)==1){
+     
+      last_bits[k++]='1';
+      last_bits[k++]='1';
+    }else
+    if(temp[0]=='#'){
+      last_bits[k++]='0';
+      last_bits[k++]='0';
+    }else
+    if(temp[0]=='%'){
+
+      last_bits[k++]='1';
+      last_bits[k++]='0';
+    }else{
+       last_bits[k++]='0';
+      last_bits[k++]='1';
+    }
+    
+}
+    if(commaflag==0){
+if(check_for_reg(temp,0)==1){
+      last_bits[k++]='0';
+      last_bits[k++]='0';
+      last_bits[k++]='1';
+      last_bits[k++]='1';
+    }else
+    if(temp[0]=='#'){
+      last_bits[k++]='0';
+      last_bits[k++]='0';
+      last_bits[k++]='0';
+      last_bits[k++]='0';
+
+    }else
+    if(temp[0]=='%'){
+      last_bits[k++]='0';
+      last_bits[k++]='0';
+      last_bits[k++]='1';
+      last_bits[k++]='0';
+    }else{
+      last_bits[k++]='0';
+      last_bits[k++]='1';
+    }
+
+    }
+   last_bits[5]='\0';
+   printf("lastbits:%s\n",last_bits);
+   number_temp = strtol(last_bits, NULL, 2);
+      sprintf(arr[index_of_datatable].adress_method, "%X", number_temp);
+  index_of_datatable++;
+
+   
+
+return 1;
+}
 /*
 param: line from file
 functionality: check if the line is .extern 
@@ -153,7 +266,6 @@ int check_if_extern(char * line) {
     printf("ERROR duplicate found \n");
     return 0;
   } else {
-    printf("ic+ic=[%d]\n",IC+IC);
     insert(symbol_table_counter++, 0, line, "external");
 
   }
@@ -270,6 +382,7 @@ int check_if_label(char * line) {
   int i = 0, j = 0;
   char temp[80];
   while (line[i] != '\n' && line[i] != '\0') {
+    if(line[i]!=' '&&line[i]!='\t')
     temp[j++] = line[i];
     if (line[i] == ':') {
       temp[i] = '\n';
@@ -317,7 +430,7 @@ void data_parsing(char * line) {
       val = strtol(p, & p, 10);
       printf("value:%ld\n", val);
       sprintf(arr[index_of_datatable].Adress,"%d",IC);
-  index_of_datatable++;
+      index_of_datatable++;
       printf("IC_DATA [%d]\n", IC);
       IC++;
     } else {
@@ -345,12 +458,12 @@ void string_parsing(char * line, int index) {
     printf("\nstr:%c\n", line[index]);
     index++;
       sprintf(arr[index_of_datatable].Adress,"%d",IC);
-  index_of_datatable++;
+      index_of_datatable++;
     printf("str_IC : %d\n", IC);
     IC++;
   }
     sprintf(arr[index_of_datatable].Adress,"%d",IC);
-  index_of_datatable++;
+    index_of_datatable++;
   printf("str_IC : %d\n", IC);
   IC++;
 

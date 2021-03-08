@@ -9,12 +9,14 @@
 
 typedef struct data_image {
 
-  char Adress[SIZEOFADRESS]; 
+  char Adress[SIZEOFADRESS];
   char opcode[SIZEOFCODE];
   char funct[SIZEOFCODE];
-  char TAG;
-}data_image;
+  char TAG[2];
+  char adress_method[SIZEOFCODE];
 
+}
+data_image;
 
 data_image arr[100];
-void append_to_file(char *filename,data_image data);
+void append_command_to_file(char * filename, data_image data);
