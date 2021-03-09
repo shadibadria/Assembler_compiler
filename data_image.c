@@ -22,14 +22,15 @@ void append_command_to_file(char * filename, data_image data) {
   fclose(file_pointer);
 
 }
-void append_register_to_file(char * filename, char * register_name) {
+void append_register_to_file(char * filename, char * register_number) {
   file_pointer = fopen(filename, "a");
   if (file_pointer == NULL) {
     printf("error creating file %s \n", filename);
     exit(0);
   }
-  fputs(register_name, file_pointer);
-  fputs("  ", file_pointer);
+
+  
+  fputs(register_number, file_pointer);
 
   fputs("\n", file_pointer);
 

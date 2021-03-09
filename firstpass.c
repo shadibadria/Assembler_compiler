@@ -5,6 +5,7 @@
 #include "symbol_table.h"
 
 #include"data_image.h"
+
 /*
 firstpass.c
 
@@ -21,7 +22,7 @@ int extern symbol_table_counter;
 FILE * filePointer;
 char buffer[bufferLength];
 int extern index_of_datatable;
-  int label_flag=0;
+int label_flag = 0;
 
 /*
 param: filename of the assembly 
@@ -53,12 +54,11 @@ int assemble_parsing(char * line) {
   }
   printf("\n******************************\n");
   printf("\nCommand :%s\n", line);
-  label_flag=0;
-  if(parse_line(line)==1){
-         
+  label_flag = 0;
+  if (parse_line(line) == 1) {
+
   }
-  
-  
+
   return 1;
 }
 /*
@@ -79,7 +79,7 @@ int parse_line(char * line) {
   if (check_if_entry(line) == 1) {
     return 0;
   }
- 
+
   while (line[i] != '\0' && line[i] != '\n') {
     if (line[i] != ' ' && line[i] != '\t') {
       temp[j++] = line[i];
@@ -87,14 +87,14 @@ int parse_line(char * line) {
       temp[j] = '\0';
       if (j != 0) {
 
-        printf("temp : %s\n",temp);
-         if (check_if_label(temp) == 1) {
-           label_flag=1;
+        printf("temp : %s\n", temp);
+        if (check_if_label(temp) == 1) {
+          label_flag = 1;
         }
-   if (check_if_command(temp) == 1) {
-         find_adressing_method(line,label_flag);
-         
-         }
+        if (check_if_command(temp) == 1) {
+          find_adressing_method(line, label_flag);
+
+        }
 
         if (check_if_its_data(line) == 1) {
           return 0;
@@ -109,17 +109,17 @@ int parse_line(char * line) {
     }
 
     i++;
-  }/*end while*/
+  } /*end while*/
 
   if (line[i] == '\n' || line[i] == '\0') {
-          temp[j] = '\0';
+    temp[j] = '\0';
 
- if (strlen(temp)) {
-      if(check_if_command(temp)==0)
+    if (strlen(temp)) {
+      if (check_if_command(temp) == 0)
         check_line(temp);
 
     }
-   
+
   }
 
   return 1;
@@ -128,124 +128,119 @@ int parse_line(char * line) {
 create bits for adressing methods
 
 */
-int find_adressing_method(char *string,int label_flag){
+int find_adressing_method(char * string, int label_flag) {
 
- int i=0;
- char temp[80];
- char *tempstring;
- char last_bits[5]="0000\n";
- int j=0,k=0,commaflag=0,number_temp=0;
+  int i = 0;
+  char temp[80];
+  char * tempstring;
+  char last_bits[5] = "0000\n";
+  int j = 0, k = 0, commaflag = 0, number_temp = 0;
 
-  tempstring= (char * ) malloc(strlen(string) * sizeof(char));
+  tempstring = (char * ) malloc(strlen(string) * sizeof(char));
   if (tempstring == NULL) {
     printf("Something Went Wrong no memory\n");
     return 0;
-    
-  }
-  strcpy(tempstring,string);
-  tempstring[strlen(tempstring)]='\0';
-  if(label_flag==1){
-     while(tempstring[i]!='\0'){
-       if(tempstring[i]==':'){
-               
 
-         break;
-       }
+  }
+  strcpy(tempstring, string);
+  tempstring[strlen(tempstring)] = '\0';
+  if (label_flag == 1) {
+    while (tempstring[i] != '\0') {
+      if (tempstring[i] == ':') {
+
+        break;
+      }
       i++;
     }
     i++;
-}
-remove_spaces_from_index(tempstring,i);
-tempstring[strlen(tempstring)]='\0';
-
-i=0;
-while(tempstring[i]!='\0'){
-  if(tempstring[i]==' '||tempstring[i]=='\t'){
-    break;
   }
-  i++;
-}
-remove_spaces_from_index(tempstring,i);
-i=0;
-tempstring[strlen(tempstring)]='\0';
+  remove_spaces_from_index(tempstring, i);
+  tempstring[strlen(tempstring)] = '\0';
 
-while(tempstring[i]!='\0'){
-
-  temp[j++]=tempstring[i];
-  if(tempstring[i]==','){
-    temp[j-1]='\0';
-    j=0;
-    commaflag=1;
-    if(check_for_reg(temp,0)==1){
-      last_bits[k++]='1';
-      last_bits[k++]='1';
-    }else{
-       last_bits[k++]='0';
-      last_bits[k++]='1';
+  i = 0;
+  while (tempstring[i] != '\0') {
+    if (tempstring[i] == ' ' || tempstring[i] == '\t') {
+      break;
     }
-
-
-  }
     i++;
-     
-}
-free(tempstring);
-temp[j]='\0';
+  }
+  remove_spaces_from_index(tempstring, i);
+  i = 0;
+  tempstring[strlen(tempstring)] = '\0';
 
-if(commaflag==1){
-  if(check_for_reg(temp,0)==1){
-     
-      last_bits[k++]='1';
-      last_bits[k++]='1';
-    }else
-    if(temp[0]=='#'){
-      last_bits[k++]='0';
-      last_bits[k++]='0';
-    }else
-    if(temp[0]=='%'){
+  while (tempstring[i] != '\0') {
 
-      last_bits[k++]='1';
-      last_bits[k++]='0';
-    }else{
-       last_bits[k++]='0';
-      last_bits[k++]='1';
-    }
-    
-}
-    if(commaflag==0){
-if(check_for_reg(temp,0)==1){
-      last_bits[k++]='0';
-      last_bits[k++]='0';
-      last_bits[k++]='1';
-      last_bits[k++]='1';
-    }else
-    if(temp[0]=='#'){
-      last_bits[k++]='0';
-      last_bits[k++]='0';
-      last_bits[k++]='0';
-      last_bits[k++]='0';
-
-    }else
-    if(temp[0]=='%'){
-      last_bits[k++]='0';
-      last_bits[k++]='0';
-      last_bits[k++]='1';
-      last_bits[k++]='0';
-    }else{
-      last_bits[k++]='0';
-      last_bits[k++]='1';
-    }
+    temp[j++] = tempstring[i];
+    if (tempstring[i] == ',') {
+      temp[j - 1] = '\0';
+      j = 0;
+      commaflag = 1;
+      if (check_for_reg(temp, 0) == 1) {
+        last_bits[k++] = '1';
+        last_bits[k++] = '1';
+      } else {
+        last_bits[k++] = '0';
+        last_bits[k++] = '1';
+      }
 
     }
-   last_bits[5]='\0';
-   number_temp = strtol(last_bits, NULL, 2);
-         printf("Lastbits:%s\n",last_bits);
+    i++;
 
-      sprintf(arr[index_of_datatable].adress_method, "%X", number_temp);
-      
+  }
+  free(tempstring);
+  temp[j] = '\0';
+
+  if (commaflag == 1) {
+    if (check_for_reg(temp, 0) == 1) {
+
+      last_bits[k++] = '1';
+      last_bits[k++] = '1';
+    } else
+    if (temp[0] == '#') {
+      last_bits[k++] = '0';
+      last_bits[k++] = '0';
+    } else
+    if (temp[0] == '%') {
+
+      last_bits[k++] = '1';
+      last_bits[k++] = '0';
+    } else {
+      last_bits[k++] = '0';
+      last_bits[k++] = '1';
+    }
+
+  }
+  if (commaflag == 0) {
+    if (check_for_reg(temp, 0) == 1) {
+      last_bits[k++] = '0';
+      last_bits[k++] = '0';
+      last_bits[k++] = '1';
+      last_bits[k++] = '1';
+    } else
+    if (temp[0] == '#') {
+      last_bits[k++] = '0';
+      last_bits[k++] = '0';
+      last_bits[k++] = '0';
+      last_bits[k++] = '0';
+
+    } else
+    if (temp[0] == '%') {
+      last_bits[k++] = '0';
+      last_bits[k++] = '0';
+      last_bits[k++] = '1';
+      last_bits[k++] = '0';
+    } else {
+      last_bits[k++] = '0';
+      last_bits[k++] = '1';
+    }
+
+  }
+  last_bits[5] = '\0';
+  number_temp = strtol(last_bits, NULL, 2);
+  printf("Lastbits:%s\n", last_bits);
+  sprintf(arr[index_of_datatable].adress_method, "%X", number_temp);
   index_of_datatable++;
-
-return 1;
+  return 1;
 }
 /*
 param: line from file
@@ -267,7 +262,6 @@ int check_if_extern(char * line) {
   line = remove_spaces_from_index(line, i);
   i = 0;
 
-  
   count++;
   line[strlen(line)] = '\0';
   remove_space_tabs(line);
@@ -318,7 +312,7 @@ int check_if_entry(char * line) {
   }
   count++;
   remove_space_tabs(line);
-  insert(symbol_table_counter++,IC,line,"entry");
+  insert(symbol_table_counter++, IC, line, "entry");
   if (checkforduplicate(line) == 0) {
     printf("ERROR duplicate found \n");
     return 0;
@@ -350,7 +344,7 @@ char * remove_spaces_from_index(char * string, int i) {
     }
     i++;
   }
-  while (string[i] != '\n'&&string[i]!='\0') {
+  while (string[i] != '\n' && string[i] != '\0') {
     newstring[j++] = string[i];
     i++;
   }
@@ -393,14 +387,14 @@ int check_if_label(char * line) {
   int i = 0, j = 0;
   char temp[80];
   while (line[i] != '\n' && line[i] != '\0') {
-    if(line[i]!=' '&&line[i]!='\t')
-    temp[j++] = line[i];
+    if (line[i] != ' ' && line[i] != '\t')
+      temp[j++] = line[i];
     if (line[i] == ':') {
       temp[i] = '\n';
       printf("label:%s\n", remove_space_tabs(temp));
 
       insert(symbol_table_counter++, IC, remove_space_tabs(temp), "code");
-      
+
       return 1;
     }
     i++;
@@ -440,7 +434,7 @@ void data_parsing(char * line) {
     if (isdigit( * p) || (( * p == '-' || * p == '+') && isdigit( * (p + 1)))) {
       val = strtol(p, & p, 10);
       printf("value:%ld\n", val);
-      sprintf(arr[index_of_datatable].Adress,"%d",IC);
+      sprintf(arr[index_of_datatable].Adress, "%d", IC);
       index_of_datatable++;
       printf("IC_DATA [%d]\n", IC);
       IC++;
@@ -468,13 +462,13 @@ void string_parsing(char * line, int index) {
   while (line[index] != '"' && line[index] != '\n' && line[index] != '\0') {
     printf("\nstr:%c\n", line[index]);
     index++;
-      sprintf(arr[index_of_datatable].Adress,"%d",IC);
-      index_of_datatable++;
+    sprintf(arr[index_of_datatable].Adress, "%d", IC);
+    index_of_datatable++;
     printf("str_IC : %d\n", IC);
     IC++;
   }
-    sprintf(arr[index_of_datatable].Adress,"%d",IC);
-    index_of_datatable++;
+  sprintf(arr[index_of_datatable].Adress, "%d", IC);
+  index_of_datatable++;
   printf("str_IC : %d\n", IC);
   IC++;
 
@@ -508,6 +502,5 @@ int check_if_command(char * line) {
     return 0;
   }
 
- 
   return 1;
 }

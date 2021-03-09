@@ -232,10 +232,11 @@ int check_for_reg(char * string, int add_to_table_flag) {
         printf("Register_IC:%d\n", IC);
         sprintf(arr[index_of_datatable].Adress, "%d", IC);
         IC++;
+              append_register_to_file("ps.ob",string);
+index_of_datatable++;
         return 1;
       }
-
-
+     
       return 1;
     }
   }
