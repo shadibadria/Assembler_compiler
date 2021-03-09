@@ -49,6 +49,16 @@ void display() {
     }
   }
 }
+char * find_label(char * label){
+   int i;
+  for (i = 0; i < capacity_table; i++) {
+    if (strcmp(array[i].symbol,label)==-1) {
+        
+        return "found";
+    }
+  }
+  return "?";
+}
 int checkforduplicate(char * symbol) {
 
   int i;

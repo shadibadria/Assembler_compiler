@@ -22,5 +22,4 @@ void insert(int key, int value, char * symbol, char * attribute);
 void display();
 int size_of_hashtable();
 int checkforduplicate(char * symbol);
-void init_array();
-void display();
+char * find_label(char * label);

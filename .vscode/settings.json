@@ -16,6 +16,7 @@
         "file_proccess.h": "c",
         "string": "c",
         "list": "c",
-        "data_image.h": "c"
+        "data_image.h": "c",
+        "random": "c"
     }
 }

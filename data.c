@@ -2,6 +2,7 @@
 
 #include"data_image.h"
 
+#include"symbol_table.h"
 int extern IC;
 int extern index_of_datatable;
 
@@ -146,6 +147,7 @@ int check_line(char * line) {
   int i = 0, j = 0;
   char temp[80];
   int comma_flag = 0;
+  int number_temp=0;
   while (line[i] != '\n' && line[i] != '\0') {
 
     temp[j++] = line[i];
@@ -156,6 +158,9 @@ int check_line(char * line) {
       if (check_for_reg(temp, 1) == 0) {
         printf("xother_IC:%d\n", IC);
         sprintf(arr[index_of_datatable].Adress, "%d", IC);
+        sprintf(arr[index_of_datatable].opcode,"%s", find_label(temp));
+
+      index_of_datatable++;
         index_of_datatable++;
         IC++;
 
@@ -177,16 +182,28 @@ int check_line(char * line) {
       i = 0;
       while (temp[i] != '\0') {
         if ((temp[i] == '#' && isdigit(temp[i + 1]) != 0) || (temp[i] == '#' && temp[i + 1] == '-' && isdigit(temp[i + 2]) != 0)) {
+
           printf("number_ic:%d\n", IC);
           sprintf(arr[index_of_datatable].Adress, "%d", IC);
+            memmove(temp,temp+1,strlen(temp));
+          printf("NUMBERIS :%s\n",temp);
+           number_temp = strtol(temp, NULL, 10);
+            sprintf(arr[index_of_datatable].opcode,"%.3X", number_temp);
+
           index_of_datatable++;
           IC++;
           return 1;
         }
         i++;
       }
-      printf("other_IC:%d \n", IC);
+      printf("hereother_IC:%d \n", IC);
+
+
+
       sprintf(arr[index_of_datatable].Adress, "%d", IC);
+      
+      sprintf(arr[index_of_datatable].opcode,"%s", find_label(temp));
+
       index_of_datatable++;
       IC++;
     }
@@ -200,6 +217,14 @@ int check_line(char * line) {
       if ((temp[i] == '#' && isdigit(temp[i + 1]) != 0) || (temp[i] == '#' && temp[i + 1] == '-' && isdigit(temp[i + 2]) != 0)) {
         printf("number_ic:%d\n", IC);
         sprintf(arr[index_of_datatable].Adress, "%d", IC);
+        memmove(temp,temp+1,strlen(temp));
+          printf("NUMBERIS :%s\n",temp);
+         
+           number_temp = strtol(temp, NULL, 10);
+                     printf("tempnum :%d\n",number_temp);
+
+            sprintf(arr[index_of_datatable].opcode,"%.5X", number_temp);
+
         index_of_datatable++;
         IC++;
         return 1;
@@ -212,6 +237,8 @@ int check_line(char * line) {
     if (temp[0] != '\0') {
       printf("other_IC:%d is:%s\n", IC, temp);
       sprintf(arr[index_of_datatable].Adress, "%d", IC);
+      sprintf(arr[index_of_datatable].opcode,"%s", find_label(temp));
+
       index_of_datatable++;
       IC++;
     }
