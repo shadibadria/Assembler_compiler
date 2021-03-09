@@ -130,10 +130,12 @@ then create hex value and insert it to the file
 int code_opcode_parsing(char * command_code, char * command_func) {
   int number_temp = 0;
   number_temp = strtol(command_code, NULL, 2);
+  printf("firsr 4 bits:%s",command_code);
   sprintf(arr[index_of_datatable].opcode, "%X", number_temp);
   number_temp = strtol(command_func, NULL, 2);
-
   sprintf(arr[index_of_datatable].funct, "%X", number_temp);
+  printf("%s\n",command_func);
+
   return 1;
 }
 /*
@@ -232,8 +234,8 @@ int check_for_reg(char * string, int add_to_table_flag) {
         IC++;
         return 1;
       }
-      
-  
+
+
       return 1;
     }
   }
