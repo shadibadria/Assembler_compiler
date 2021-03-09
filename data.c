@@ -227,6 +227,7 @@ int check_for_reg(char * string, int add_to_table_flag) {
   int i = 0;
   char register_maker[13]={"000000000000\n"};
   int number_temp=0;
+  register_maker[13]='\0';
   for (i = 0; i < REGISTERS_COUNT; i++) {
     if (!strcmp(reg[i], string)) {
              register_maker[11-i]='1';
@@ -240,11 +241,14 @@ int check_for_reg(char * string, int add_to_table_flag) {
         strncpy(arr[index_of_datatable].opcode,register_maker,4);
           number_temp = strtol(arr[index_of_datatable].opcode, NULL, 2);
          sprintf(arr[index_of_datatable].opcode, "%X", number_temp);
-      
-      
+         
         strncpy(arr[index_of_datatable].funct,register_maker+4,4);
-   
+        number_temp = strtol(arr[index_of_datatable].funct, NULL, 2);
+        sprintf(arr[index_of_datatable].funct, "%X", number_temp);
+
         strncpy(arr[index_of_datatable].adress_method,register_maker+8,12);
+        number_temp = strtol(arr[index_of_datatable].adress_method, NULL, 2);
+        sprintf(arr[index_of_datatable].adress_method, "%X", number_temp);
 
 
 
