@@ -225,15 +225,30 @@ check if value is register
 */
 int check_for_reg(char * string, int add_to_table_flag) {
   int i = 0;
-
+  char register_maker[13]={"000000000000\n"};
+  int number_temp=0;
   for (i = 0; i < REGISTERS_COUNT; i++) {
     if (!strcmp(reg[i], string)) {
+             register_maker[11-i]='1';
+                  
+
       if (add_to_table_flag == 1) {
         printf("Register_IC:%d\n", IC);
         sprintf(arr[index_of_datatable].Adress, "%d", IC);
         IC++;
-              append_register_to_file("ps.ob",string);
-index_of_datatable++;
+
+        strncpy(arr[index_of_datatable].opcode,register_maker,4);
+          number_temp = strtol(arr[index_of_datatable].opcode, NULL, 2);
+         sprintf(arr[index_of_datatable].opcode, "%X", number_temp);
+      
+      
+        strncpy(arr[index_of_datatable].funct,register_maker+4,4);
+   
+        strncpy(arr[index_of_datatable].adress_method,register_maker+8,12);
+
+
+
+      index_of_datatable++;
         return 1;
       }
      
