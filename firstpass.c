@@ -84,7 +84,7 @@ int parse_line(char * line) {
   if (check_if_extern(line) == 1) {
     return 0;
   }
-  if (check_if_entry(line) == 1) {
+ if (check_if_entry(line) == 1) {
     return 0;
   }
    if (check_if_label(line) == 1) {
@@ -319,11 +319,12 @@ int check_if_entry(char * line) {
   }
   count++;
   remove_space_tabs(line);
-  insert(DC++, IC, line, "entry");
   if (checkforduplicate(line) == 0) {
     printf("ERROR duplicate found \n");
     return 0;
   }
+  return 1;
+  insert(DC++, IC, line, "entry");
 
   printf("\n\nits entry !!!\n");
   return 1;
@@ -406,6 +407,9 @@ int check_if_label(char * line) {
       if(check_if_its_string(line,1)==1)
       {
       insert(DC++, IC, remove_space_tabs(temp), "data");
+
+      }else{
+              insert(DC++, IC, remove_space_tabs(temp), "code");
 
       }
 
