@@ -36,13 +36,13 @@ int main(int argc, char * argv[]) {
 
       if (check_file(filename)) {
         firstpass(argv[i]);
-    for(i=0;i<100;i++){
-        if(strlen(arr[i].Adress)>=1){
-    append_command_to_file("ps.ob",arr[i]);
-    close_file();
+        for (i = 0; i < 100; i++) {
+          if (strlen(arr[i].Adress) >= 1) {
+            append_command_to_file("ps.ob", arr[i]);
+            close_file();
 
+          }
         }
-    }
       }
 
       fclose(fp);

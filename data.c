@@ -3,6 +3,7 @@
 #include"data_image.h"
 
 #include"symbol_table.h"
+
 int extern IC;
 int extern index_of_datatable;
 
@@ -131,12 +132,12 @@ then create hex value and insert it to the file
 int code_opcode_parsing(char * command_code, char * command_func) {
   int number_temp = 0;
   number_temp = strtol(command_code, NULL, 2);
-  printf("firsr 4 bits:%s",command_code);
+  printf("firsr 4 bits:%s", command_code);
   sprintf(arr[index_of_datatable].opcode, "%X", number_temp);
   number_temp = strtol(command_func, NULL, 2);
   sprintf(arr[index_of_datatable].funct, "%X", number_temp);
   sprintf(arr[index_of_datatable].TAG, "%c", 'A');
-  printf("%s\n",command_func);
+  printf("%s\n", command_func);
 
   return 1;
 }
@@ -148,7 +149,7 @@ int check_line(char * line) {
   int i = 0, j = 0;
   char temp[80];
   int comma_flag = 0;
-  int number_temp=0;
+  int number_temp = 0;
   while (line[i] != '\n' && line[i] != '\0') {
 
     temp[j++] = line[i];
@@ -159,9 +160,9 @@ int check_line(char * line) {
       if (check_for_reg(temp, 1) == 0) {
         printf("xother_IC:%d\n", IC);
         sprintf(arr[index_of_datatable].Adress, "%d", IC);
-        sprintf(arr[index_of_datatable].opcode,"%s", find_label(temp));
+        sprintf(arr[index_of_datatable].opcode, "%s", find_label(temp));
 
-      index_of_datatable++;
+        index_of_datatable++;
         index_of_datatable++;
         IC++;
 
@@ -186,15 +187,15 @@ int check_line(char * line) {
 
           printf("number_ic:%d\n", IC);
           sprintf(arr[index_of_datatable].Adress, "%d", IC);
-            sprintf(arr[index_of_datatable].TAG, "%c", 'A');
+          sprintf(arr[index_of_datatable].TAG, "%c", 'A');
 
-            memmove(temp,temp+1,strlen(temp));
-           number_temp = strtol(temp, NULL, 10);
-            sprintf(arr[index_of_datatable].opcode,"%03X", number_temp);
-              if(number_temp<0){
-             arr[index_of_datatable].opcode[0]='\0';
-              arr[index_of_datatable].funct[4]='\0';  
-            }
+          memmove(temp, temp + 1, strlen(temp));
+          number_temp = strtol(temp, NULL, 10);
+          sprintf(arr[index_of_datatable].opcode, "%03X", number_temp);
+          if (number_temp < 0) {
+            arr[index_of_datatable].opcode[0] = '\0';
+            arr[index_of_datatable].funct[4] = '\0';
+          }
           index_of_datatable++;
           IC++;
           return 1;
@@ -203,11 +204,9 @@ int check_line(char * line) {
       }
       printf("hereother_IC:%d \n", IC);
 
-
-
       sprintf(arr[index_of_datatable].Adress, "%d", IC);
-      
-      sprintf(arr[index_of_datatable].opcode,"%s", find_label(temp));
+
+      sprintf(arr[index_of_datatable].opcode, "%s", find_label(temp));
 
       index_of_datatable++;
       IC++;
@@ -222,19 +221,19 @@ int check_line(char * line) {
       if ((temp[i] == '#' && isdigit(temp[i + 1]) != 0) || (temp[i] == '#' && temp[i + 1] == '-' && isdigit(temp[i + 2]) != 0)) {
         printf("number_ic:%d\n", IC);
         sprintf(arr[index_of_datatable].Adress, "%d", IC);
-        memmove(temp,temp+1,strlen(temp));
-          printf("NUMBERIS :%s\n",temp);
-                     sprintf(arr[index_of_datatable].TAG, "%c", 'A');
+        memmove(temp, temp + 1, strlen(temp));
+        printf("NUMBERIS :%s\n", temp);
+        sprintf(arr[index_of_datatable].TAG, "%c", 'A');
 
-           number_temp = strtol(temp, NULL, 10);
-                     printf("tempnum :%d\n",number_temp);
+        number_temp = strtol(temp, NULL, 10);
+        printf("tempnum :%d\n", number_temp);
 
-            sprintf(arr[index_of_datatable].opcode,"%03X", number_temp);
-            if(number_temp<0){
-             arr[index_of_datatable].opcode[0]='\0';
-              arr[index_of_datatable].funct[4]='\0';  
-            }
-               
+        sprintf(arr[index_of_datatable].opcode, "%03X", number_temp);
+        if (number_temp < 0) {
+          arr[index_of_datatable].opcode[0] = '\0';
+          arr[index_of_datatable].funct[4] = '\0';
+        }
+
         index_of_datatable++;
         IC++;
         return 1;
@@ -247,7 +246,7 @@ int check_line(char * line) {
     if (temp[0] != '\0') {
       printf("other_IC:%d is:%s\n", IC, temp);
       sprintf(arr[index_of_datatable].Adress, "%d", IC);
-      sprintf(arr[index_of_datatable].opcode,"%s", find_label(temp));
+      sprintf(arr[index_of_datatable].opcode, "%s", find_label(temp));
 
       index_of_datatable++;
       IC++;
@@ -262,38 +261,37 @@ check if value is register
 */
 int check_for_reg(char * string, int add_to_table_flag) {
   int i = 0;
-  char register_maker[13]={"000000000000\n"};
-  int number_temp=0;
-  register_maker[13]='\0';
+  char register_maker[13] = {
+    "000000000000\n"
+  };
+  int number_temp = 0;
+  register_maker[13] = '\0';
   for (i = 0; i < REGISTERS_COUNT; i++) {
     if (!strcmp(reg[i], string)) {
-             register_maker[11-i]='1';
-                  
+      register_maker[11 - i] = '1';
 
       if (add_to_table_flag == 1) {
         printf("Register_IC:%d\n", IC);
         sprintf(arr[index_of_datatable].Adress, "%d", IC);
         IC++;
 
-        strncpy(arr[index_of_datatable].opcode,register_maker,4);
-          number_temp = strtol(arr[index_of_datatable].opcode, NULL, 2);
-         sprintf(arr[index_of_datatable].opcode, "%X", number_temp);
-         
-        strncpy(arr[index_of_datatable].funct,register_maker+4,4);
+        strncpy(arr[index_of_datatable].opcode, register_maker, 4);
+        number_temp = strtol(arr[index_of_datatable].opcode, NULL, 2);
+        sprintf(arr[index_of_datatable].opcode, "%X", number_temp);
+
+        strncpy(arr[index_of_datatable].funct, register_maker + 4, 4);
         number_temp = strtol(arr[index_of_datatable].funct, NULL, 2);
         sprintf(arr[index_of_datatable].funct, "%X", number_temp);
 
-        strncpy(arr[index_of_datatable].adress_method,register_maker+8,12);
+        strncpy(arr[index_of_datatable].adress_method, register_maker + 8, 12);
         number_temp = strtol(arr[index_of_datatable].adress_method, NULL, 2);
         sprintf(arr[index_of_datatable].adress_method, "%X", number_temp);
         sprintf(arr[index_of_datatable].TAG, "%c", 'A');
 
-
-
-      index_of_datatable++;
+        index_of_datatable++;
         return 1;
       }
-     
+
       return 1;
     }
   }

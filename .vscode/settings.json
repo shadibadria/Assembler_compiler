@@ -17,6 +17,7 @@
         "string": "c",
         "list": "c",
         "data_image.h": "c",
-        "random": "c"
+        "random": "c",
+        "string.h": "c"
     }
 }

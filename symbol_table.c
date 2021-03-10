@@ -1,6 +1,6 @@
 #include"symbol_table.h"
 
-int  symbol_table_counter=0;
+int symbol_table_counter = 0;
 int capacity_table = 20;
 int size_table = 25;
 int hashcode(int key) {
@@ -49,12 +49,12 @@ void display() {
     }
   }
 }
-char * find_label(char * label){
-   int i;
+char * find_label(char * label) {
+  int i;
   for (i = 0; i < capacity_table; i++) {
-    if (strcmp(array[i].symbol,label)==-1) {
-        
-        return "found";
+    if (strcmp(array[i].symbol, label) == -1) {
+
+      return "found";
     }
   }
   return "?";

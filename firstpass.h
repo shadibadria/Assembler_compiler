@@ -21,4 +21,4 @@ int check_if_its_string(char * line);
 void data_parsing(char * line);
 void string_parsing(char * line, int index);
 int check_if_command(char * line);
-int find_adressing_method(char *string,int label_flag);
+int find_adressing_method(char * string, int label_flag);
