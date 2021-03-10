@@ -434,8 +434,12 @@ void data_parsing(char * line) {
     if (isdigit( * p) || (( * p == '-' || * p == '+') && isdigit( * (p + 1)))) {
       val = strtol(p, & p, 10);
      sprintf(arr[index_of_datatable].Adress, "%d", IC);
-      sprintf(arr[index_of_datatable].opcode, "%X", val);
-
+      sprintf(arr[index_of_datatable].opcode, "%03X", val);
+      sprintf(arr[index_of_datatable].TAG, "%c", 'A');
+   if(val<0){
+             arr[index_of_datatable].opcode[0]='\0';
+              arr[index_of_datatable].funct[4]='\0';  
+            }
       index_of_datatable++;
       printf("IC_DATA [%d]\n", IC);
       IC++;
@@ -468,6 +472,7 @@ int ascii=0;
     printf("ascii:%d\n",ascii);
     sprintf(arr[index_of_datatable].opcode, "%X", 0);
         sprintf(arr[index_of_datatable].funct, "%X", ascii);
+      sprintf(arr[index_of_datatable].TAG, "%c", 'A');
 
     index_of_datatable++;
     printf("str_IC : %d\n", IC);
@@ -478,7 +483,8 @@ int ascii=0;
   sprintf(arr[index_of_datatable].Adress, "%d", IC);
       ascii=0;
 
-  sprintf(arr[index_of_datatable].opcode, "%X", ascii);
+  sprintf(arr[index_of_datatable].opcode, "%03X", ascii);
+      sprintf(arr[index_of_datatable].TAG, "%c", 'A');
 
   index_of_datatable++;
   printf("str_IC : %d\n", IC);

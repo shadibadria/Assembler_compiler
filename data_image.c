@@ -13,10 +13,13 @@ void append_command_to_file(char * filename, data_image data) {
   }
  
   fputs(data.Adress, file_pointer);
-  fputs("  ", file_pointer);
+  fputs("    ", file_pointer);
   fputs(data.opcode, file_pointer);
   fputs(data.funct, file_pointer);
   fputs(data.adress_method, file_pointer);
+    fputs("      ", file_pointer);
+  fputs(data.TAG, file_pointer);
+
   fputs("\n", file_pointer);
 
 
