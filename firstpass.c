@@ -18,7 +18,6 @@ and to the RAM
 int IC = 100;
 int DC = 0;
 int count = 0;
-int extern symbol_table_counter;
 FILE * filePointer;
 char buffer[bufferLength];
 int extern index_of_datatable;
@@ -29,6 +28,7 @@ param: filename of the assembly
 functionality: function take file name and scan it and sent line to parsing
 */
 int firstpass(char * filename) {
+  int i=0;
   filePointer = fopen(filename, "r");
   if (filePointer == NULL) {
     printf("\ncant open file \n");
@@ -39,6 +39,14 @@ int firstpass(char * filename) {
     assemble_parsing(buffer);
 
   }
+      for (i = 0; i < 100; i++) {
+          if (strlen(arr[i].Adress) >= 1) {
+            append_command_to_file("ps.ob", arr[i]);
+            close_file();
+
+          }
+        }
+        fclose(filePointer);
   return 0;
 }
 
@@ -79,7 +87,9 @@ int parse_line(char * line) {
   if (check_if_entry(line) == 1) {
     return 0;
   }
-
+   if (check_if_label(line) == 1) {
+          label_flag = 1;
+        }
   while (line[i] != '\0' && line[i] != '\n') {
     if (line[i] != ' ' && line[i] != '\t') {
       temp[j++] = line[i];
@@ -87,19 +97,16 @@ int parse_line(char * line) {
       temp[j] = '\0';
       if (j != 0) {
 
-        printf("temp : %s\n", temp);
-        if (check_if_label(temp) == 1) {
-          label_flag = 1;
-        }
+     
         if (check_if_command(temp) == 1) {
           find_adressing_method(line, label_flag);
 
         }
 
-        if (check_if_its_data(line) == 1) {
+        if (check_if_its_data(line,0) == 1) {
           return 0;
         }
-        if (check_if_its_string(line) == 1) {
+        if (check_if_its_string(line,0) == 1) {
           return 0;
 
         }
@@ -270,7 +277,7 @@ int check_if_extern(char * line) {
     printf("ERROR duplicate found \n");
     return 0;
   } else {
-    insert(symbol_table_counter++, 0, line, "external");
+    insert(DC++, 0, line, "external");
 
   }
   printf("\n\nits extern !!!\n");
@@ -312,7 +319,7 @@ int check_if_entry(char * line) {
   }
   count++;
   remove_space_tabs(line);
-  insert(symbol_table_counter++, IC, line, "entry");
+  insert(DC++, IC, line, "entry");
   if (checkforduplicate(line) == 0) {
     printf("ERROR duplicate found \n");
     return 0;
@@ -392,8 +399,15 @@ int check_if_label(char * line) {
     if (line[i] == ':') {
       temp[i] = '\n';
       printf("label:%s\n", remove_space_tabs(temp));
+      if(check_if_its_data(line,1)==1){
+      insert(DC++, IC, remove_space_tabs(temp), "data");
 
-      insert(symbol_table_counter++, IC, remove_space_tabs(temp), "code");
+      }else
+      if(check_if_its_string(line,1)==1)
+      {
+      insert(DC++, IC, remove_space_tabs(temp), "data");
+
+      }
 
       return 1;
     }
@@ -405,15 +419,17 @@ int check_if_label(char * line) {
 param: line from file
 functionality: check if its data
 */
-int check_if_its_data(char * line) {
+int check_if_its_data(char * line,int test) {
 
   int i = 0;
-
   while (line[i] != '\n' && line[i] != '\0') {
     if (line[i] == '.') {
       if (line[i + 1] == 'd' && line[i + 2] == 'a' && line[i + 3] == 't' && line[i + 4] == 'a') {
-        printf("its data\n");
+        if(test==0){
         data_parsing(line);
+        return 1;
+        }
+        printf("its data\n");
         return 1;
       }
     }
@@ -433,7 +449,7 @@ void data_parsing(char * line) {
 
     if (isdigit( * p) || (( * p == '-' || * p == '+') && isdigit( * (p + 1)))) {
       val = strtol(p, & p, 10);
-      sprintf(arr[index_of_datatable].Adress, "%d", IC);
+      sprintf(arr[index_of_datatable].Adress, "%04d", IC);
       sprintf(arr[index_of_datatable].opcode, "%03X", val);
       sprintf(arr[index_of_datatable].TAG, "%c", 'A');
       if (val < 0) {
@@ -441,7 +457,6 @@ void data_parsing(char * line) {
         arr[index_of_datatable].funct[4] = '\0';
       }
       index_of_datatable++;
-      printf("IC_DATA [%d]\n", IC);
       IC++;
     } else {
       p++;
@@ -455,7 +470,7 @@ void data_parsing(char * line) {
 param: string  line
 functionality: get data input to array
 */
-void string_parsing(char * line, int index) {
+int  string_parsing(char * line, int index) {
   int ascii = 0;
   while (line[index] != '\n' && line[index] != '\0') {
     if (line[index] == '"') {
@@ -465,22 +480,21 @@ void string_parsing(char * line, int index) {
   }
   index++;
   while (line[index] != '"' && line[index] != '\n' && line[index] != '\0') {
+    
     printf("\nstr:%c\n", line[index]);
 
-    sprintf(arr[index_of_datatable].Adress, "%d", IC);
+    sprintf(arr[index_of_datatable].Adress, "%04d", IC);
     ascii = (int) line[index];
     printf("ascii:%d\n", ascii);
     sprintf(arr[index_of_datatable].opcode, "%X", 0);
     sprintf(arr[index_of_datatable].funct, "%X", ascii);
     sprintf(arr[index_of_datatable].TAG, "%c", 'A');
-
     index_of_datatable++;
-    printf("str_IC : %d\n", IC);
+    printf("str_IC      : %d\n", IC);
     IC++;
     index++;
-
   }
-  sprintf(arr[index_of_datatable].Adress, "%d", IC);
+  sprintf(arr[index_of_datatable].Adress, "%04d", IC);
   ascii = 0;
 
   sprintf(arr[index_of_datatable].opcode, "%03X", ascii);
@@ -489,18 +503,22 @@ void string_parsing(char * line, int index) {
   index_of_datatable++;
   printf("str_IC : %d\n", IC);
   IC++;
-
+return 1;
 }
 /*
 param: line from file
 functionality: check if its string
 */
-int check_if_its_string(char * line) {
+int check_if_its_string(char * line,int test) {
   int i = 0;
   while (line[i] != '\n' && line[i] != '\0') {
     if (line[i] == '.') {
       if (line[i + 1] == 's' && line[i + 2] == 't' && line[i + 3] == 'r' && line[i + 4] == 'i' && line[i + 5] == 'n' && line[i + 6] == 'g') {
+      
         printf("its string\n");
+          if(test==1){
+          return 1;
+        }
         string_parsing(line, i + 7);
         return 1;
       }

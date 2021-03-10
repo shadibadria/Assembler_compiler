@@ -6,14 +6,19 @@
 
 #include"file_proccess.h"
 
-
 #include"symbol_table.h"
 
 #include"data.h"
 
-
 #include"data_image.h"
 
+/*
+Main function 
+role:
+call for first pass 
+call for second pass
+open/close file
+*/
 int main(int argc, char * argv[]) {
 
   int i = 0;
@@ -35,14 +40,9 @@ int main(int argc, char * argv[]) {
       strcpy(filename, argv[i]);
 
       if (check_file(filename)) {
-        firstpass(argv[i]);
-        for (i = 0; i < 100; i++) {
-          if (strlen(arr[i].Adress) >= 1) {
-            append_command_to_file("ps.ob", arr[i]);
-            close_file();
 
-          }
-        }
+        firstpass(argv[i]);/*First Pass*/
+    
       }
 
       fclose(fp);

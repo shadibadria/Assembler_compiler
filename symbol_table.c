@@ -1,6 +1,5 @@
 #include"symbol_table.h"
 
-int symbol_table_counter = 0;
 int capacity_table = 20;
 int size_table = 25;
 int hashcode(int key) {
@@ -27,7 +26,7 @@ void insert(int key, int value, char * symbol, char * attribute) {
     strcpy(array[index].symbol, symbol);
     strcpy(array[index].attribute, attribute);
     size_table++;
-    /*printf("\n Key (%d) has been inserted \n", key);*/
+   printf("\n Key (%d) has been inserted \n", key);
   } else if (array[index].key_value == key) {
     /*  updating already existing key  */
     printf("\n Key (%d) already present, hence updating its value \n", key);
