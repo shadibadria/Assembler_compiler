@@ -4,6 +4,9 @@
 #include<stdlib.h>
 #include"firstpass.h"
 
+#include "symbol_table.h"
+
+#include"data_image.h"
 FILE * filePointer;
 char buffer[bufferLength];
 
@@ -16,9 +19,9 @@ int secondpass(char *filename){
   while (fgets(buffer, bufferLength, filePointer)) {
 
     secondpass_pasrsing(buffer);
-
   }
-     
+     fill_table();
+
         fclose(filePointer);
   return 0;
 
@@ -68,3 +71,23 @@ i++;
     return 1;
 }
 
+void fill_table(){
+
+int i=0,j;
+for(i=0;i<100;i++){
+if(strcmp(arr[i].opcode,"?")==0){
+
+  for(j=0;j<100;j++){
+        printf("array:%s\n",array[j].value);
+    printf("arr:%s\n",arr[i].Adress);
+
+ if(strcmp(arr[i].Adress,array[j].value)==0){
+  printf("*************************found ? :%s\n",arr[i].opcode);
+
+  }
+  }
+ 
+}
+}
+
+}

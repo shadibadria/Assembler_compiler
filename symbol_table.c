@@ -1,6 +1,6 @@
 #include"symbol_table.h"
 
-int capacity_table = 20;
+int capacity_table = 100;
 int size_table = 25;
 int hashcode(int key) {
   return (key % capacity_table);
@@ -32,8 +32,8 @@ void insert(int key, int value, char * symbol, char * attribute) {
     /*  key not present, insert it  */
     array[index].key_value = key;
     array[index].amount = 1;
-    array[index].value = value;
 
+    sprintf(array[index].value,"%04d",value);
     strcpy(array[index].symbol, symbol);
     strcpy(array[index].attribute, attribute);
     size_table++;
@@ -55,7 +55,7 @@ void display() {
     if (array[i].amount == 0) {
 
     } else {
-      printf("\n--------------------\nkey= %d \nvalue = %d\nsymbol = %s \nattr= %s\n--------------------\n", array[i].key_value, array[i].value, array[i].symbol, array[i].attribute);
+      printf("\n--------------------\nkey= %d \nvalue = %s\nsymbol = %s \nattr= %s\n--------------------\n", array[i].key_value, array[i].value, array[i].symbol, array[i].attribute);
     }
   }
 }

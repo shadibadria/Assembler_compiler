@@ -411,6 +411,7 @@ int check_if_label(char * line,int test) {
       temp[i] = '\n';
       printf("label:%s\n", remove_space_tabs(temp));
       if(check_if_its_data(line,1)==1){
+
       insert(DC++, IC, remove_space_tabs(temp), "data");
 
       }else

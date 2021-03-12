@@ -8,7 +8,7 @@
 struct data {
   int key_value;
   int amount; /*if value is more than 1 (same adress twice)*/
-  int value;
+  char value[15];
   char symbol[15];
   char attribute[15];
 };
