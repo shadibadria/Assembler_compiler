@@ -13,7 +13,18 @@ void init_array() {
 
   }
 }
+void insert_entry(char * symbol){
 
+int i;
+
+  for (i = 0; i < capacity_table; i++) {
+    if (strcmp(array[i].symbol ,symbol)==0) {
+            printf("STR:%s\n",symbol);
+
+      strcat(array[i].attribute,",entry" );
+    }
+}
+}
 /* to insert a key in the hash table */
 void insert(int key, int value, char * symbol, char * attribute) {
   int index = hashcode(key);
@@ -61,9 +72,10 @@ char * find_label(char * label) {
 int checkforduplicate(char * symbol) {
 
   int i;
+        printf("Symbol :%s\n",symbol);
+
   for (i = 0; i < capacity_table; i++) {
-    /* printf("\ndatabase:[%s]=value:[%s]\n",array[i].symbol,symbol);*/
-    if (array[i].symbol == symbol) {
+    if (strcmp(array[i].symbol,symbol)==0) {
       printf("Symbol Already Exsist \n");
       return 0;
     }

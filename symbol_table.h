@@ -23,3 +23,4 @@ void display();
 int size_of_hashtable();
 int checkforduplicate(char * symbol);
 char * find_label(char * label);
+void insert_entry(char * symbol);

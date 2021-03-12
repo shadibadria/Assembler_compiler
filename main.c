@@ -4,6 +4,8 @@
 
 #include"firstpass.h"
 
+#include"second_pass.h"
+
 #include"file_proccess.h"
 
 #include"symbol_table.h"
@@ -42,7 +44,8 @@ int main(int argc, char * argv[]) {
       if (check_file(filename)) {
 
         firstpass(argv[i]);/*First Pass*/
-    
+        secondpass(argv[i]);/*First Pass*/
+
       }
 
       fclose(fp);

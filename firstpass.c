@@ -81,13 +81,13 @@ int parse_line(char * line) {
     return 0;
   }
 
-  if (check_if_extern(line) == 1) {
+  if (check_if_extern(line,0) == 1) {
     return 0;
   }
- if (check_if_entry(line) == 1) {
+ if (check_if_entry(line,0) == 1) {
     return 0;
   }
-   if (check_if_label(line) == 1) {
+   if (check_if_label(line,0) == 1) {
           label_flag = 1;
         }
   while (line[i] != '\0' && line[i] != '\n') {
@@ -254,7 +254,7 @@ param: line from file
 functionality: check if the line is .extern 
 */
 
-int check_if_extern(char * line) {
+int check_if_extern(char * line,int test) {
   int i = 0;
   line[strlen(line)] = '\n';
   if (strlen(line) < 7) {
@@ -265,6 +265,9 @@ int check_if_extern(char * line) {
   if (line[i] != '.' || line[i + 1] != 'e' || line[i + 2] != 'x' || line[i + 3] != 't' || line[i + 4] != 'e' || line[i + 5] != 'r' || line[i + 6] != 'n' || (line[i + 7] != ' ' && line[i + 7] != '\t')) {
     return 0;
   }
+  if(test==1){
+    return 1;
+  }
   i = i + 7;
   line = remove_spaces_from_index(line, i);
   i = 0;
@@ -272,14 +275,11 @@ int check_if_extern(char * line) {
   count++;
   line[strlen(line)] = '\0';
   remove_space_tabs(line);
-
-  if (checkforduplicate(line) == 0) {
+if (checkforduplicate(line) == 0) {
     printf("ERROR duplicate found \n");
     return 0;
-  } else {
-    insert(DC++, 0, line, "external");
-
   }
+ 
   printf("\n\nits extern !!!\n");
   return 1;
 }
@@ -288,7 +288,7 @@ int check_if_extern(char * line) {
 param: line from file
 functionality: check if its entry line
 */
-int check_if_entry(char * line) {
+int check_if_entry(char * line,int test) {
   int i = 0;
   line[strlen(line)] = '\n';
   if (strlen(line) < 7) {
@@ -319,12 +319,19 @@ int check_if_entry(char * line) {
   }
   count++;
   remove_space_tabs(line);
-  if (checkforduplicate(line) == 0) {
-    printf("ERROR duplicate found \n");
+  if(test==0){
+    return 1;
+  }
+   if (checkforduplicate(line) == 0) {
+        insert_entry(line);
+
+   
+  } else {
+ printf("ERROR: entry not found in symbol table \n");
     return 0;
   }
-  return 1;
-  insert(DC++, IC, line, "entry");
+  
+  
 
   printf("\n\nits entry !!!\n");
   return 1;
@@ -391,13 +398,16 @@ char * remove_space_tabs(char * string) {
 param: line from file
 functionality: check if its label
 */
-int check_if_label(char * line) {
+int check_if_label(char * line,int test) {
   int i = 0, j = 0;
   char temp[80];
   while (line[i] != '\n' && line[i] != '\0') {
     if (line[i] != ' ' && line[i] != '\t')
       temp[j++] = line[i];
     if (line[i] == ':') {
+      if(test==1){
+        return 1;
+      }
       temp[i] = '\n';
       printf("label:%s\n", remove_space_tabs(temp));
       if(check_if_its_data(line,1)==1){
@@ -433,6 +443,7 @@ int check_if_its_data(char * line,int test) {
         data_parsing(line);
         return 1;
         }
+        
         printf("its data\n");
         return 1;
       }
