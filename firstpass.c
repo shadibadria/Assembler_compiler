@@ -39,13 +39,7 @@ int firstpass(char * filename) {
     assemble_parsing(buffer);
 
   }
-      for (i = 0; i < 100; i++) {
-          if (strlen(arr[i].Adress) >= 1) {
-            append_command_to_file("ps.ob", arr[i]);
-            close_file();
-
-          }
-        }
+    
        
         fclose(filePointer);
   return 0;

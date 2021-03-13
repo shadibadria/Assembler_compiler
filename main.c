@@ -45,7 +45,13 @@ int main(int argc, char * argv[]) {
 
         firstpass(argv[i]);/*First Pass*/
         secondpass(argv[i]);/*First Pass*/
+       for (i = 0; i < 100; i++) {
+          if (strlen(arr[i].Adress) >= 1) {
+            append_command_to_file("ps.ob", arr[i]);
+            close_file();
 
+          }
+        }
       }
 
       fclose(fp);

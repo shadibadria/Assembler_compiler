@@ -75,21 +75,23 @@ i++;
 
 void fill_table(){
 
-int i=0,j;
+int i=0,j,number_temp;
 for(i=0;i<100;i++){
+
 if(strcmp(arr[i].opcode,"?")==0){
 
   for(j=0;j<100;j++){
-        printf("array:%s\n",array[j].value);
-    printf("arr:%s\n",arr[i].Adress);
 
- if(strcmp(arr[i].Adress,array[j].value)==0){
-  printf("*************************found ? :%s\n",arr[i].opcode);
-
+    if(strstr(arr[i].label_name,array[j].symbol)){
+                    printf("table[%s] , symboltable[%s]\n",arr[i].label_name,array[j].symbol);
+                    number_temp = strtol(array[j].value, NULL, 10);
+                    printf("NUMBER:%d\n",number_temp);
+            sprintf(arr[i].opcode,"%X",number_temp);
+        printf("value[%s]\n",array[i].value);
+        break;
+    }
   }
-  }
- 
-}
 }
 
+}
 }

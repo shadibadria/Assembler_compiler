@@ -160,8 +160,15 @@ int check_line(char * line) {
       if (check_for_reg(temp, 1) == 0) {
         printf("xother_IC:%d\n", IC);
         sprintf(arr[index_of_datatable].Adress, "%04d", IC);
-        sprintf(arr[index_of_datatable].opcode, "%s", find_label(temp));
+ if(strcmp(find_label(temp),"?")==0){
+        
+      sprintf(arr[index_of_datatable].label_name, "%s",temp );
+                    sprintf(arr[index_of_datatable].opcode, "%s","?" );
 
+      }else{
+              sprintf(arr[index_of_datatable].opcode, "%s","found" );
+
+      }
         index_of_datatable++;
         index_of_datatable++;
         IC++;
@@ -206,8 +213,14 @@ int check_line(char * line) {
 
       sprintf(arr[index_of_datatable].Adress, "%04d", IC);
 
-      sprintf(arr[index_of_datatable].opcode, "%s", find_label(temp));
+ if(strcmp(find_label(temp),"?")==0){
+        
+      sprintf(arr[index_of_datatable].label_name, "%s",temp );
+      sprintf(arr[index_of_datatable].opcode, "%s","?" );
+      }else{
+              sprintf(arr[index_of_datatable].opcode, "%s","found" );
 
+      }
       index_of_datatable++;
       IC++;
     }
@@ -244,10 +257,16 @@ int check_line(char * line) {
     i = 0;
     remove_space_tabs(temp);
     if (temp[0] != '\0') {
-      printf("other_IC:%d is:%s\n", IC, temp);
+      printf("other_IC:%d istemp:%s\n", IC, temp);
       sprintf(arr[index_of_datatable].Adress, "%04d", IC);
-      sprintf(arr[index_of_datatable].opcode, "%s", find_label(temp));
+      if(strcmp(find_label(temp),"?")==0){
+        
+      sprintf(arr[index_of_datatable].label_name, "%s",temp );
+      sprintf(arr[index_of_datatable].opcode, "%s","?" );
+      }else{
+              sprintf(arr[index_of_datatable].opcode, "%s","found" );
 
+      }
       index_of_datatable++;
       IC++;
     }

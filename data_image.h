@@ -14,6 +14,7 @@ typedef struct data_image {
   char funct[SIZEOFCODE];
   char TAG[2];
   char adress_method[SIZEOFCODE];
+  char label_name[SIZEOFCODE];
 
 }
 data_image;
