@@ -23,6 +23,8 @@ void append_command_to_file(char * filename, data_image data) {
   fputs("\n", file_pointer);
 
 }
+
+
 void append_register_to_file(char * filename, char * register_number) {
   file_pointer = fopen(filename, "a");
   if (file_pointer == NULL) {

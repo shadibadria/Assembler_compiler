@@ -23,6 +23,8 @@ int secondpass(char *filename){
      fill_table();
 
         fclose(filePointer);
+         append_entry_tofile("ps.ent");
+
   return 0;
 
 }

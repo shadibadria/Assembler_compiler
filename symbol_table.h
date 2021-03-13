@@ -11,6 +11,7 @@ struct data {
   char value[15];
   char symbol[15];
   char attribute[15];
+  char ocurs[15];
 };
 
 struct data * array;
@@ -18,7 +19,7 @@ struct data * array;
 int hashcode(int key);
 void init_array();
 void insert(int key, int value, char * symbol, char * attribute);
-
+void append_entry_tofile(char * filename);
 void display();
 int size_of_hashtable();
 int checkforduplicate(char * symbol);

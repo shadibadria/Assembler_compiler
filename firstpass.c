@@ -46,6 +46,7 @@ int firstpass(char * filename) {
 
           }
         }
+       
         fclose(filePointer);
   return 0;
 }

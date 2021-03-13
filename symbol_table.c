@@ -2,6 +2,7 @@
 
 int capacity_table = 100;
 int size_table = 25;
+FILE * file_pointer;
 int hashcode(int key) {
   return (key % capacity_table);
 }
@@ -12,6 +13,32 @@ void init_array() {
   for (i = 0; i < capacity_table; i++) {
 
   }
+}
+
+
+/*append to file function*/
+
+void append_entry_tofile(char * filename) {
+  int i=0;
+  file_pointer = fopen(filename, "a");
+  if (file_pointer == NULL) {
+    printf("error creating file %s \n", filename);
+    exit(0);
+  }
+
+    for(i=0;i<100;i++){
+        if(strstr(array[i].attribute,"entry")!=NULL){
+      fputs(array[i].symbol, file_pointer);
+      fputs("      ", file_pointer);
+            fputs(array[i].value, file_pointer);
+
+  fputs("\n", file_pointer);
+
+        }
+    }
+ 
+
+
 }
 void insert_entry(char * symbol){
 
