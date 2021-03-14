@@ -36,10 +36,9 @@ void append_entry_tofile(char * filename) {
 
         }
     }
- 
-
 
 }
+
 void insert_entry(char * symbol){
 
 int i;

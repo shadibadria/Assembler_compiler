@@ -29,6 +29,7 @@ int secondpass(char * filename) {
 
   fclose(filePointer);
   append_entry_tofile("ps.ent");
+  append_extern_tofile("ps.ext");
 
   return 0;
 

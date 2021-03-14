@@ -41,14 +41,23 @@ void close_file() {
   fclose(file_pointer);
 
 }
-/*from dec to bin */
+void append_extern_tofile(char * filename) {
+  int i=0;
+  file_pointer = fopen(filename, "a");
+  if (file_pointer == NULL) {
+    printf("error creating file %s \n", filename);
+    exit(0);
+  }
 
-/*from bin to hex */
+    for(i=0;i<100;i++){
+        if(strstr(arr[i].TAG,"E")!=NULL){
+      fputs(arr[i].label_name, file_pointer);
+      fputs("        ", file_pointer);
+        fputs(arr[i].Adress, file_pointer);
 
-/*create table line*/
+  fputs("\n", file_pointer);
 
-/*write line to file*/
+        }
+    }
 
-/*replace unknown line with adress (second pass)*/
-
-/*if ps.ob file is good then create ps.ent and ps.ext*/
+}
