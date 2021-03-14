@@ -11,7 +11,7 @@ void append_command_to_file(char * filename, data_image data) {
     printf("error creating file %s \n", filename);
     exit(0);
   }
-
+  
   fputs(data.Adress, file_pointer);
   fputs("      ", file_pointer);
   fputs(data.opcode, file_pointer);

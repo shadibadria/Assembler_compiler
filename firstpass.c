@@ -28,7 +28,7 @@ param: filename of the assembly
 functionality: function take file name and scan it and sent line to parsing
 */
 int firstpass(char * filename) {
-  int i=0;
+
   filePointer = fopen(filename, "r");
   if (filePointer == NULL) {
     printf("\ncant open file \n");
@@ -274,7 +274,7 @@ if (checkforduplicate(line) == 0) {
     printf("ERROR duplicate found \n");
     return 0;
   }
- 
+ insert(DC++,0,remove_space_tabs(line),"external");
   printf("\n\nits extern !!!\n");
   return 1;
 }
