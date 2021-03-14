@@ -1,3 +1,10 @@
+
+/*
+file name : main function
+explain: this file has the main function that control all the program
+the main function call the firstpass function and then the second pass function 
+then it create files 
+*/
 #include<stdio.h>
 
 #include<string.h>

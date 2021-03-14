@@ -7,6 +7,12 @@
 #define SIZEOFCODE 5
 #define SIZEOFADRESS 5
 
+/*
+file name : data_image
+explain: this file is is header file that responsible for declre the function and the data image sruct
+
+
+*/
 typedef struct data_image {
 
   char Adress[SIZEOFADRESS];

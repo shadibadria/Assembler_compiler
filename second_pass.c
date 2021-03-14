@@ -1,3 +1,12 @@
+/*
+file name: second_pass.c
+explain: this file has all functions of second pass of the compiler
+
+second iteration of the assembly program
+its porpuse is to rewrite  all the unknown labels and data to the symbol table 
+and to the RAM
+
+*/
 #include "second_pass.h"
 
 #include<stdio.h>
@@ -14,7 +23,11 @@
 
 FILE * filePointer;
 char buffer[bufferLength];
-
+/*
+second pass function 
+it take the file name and start to read it line by line
+and send it to parsing
+*/
 int secondpass(char * filename) {
   filePointer = fopen(filename, "r");
   if (filePointer == NULL) {
@@ -34,7 +47,10 @@ int secondpass(char * filename) {
   return 0;
 
 }
-
+/*
+line parsing function 
+it take line and parse it to write the missing labels at the data table 
+*/
 int secondpass_pasrsing(char * line) {
   char temp[80];
   int i = 0, j = 0;
@@ -75,7 +91,7 @@ int secondpass_pasrsing(char * line) {
   }
   return 1;
 }
-
+/*fill the data table where is labels are missing*/
 void fill_table() {
 
   int i = 0, j, number_temp, k = 0, flag = 0, current_adress = 0;

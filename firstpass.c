@@ -1,3 +1,13 @@
+
+/*
+file name: firstpass.c
+explain: this file has all functions of firstpass of the compiler
+
+first iteration of the assembly program
+its porpuse is to add all the labels and data to the symbol table 
+and to the RAM
+
+*/
 #include"firstpass.h"
 
 #include"data.h"
@@ -6,14 +16,7 @@
 
 #include"data_image.h"
 
-/*
-firstpass.c
 
-first iteration of the assembly program
-its porpuse is to add all the labels and data to the symbol table 
-and to the RAM
-
-*/
 
 int IC = 100;
 int DC = 0;
@@ -37,9 +40,7 @@ int firstpass(char * filename) {
 
     assemble_parsing(buffer);
 
-  }
-
-      
+  }   
         fclose(filePointer);
   return 0;
 }
@@ -126,7 +127,7 @@ int parse_line(char * line) {
   return 1;
 }
 /*
-create bits for adressing methods
+find adress method and create the bits of it 
 
 */
 int find_adressing_method(char * string, int label_flag) {
@@ -327,8 +328,6 @@ int check_if_entry(char * line,int test) {
     return 0;
   }
   
-  
-
   printf("\n\nits entry !!!\n");
   return 1;
 }

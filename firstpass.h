@@ -1,3 +1,8 @@
+
+/*
+file name : firstpass.h
+explain: this header file has all the function declration for firstpass.c
+*/
 #include<stdio.h>
 
 #include<string.h>

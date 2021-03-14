@@ -1,3 +1,8 @@
+
+/*
+file name: file_proccess.c 
+explain: this file has all function of file creating /writing/creating files 
+*/
 #include "file_proccess.h"
 
 /*

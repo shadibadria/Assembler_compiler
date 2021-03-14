@@ -1,3 +1,8 @@
+/*
+file name : data.c
+explain: all function of data (commands , datat ,string )
+*/
+
 #include"data.h"
 
 #include"data_image.h"
@@ -112,14 +117,12 @@ int check_command(char * command) {
   for (i = 0; i < COMMANDS_AMOUNT; i++) {
     if (strcmp(mycommands[i].command_name, command) == 0) {
       sprintf(arr[index_of_datatable].Adress, "%04d", IC);
-  printf("COMMAND_IC:%d\n", IC);
+      printf("COMMAND_IC:%d\n", IC);
       IC++;
-      if(code_opcode_parsing(mycommands[i].opcode, mycommands[i].funct)==0){
+      if (code_opcode_parsing(mycommands[i].opcode, mycommands[i].funct) == 0) {
         return 1;
       }
-     
-      
-     
+
       /* printf("Command_name :%s\nopcode :%d \nfunct: %d\n ",mycommands[i].command_name,mycommands[i].opcode,mycommands[i].funct);*/
       return 1;
     }
@@ -135,19 +138,19 @@ then create hex value and insert it to the file
 int code_opcode_parsing(char * command_code, char * command_func) {
 
   int number_temp = 0;
-  if(strcmp(command_code,"1111")==0){
-      number_temp = strtol(command_code, NULL, 2);
-  printf("firsr 4 bits:%s", command_code);
-  sprintf(arr[index_of_datatable].opcode, "%01X", number_temp);
-  number_temp = strtol(command_func, NULL, 2);
-  sprintf(arr[index_of_datatable].funct, "%02X", number_temp);
-  sprintf(arr[index_of_datatable].TAG, "%c", 'A');
-  printf("%s\n", command_func);
+  if (strcmp(command_code, "1111") == 0) {
+    number_temp = strtol(command_code, NULL, 2);
+    printf("firsr 4 bits:%s", command_code);
+    sprintf(arr[index_of_datatable].opcode, "%01X", number_temp);
+    number_temp = strtol(command_func, NULL, 2);
+    sprintf(arr[index_of_datatable].funct, "%02X", number_temp);
+    sprintf(arr[index_of_datatable].TAG, "%c", 'A');
+    printf("%s\n", command_func);
     index_of_datatable++;
 
-  return 0;
-      }
-  printf("COMMAND:%s\n",command_code);
+    return 0;
+  }
+  printf("COMMAND:%s\n", command_code);
   number_temp = strtol(command_code, NULL, 2);
   printf("firsr 4 bits:%s", command_code);
   sprintf(arr[index_of_datatable].opcode, "%X", number_temp);
@@ -155,8 +158,6 @@ int code_opcode_parsing(char * command_code, char * command_func) {
   sprintf(arr[index_of_datatable].funct, "%X", number_temp);
   sprintf(arr[index_of_datatable].TAG, "%c", 'A');
   printf("%s\n", command_func);
-
-     
 
   return 1;
 }
@@ -179,15 +180,15 @@ int check_line(char * line) {
       if (check_for_reg(temp, 1) == 0) {
         printf("xother_IC:%d\n", IC);
         sprintf(arr[index_of_datatable].Adress, "%04d", IC);
- if(strcmp(find_label(temp),"?")==0){
-        
-      sprintf(arr[index_of_datatable].label_name, "%s",temp );
-                    sprintf(arr[index_of_datatable].opcode, "%s","?" );
+        if (strcmp(find_label(temp), "?") == 0) {
 
-      }else{
-              sprintf(arr[index_of_datatable].opcode, "%s","found" );
+          sprintf(arr[index_of_datatable].label_name, "%s", temp);
+          sprintf(arr[index_of_datatable].opcode, "%s", "?");
 
-      }
+        } else {
+          sprintf(arr[index_of_datatable].opcode, "%s", "found");
+
+        }
         index_of_datatable++;
         IC++;
 
@@ -231,12 +232,12 @@ int check_line(char * line) {
 
       sprintf(arr[index_of_datatable].Adress, "%04d", IC);
 
- if(strcmp(find_label(temp),"?")==0){
-        
-      sprintf(arr[index_of_datatable].label_name, "%s",temp );
-      sprintf(arr[index_of_datatable].opcode, "%s","?" );
-      }else{
-              sprintf(arr[index_of_datatable].opcode, "%s","found" );
+      if (strcmp(find_label(temp), "?") == 0) {
+
+        sprintf(arr[index_of_datatable].label_name, "%s", temp);
+        sprintf(arr[index_of_datatable].opcode, "%s", "?");
+      } else {
+        sprintf(arr[index_of_datatable].opcode, "%s", "found");
 
       }
       index_of_datatable++;
@@ -277,12 +278,12 @@ int check_line(char * line) {
     if (temp[0] != '\0') {
       printf("other_IC:%d istemp:%s\n", IC, temp);
       sprintf(arr[index_of_datatable].Adress, "%04d", IC);
-      if(strcmp(find_label(temp),"?")==0){
-        
-      sprintf(arr[index_of_datatable].label_name, "%s",temp );
-      sprintf(arr[index_of_datatable].opcode, "%s","?" );
-      }else{
-              sprintf(arr[index_of_datatable].opcode, "%s","found" );
+      if (strcmp(find_label(temp), "?") == 0) {
+
+        sprintf(arr[index_of_datatable].label_name, "%s", temp);
+        sprintf(arr[index_of_datatable].opcode, "%s", "?");
+      } else {
+        sprintf(arr[index_of_datatable].opcode, "%s", "found");
 
       }
       index_of_datatable++;

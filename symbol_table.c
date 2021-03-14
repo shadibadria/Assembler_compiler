@@ -1,3 +1,9 @@
+/*
+file name : symbol_table.c
+explain: this file has all the symbol table function
+symbol table uses HASH TABLE 
+*/
+
 #include"symbol_table.h"
 
 int capacity_table = 100;
@@ -7,6 +13,9 @@ int hashcode(int key) {
   return (key % capacity_table);
 }
 
+/*
+init hash table array using malloc 
+*/
 void init_array() {
   int i;
   array = (struct data * ) malloc(capacity_table * sizeof(struct data));
@@ -38,7 +47,10 @@ void append_entry_tofile(char * filename) {
     }
 
 }
-
+/*
+insert entry labels after second pass to the labels 
+at the symbol table
+*/
 void insert_entry(char * symbol){
 
 int i;
@@ -85,6 +97,9 @@ void display() {
     }
   }
 }
+/*
+find label at the symbol table
+*/
 char * find_label(char * label) {
   int i;
   for (i = 0; i < capacity_table; i++) {
@@ -95,6 +110,9 @@ char * find_label(char * label) {
   }
   return "?";
 }
+/*
+check for duplicate at the symbol table 
+*/
 int checkforduplicate(char * symbol) {
 
   int i;
@@ -109,7 +127,7 @@ int checkforduplicate(char * symbol) {
   }
   return 1;
 }
-
+/*get the size of the symbol table*/
 int size_of_hashtable() {
   return size_table;
 }

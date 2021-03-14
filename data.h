@@ -1,3 +1,7 @@
+/*
+file name : data.h
+explain : header file have declration of function for data.c and struct of command
+*/
 #define COMMAND_NAME_MAX_SIZE 5
 #define COMMANDS_AMOUNT 16
 #define REGISTERS_COUNT 8
