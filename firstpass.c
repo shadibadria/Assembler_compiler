@@ -28,7 +28,6 @@ param: filename of the assembly
 functionality: function take file name and scan it and sent line to parsing
 */
 int firstpass(char * filename) {
-
   filePointer = fopen(filename, "r");
   if (filePointer == NULL) {
     printf("\ncant open file \n");
@@ -39,8 +38,8 @@ int firstpass(char * filename) {
     assemble_parsing(buffer);
 
   }
-    
-       
+
+      
         fclose(filePointer);
   return 0;
 }
@@ -232,6 +231,8 @@ int find_adressing_method(char * string, int label_flag) {
       last_bits[k++] = '1';
       last_bits[k++] = '0';
     } else {
+      last_bits[k++] = '0';
+      last_bits[k++] = '0';
       last_bits[k++] = '0';
       last_bits[k++] = '1';
     }
