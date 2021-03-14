@@ -138,7 +138,7 @@ void fill_table() {
             } else {
               if (strcmp(array[j].attribute, "code") == 0 || strcmp(array[j].attribute, "data") == 0) {
 
-                strcpy(arr[i].TAG, "A");
+                strcpy(arr[i].TAG, "R");
                 break;
               }
 
