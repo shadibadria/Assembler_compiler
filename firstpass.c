@@ -51,16 +51,16 @@ functionality: send the line to function parse_line after removing spaces and ta
 at the beginning , and checks if line empty or EOF
 */
 int assemble_parsing(char * line) {
-
   if (line[0] == '\n' || line[0] == '\0') {
     return 0;
   }
   printf("\n******************************\n");
   printf("\nCommand :%s\n", line);
   label_flag = 0;
-  if (parse_line(line) == 1) {
+ 
+ parse_line(line);
 
-  }
+  
 
   return 1;
 }
@@ -71,11 +71,12 @@ functionality: parse the line to data we needby calling functions
 int parse_line(char * line) {
   int i = 0, j = 0;
   char temp[80];
+   
   if (line[i] == ';') {
     printf("comment\n");
     return 0;
   }
-
+   
   if (check_if_extern(line,0) == 1) {
     return 0;
   }
@@ -85,14 +86,15 @@ int parse_line(char * line) {
    if (check_if_label(line,0) == 1) {
           label_flag = 1;
         }
+
   while (line[i] != '\0' && line[i] != '\n') {
     if (line[i] != ' ' && line[i] != '\t') {
       temp[j++] = line[i];
     } else {
       temp[j] = '\0';
       if (j != 0) {
+        
 
-     
         if (check_if_command(temp) == 1) {
           find_adressing_method(line, label_flag);
 
@@ -115,7 +117,6 @@ int parse_line(char * line) {
 
   if (line[i] == '\n' || line[i] == '\0') {
     temp[j] = '\0';
-
     if (strlen(temp)) {
       if (check_if_command(temp) == 0)
         check_line(temp);
@@ -273,10 +274,11 @@ int check_if_extern(char * line,int test) {
   line[strlen(line)] = '\0';
   remove_space_tabs(line);
 if (checkforduplicate(line) == 0) {
-    printf("ERROR duplicate found \n");
+    printf("ERROR extern duplicate found \n");
     return 0;
   }
- insert(DC++,0,remove_space_tabs(line),"external");
+ insert(DC++,0, line,"external");
+
   printf("\n\nits extern !!!\n");
   return 1;
 }
@@ -371,10 +373,12 @@ functionality: remove all space/tabs from line/string
 char * remove_space_tabs(char * string) {
   char * newstring;
   int j = 0, i = 0;
-
-  newstring = (char * ) malloc(strlen(string) * sizeof(char));
+  int string_len=(strlen(string)+1);
+  newstring = (char * )malloc( string_len * sizeof(char));
   if (newstring == NULL) {
     printf("Something Went Wrong no memory\n");
+      free(newstring);
+
     return "bad";
   }
   while (string[i] != '\n' && string[i] != '\0') {
@@ -384,6 +388,10 @@ char * remove_space_tabs(char * string) {
     i++;
   }
   newstring[j] = '\0';
+  if(strlen(newstring)<=1){
+    free(newstring);
+    return 0;
+  }
   strcpy(string, newstring);
   free(newstring);
   return string;
@@ -395,16 +403,31 @@ functionality: check if its label
 */
 int check_if_label(char * line,int test) {
   int i = 0, j = 0;
-  char temp[80];
+  char *temp;
+   temp = (char * ) malloc((strlen(line)+1) * sizeof(char));
+  if (temp == NULL) {
+    printf("Something Went Wrong no memory\n");
+    return 0;
+
+  }
   while (line[i] != '\n' && line[i] != '\0') {
-    if (line[i] != ' ' && line[i] != '\t')
+    if (line[i] != ' ' && line[i] != '\t'){
+     
       temp[j++] = line[i];
+      
+    }
     if (line[i] == ':') {
       if(test==1){
+        free(temp);
         return 1;
       }
-      temp[i] = '\n';
+
+      temp[j] = '\n';
       printf("label:%s\n", remove_space_tabs(temp));
+      if(temp[i]==','){
+          free(temp);
+        return 0;
+      }
       if(check_if_its_data(line,1)==1){
 
       insert(DC++, IC, remove_space_tabs(temp), "data");
@@ -415,14 +438,17 @@ int check_if_label(char * line,int test) {
       insert(DC++, IC, remove_space_tabs(temp), "data");
 
       }else{
+        
               insert(DC++, IC, remove_space_tabs(temp), "code");
 
       }
-
+  free(temp);
       return 1;
     }
     i++;
   }
+    free(temp);
+
   return 0;
 }
 /*
@@ -525,7 +551,7 @@ int check_if_its_string(char * line,int test) {
   while (line[i] != '\n' && line[i] != '\0') {
     if (line[i] == '.') {
       if (line[i + 1] == 's' && line[i + 2] == 't' && line[i + 3] == 'r' && line[i + 4] == 'i' && line[i + 5] == 'n' && line[i + 6] == 'g') {
-      
+        printf("string:%s\n",line);
         printf("its string\n");
           if(test==1){
           return 1;

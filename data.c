@@ -170,6 +170,7 @@ int check_line(char * line) {
   char temp[80];
   int comma_flag = 0;
   int number_temp = 0;
+
   while (line[i] != '\n' && line[i] != '\0') {
 
     temp[j++] = line[i];
@@ -178,17 +179,17 @@ int check_line(char * line) {
 
       comma_flag = 1;
       if (check_for_reg(temp, 1) == 0) {
+   
         printf("xother_IC:%d\n", IC);
+           
+
         sprintf(arr[index_of_datatable].Adress, "%04d", IC);
         if (strcmp(find_label(temp), "?") == 0) {
 
           sprintf(arr[index_of_datatable].label_name, "%s", temp);
           sprintf(arr[index_of_datatable].opcode, "%s", "?");
 
-        } else {
-          sprintf(arr[index_of_datatable].opcode, "%s", "found");
-
-        }
+        } 
         index_of_datatable++;
         IC++;
 
@@ -228,7 +229,12 @@ int check_line(char * line) {
         }
         i++;
       }
-      printf("hereother_IC:%d \n", IC);
+      
+    
+    
+              printf("hereother_IC:%d \n", IC);
+
+
 
       sprintf(arr[index_of_datatable].Adress, "%04d", IC);
 
@@ -236,10 +242,7 @@ int check_line(char * line) {
 
         sprintf(arr[index_of_datatable].label_name, "%s", temp);
         sprintf(arr[index_of_datatable].opcode, "%s", "?");
-      } else {
-        sprintf(arr[index_of_datatable].opcode, "%s", "found");
-
-      }
+      } 
       index_of_datatable++;
       IC++;
     }
@@ -249,6 +252,7 @@ int check_line(char * line) {
     if (check_for_reg(temp, 1) == 1) {
       return 1;
     }
+
     while (temp[i] != '\0') {
       if ((temp[i] == '#' && isdigit(temp[i + 1]) != 0) || (temp[i] == '#' && temp[i + 1] == '-' && isdigit(temp[i + 2]) != 0)) {
         printf("number_ic:%d\n", IC);
@@ -276,9 +280,13 @@ int check_line(char * line) {
     i = 0;
     remove_space_tabs(temp);
     if (temp[0] != '\0') {
-      printf("other_IC:%d istemp:%s\n", IC, temp);
+
+       
+              printf("other_IC:%d istemp:%s\n", IC, temp);
       sprintf(arr[index_of_datatable].Adress, "%04d", IC);
+
       if (strcmp(find_label(temp), "?") == 0) {
+            printf("HERE:\n");
 
         sprintf(arr[index_of_datatable].label_name, "%s", temp);
         sprintf(arr[index_of_datatable].opcode, "%s", "?");

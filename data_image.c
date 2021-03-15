@@ -24,13 +24,10 @@ void append_command_to_file(char * filename, data_image data) {
   fputs("        ", file_pointer);
   fputs(data.TAG, file_pointer);
   fputs("\n", file_pointer);
+    fclose(file_pointer);
+
 }
-/*
-Close file
-*/
-void close_file() {
-  fclose(file_pointer);
-}
+
 /*create and add extern labels to file*/
 void append_extern_tofile(char * filename) {
   int i = 0;
@@ -43,7 +40,7 @@ void append_extern_tofile(char * filename) {
   for (i = 0; i < 100; i++) {
     if (strstr(arr[i].TAG, "E") != NULL) {
       fputs(arr[i].label_name, file_pointer);
-      fputs("        ", file_pointer);
+      fputs("          ", file_pointer);
       fputs(arr[i].Adress, file_pointer);
       fputs("\n", file_pointer);
     }

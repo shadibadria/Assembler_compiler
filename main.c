@@ -51,21 +51,27 @@ int main(int argc, char * argv[]) {
       if (check_file(filename)) {
 
         firstpass(argv[i]);/*First Pass*/
-        secondpass(argv[i]);/*First Pass*/
-       for (i = 0; i < 100; i++) {
-          if (strlen(arr[i].Adress) >= 1) {
-          
-            append_command_to_file("ps.ob", arr[i]);
-            close_file();
+         display();
+                 printf("DONExxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n");
 
+                          secondpass(argv[i]);/*second Pass*/
+    for (i = 0; i < 100; i++) {
+          if (strlen(arr[i].Adress) >= 1) {        
+            append_command_to_file("ps.ob", arr[i]);           
           }
+
         }
+     
+
       }
 
       fclose(fp);
     }
   }
-  display();
+            display();
+
+  free_symbol_table_memory();
+
 
   return 0;
 }

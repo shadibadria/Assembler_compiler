@@ -23,6 +23,7 @@ and to the RAM
 
 FILE * filePointer;
 char buffer[bufferLength];
+int extern size_table;
 /*
 second pass function 
 it take the file name and start to read it line by line
@@ -99,8 +100,7 @@ void fill_table() {
   for (i = 0; i < 100; i++) {
 
     if (strcmp(arr[i].opcode, "?") == 0) {
-
-      for (j = 0; j < 100; j++) {
+      for (j = 0; j < size_table; j++) {
         flag = 0;
 
         if (arr[i].label_name[0] == '%') {
@@ -116,15 +116,13 @@ void fill_table() {
             k++;
           }
           flag = 1;
-          printf("is:%s\n", tempstring);
+
         }
         if (flag == 1 && strcmp(array[j].symbol, tempstring) == 0) {
 
           number_temp = strtol(array[j].value, NULL, 10);
           current_adress = strtol(arr[i].Adress, NULL, 10);
 
-          printf("befVAL:%d\n", number_temp);
-          printf("currnet-Adress=%d\n", number_temp - current_adress);
 
           sprintf(arr[i].opcode, "%03X", number_temp - current_adress);
           if (number_temp - current_adress < 0) {
@@ -133,18 +131,17 @@ void fill_table() {
           }
           strcpy(arr[i].TAG, "A");
 
-          printf("VAL:%s\n", arr[i].opcode);
           break;
 
         }
+
         if (strcmp(arr[i].label_name, array[j].symbol) == 0) {
           number_temp = strtol(array[j].value, NULL, 10);
           sprintf(arr[i].opcode, "%03X", number_temp);
-
-          if (strcmp(array[j].attribute, "external") == 0) {
-
-            strcpy(arr[i].TAG, "E");
             printf("extern:%s\n", array[j].value);
+            printf("[%d]\n",j);
+          if (strcmp(array[j].attribute, "external") == 0) {
+            strcpy(arr[i].TAG, "E");
             break;
           } else {
             if (strstr(array[j].attribute, "entry")) {
@@ -153,11 +150,8 @@ void fill_table() {
               break;
 
             } else {
-              if (strcmp(array[j].attribute, "code") == 0 || strcmp(array[j].attribute, "data") == 0) {
+                              strcpy(arr[i].TAG, "R");
 
-                strcpy(arr[i].TAG, "R");
-                break;
-              }
 
             }
           }

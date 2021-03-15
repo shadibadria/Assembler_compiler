@@ -5,9 +5,10 @@ symbol table uses HASH TABLE
 */
 
 #include"symbol_table.h"
+#include "math.h"
+int capacity_table=1;
+int size_table = 0;
 
-int capacity_table = 100;
-int size_table = 25;
 FILE * file_pointer;
 int hashcode(int key) {
   return (key % capacity_table);
@@ -16,12 +17,14 @@ int hashcode(int key) {
 /*
 init hash table array using malloc 
 */
-void init_array() {
-  int i;
-  array = (struct data * ) malloc(capacity_table * sizeof(struct data));
-  for (i = 0; i < capacity_table; i++) {
-
+int init_array() {
+  
+  array = (struct data * ) malloc(capacity_table* sizeof(struct data));
+  if(array==NULL){
+    printf("ERROR: something went wrong while trying to use malloc at symboltable.c\n");
+    return 0;
   }
+  return 1;
 }
 
 
@@ -34,12 +37,12 @@ void append_entry_tofile(char * filename) {
     printf("error creating file %s \n", filename);
     exit(0);
   }
-
-    for(i=0;i<100;i++){
+    printf("append:%ld\n",strlen(array[i].attribute));
+    for(i=0;i<size_table;i++){
         if(strstr(array[i].attribute,"entry")!=NULL){
       fputs(array[i].symbol, file_pointer);
       fputs("      ", file_pointer);
-            fputs(array[i].value, file_pointer);
+       fputs(array[i].value, file_pointer);
 
   fputs("\n", file_pointer);
 
@@ -55,9 +58,15 @@ void insert_entry(char * symbol){
 
 int i;
 
-  for (i = 0; i < capacity_table; i++) {
+  for (i = 0; i < size_table; i++) {
     if (strcmp(array[i].symbol ,symbol)==0) {
-            printf("STR:%s\n",symbol);
+        
+        array[i].attribute=(char*)realloc(array[i].attribute,6 );
+
+  if (array[i].attribute == NULL) {
+    printf("Something Went Wrong no memory\n");
+    exit(1);
+  }  
 
       strcat(array[i].attribute,",entry" );
     }
@@ -66,14 +75,59 @@ int i;
 /* to insert a key in the hash table */
 void insert(int key, int value, char * symbol, char * attribute) {
   int index = hashcode(key);
+  
+  capacity_table++;
+  array=(struct data*)realloc(array,capacity_table* sizeof(struct data));
+    
+  if(array==NULL){
+    printf("ERROR: using realloc at symbol_table.c\n");
+    exit(0);
+  }
+      printf("symbxxxxxxxxxxxxxxol:%s\n",symbol);
+
+
   if (array[index].amount == 0) {
     /*  key not present, insert it  */
+
     array[index].key_value = key;
     array[index].amount = 1;
+      /*insert value */
+      if(value==0){
+              array[index].value = (char * ) malloc(2 * sizeof(char));
 
-    sprintf(array[index].value,"%04d",value);
-    strcpy(array[index].symbol, symbol);
+      }else{
+      array[index].value = (char * ) malloc((floor(log10(abs(value)))+1) * sizeof(char));
+
+      }
+  if (array[index].value == NULL) {
+    printf("Something Went Wrong no memory at  symbol_table.c\n");
+    exit(1);
+  }  
+   sprintf(array[index].value,"%04d",value);
+
+    /*insert symbol*/
+   array[index].symbol = (char * ) malloc(strlen(symbol) * sizeof(char));
+  if (array[index].symbol == NULL) {
+    printf("Something Went Wrong no memory\n");
+    exit(1);
+  }  
+    if(symbol[strlen(symbol)-1]==':'){
+            symbol[strlen(symbol)-1]='\0';
+
+    }else{
+      symbol[strlen(symbol)]='\0';
+
+    }
+      strcpy(array[index].symbol, symbol);
+
+    /*insert attribute */
+  array[index].attribute = (char * ) malloc((2+strlen(attribute)) * sizeof(char));
+  if (array[index].attribute == NULL) {
+    printf("Something Went Wrong no memory\n");
+    exit(1);
+  }  
     strcpy(array[index].attribute, attribute);
+   
     size_table++;
    printf("\n Key (%d) has been inserted \n", key);
   } else if (array[index].key_value == key) {
@@ -89,7 +143,7 @@ void insert(int key, int value, char * symbol, char * attribute) {
 /* to display all the elements of a hash table */
 void display() {
   int i;
-  for (i = 0; i < capacity_table; i++) {
+  for (i = 0; i < size_table; i++) {
     if (array[i].amount == 0) {
 
     } else {
@@ -102,7 +156,7 @@ find label at the symbol table
 */
 char * find_label(char * label) {
   int i;
-  for (i = 0; i < capacity_table; i++) {
+  for (i = 0; i < size_table; i++) {
     if (strcmp(array[i].symbol, label) == -1) {
 
       return "found";
@@ -116,9 +170,8 @@ check for duplicate at the symbol table
 int checkforduplicate(char * symbol) {
 
   int i;
-        printf("Symbol :%s\n",symbol);
 
-  for (i = 0; i < capacity_table; i++) {
+  for (i = 0; i < size_table; i++) {
     if (strcmp(array[i].symbol,symbol)==0) {
       printf("Symbol Already Exsist \n");
       return 0;
@@ -130,4 +183,14 @@ int checkforduplicate(char * symbol) {
 /*get the size of the symbol table*/
 int size_of_hashtable() {
   return size_table;
+}
+void free_symbol_table_memory(){
+int i=0;
+
+for(i=0;i<size_table;i++){
+  free(array[i].symbol);
+    free(array[i].value);
+  free(array[i].attribute);
+}
+free(array);
 }

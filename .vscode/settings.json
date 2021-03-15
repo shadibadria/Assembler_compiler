@@ -18,6 +18,8 @@
         "list": "c",
         "data_image.h": "c",
         "random": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "stdlib.h": "c",
+        "stdio.h": "c"
     }
 }
