@@ -51,7 +51,6 @@ int main(int argc, char * argv[]) {
       if (check_file(filename)) {
 
         firstpass(argv[i]);/*First Pass*/
-         display();
                  printf("DONExxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n");
 
                           secondpass(argv[i]);/*second Pass*/

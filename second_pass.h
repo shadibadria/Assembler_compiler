@@ -7,3 +7,4 @@ int secondpass_pasrsing(char *line);
 int secondpass(char *filename);
 int check_for_label(char * line);
 void fill_table();
+void check_for_label_error();

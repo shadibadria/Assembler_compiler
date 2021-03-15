@@ -96,7 +96,7 @@ void insert(int key, int value, char * symbol, char * attribute) {
               array[index].value = (char * ) malloc(2 * sizeof(char));
 
       }else{
-      array[index].value = (char * ) malloc((floor(log10(abs(value)))+1) * sizeof(char));
+      array[index].value = (char * ) malloc( (floor(log10(abs(value)))) * sizeof(char));
 
       }
   if (array[index].value == NULL) {

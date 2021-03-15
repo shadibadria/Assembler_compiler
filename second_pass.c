@@ -40,7 +40,7 @@ int secondpass(char * filename) {
     secondpass_pasrsing(buffer);
   }
   fill_table();
-
+  check_for_label_error();
   fclose(filePointer);
   append_entry_tofile("ps.ent");
   append_extern_tofile("ps.ext");
@@ -161,4 +161,15 @@ void fill_table() {
     }
 
   }
+}
+void check_for_label_error(){
+  int i=0;
+      for (i = 0; i < 100; i++) 
+        {
+            if(strcmp(arr[i].opcode,"?")==0){
+              printf("ERROR: Label : %s not found in symbol table \n",arr[i].label_name);
+              
+            }
+        }
+
 }

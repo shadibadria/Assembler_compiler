@@ -411,12 +411,36 @@ int check_if_label(char * line,int test) {
 
   }
   while (line[i] != '\n' && line[i] != '\0') {
-    if (line[i] != ' ' && line[i] != '\t'){
-     
+   
+ 
       temp[j++] = line[i];
       
-    }
     if (line[i] == ':') {
+          temp[j] = '\n';
+          printf("[%d]\n",j);
+          j=0;
+          while(temp[j]!=':'){
+           if(temp[j]==' '||temp[j]=='\t'){
+            printf("\nERROR:Label has space/tab in it\n");
+            break;
+          }
+          j++;
+          }
+         
+        if(isdigit(temp[0])){
+            printf("ERROR:label must start with letter\n");           
+        }
+        if(strlen(temp)>31){
+                      printf("\nERROR:label is to long must be 31 char\n");           
+
+        }
+          while(temp[j]!=':'){
+            j++;
+          }
+          if(temp[j]==':'){
+            j++;
+          }
+
       if(test==1){
         free(temp);
         return 1;
