@@ -110,12 +110,30 @@ void init_commands() {
 /*
 check if its command and inc the IC 
 */
-int check_command(char * command) {
+int check_command(char * command,char *line) {
   int i = 0;
+  int coma_flag=0;
+  
+  if(command[strlen(command)-1]==','){
+    command[strlen(command)-1]='\0';
+    coma_flag=1;
+  }
+i=strlen(command);
+ while(line[i]==' '||line[i]=='\t'){
+   
+   i++;
+ }
+ if(line[i]==','){
+   printf("ERROR:to many commas\n");
+ }
+ 
 
   command[strlen(command)] = '\0';
   for (i = 0; i < COMMANDS_AMOUNT; i++) {
     if (strcmp(mycommands[i].command_name, command) == 0) {
+      if(coma_flag==1){
+        printf("ERROR:to many commas\n");
+      }
       sprintf(arr[index_of_datatable].Adress, "%04d", IC);
       printf("COMMAND_IC:%d\n", IC);
       IC++;

@@ -22,7 +22,7 @@ typedef struct command {
 command;
 
 void init_commands();
-int check_command(char * command);
+int check_command(char * command,char *line);
 int check_line(char * line);
 const char * reg[REGISTERS_COUNT];
 void init_registers();

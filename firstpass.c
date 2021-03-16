@@ -95,18 +95,19 @@ int parse_line(char * line) {
       if (j != 0) {
         
 
-        if (check_if_command(temp) == 1) {
+        if (check_if_command(temp,line) == 1) {
           find_adressing_method(line, label_flag);
 
         }
 
-        if (check_if_its_data(line,0) == 1) {
-          return 0;
-        }
-        if (check_if_its_string(line,0) == 1) {
-          return 0;
+        if (check_if_its_data(line,0) != 1&&check_if_its_string(line,0) != 1) {
+          
+          check_comma(line);
+        }else{
+                    return 0;
 
         }
+      
       }
       j = 0;
       temp[j] = '\0';
@@ -118,7 +119,7 @@ int parse_line(char * line) {
   if (line[i] == '\n' || line[i] == '\0') {
     temp[j] = '\0';
     if (strlen(temp)) {
-      if (check_if_command(temp) == 0)
+      if (check_if_command(temp,line) == 0)
         check_line(temp);
 
     }
@@ -126,6 +127,15 @@ int parse_line(char * line) {
   }
 
   return 1;
+}
+void check_comma(char *line){
+int i=0,counter=0;
+while(line[i]!='\0'){
+if(line[i]==',') counter++;
+  i++;
+}
+printf("counter:%d\n",counter);
+if(counter>1) printf("ERROR : to many comma\n");
 }
 /*
 find adress method and create the bits of it 
@@ -255,7 +265,8 @@ functionality: check if the line is .extern
 int check_if_extern(char * line,int test) {
   int i = 0;
   line[strlen(line)] = '\n';
-  if (strlen(line) < 7) {
+ 
+   if (strlen(line) < 7) {
     printf("ERROR \n");
     return 0;
   }
@@ -266,6 +277,7 @@ int check_if_extern(char * line,int test) {
   if(test==1){
     return 1;
   }
+ 
   i = i + 7;
   line = remove_spaces_from_index(line, i);
   i = 0;
@@ -504,11 +516,29 @@ functionality: get data input to array
 */
 void data_parsing(char * line) {
   char * p = line;
-  int val;
+  int val,comma_counter=0,number_counter=0,number_flag=0;
   line[strlen(line)] = '\0';
+  while(*p){
+    if(*p==','){
+      if(number_flag==0){
+            printf("ERROR: to many comma's missing numbers\n");
+
+      }
+      number_flag=0;
+      comma_counter++;
+    }else{
+           if (isdigit( * p) || (( * p == '-' || * p == '+') && isdigit( * (p + 1)))) {
+             number_flag=1;
+           }
+
+    }
+    p++;
+  }
+  p=line;
   while ( * p) {
 
     if (isdigit( * p) || (( * p == '-' || * p == '+') && isdigit( * (p + 1)))) {
+      number_counter++;
       val = strtol(p, & p, 10);
       sprintf(arr[index_of_datatable].Adress, "%04d", IC);
       sprintf(arr[index_of_datatable].opcode, "%03X", val);
@@ -524,6 +554,10 @@ void data_parsing(char * line) {
     }
 
   }
+  if(number_counter<=comma_counter){
+    printf("ERROR: to many comma's missing numbers\n");
+  }
+   
 
 }
 
@@ -592,10 +626,10 @@ int check_if_its_string(char * line,int test) {
 param : line from file
 functionality : check if its command
 */
-int check_if_command(char * line) {
+int check_if_command(char * command,char *line) {
 
   /*check command*/
-  if (check_command(line) == 0) {
+  if (check_command(command,line) == 0) {
     return 0;
   }
 
