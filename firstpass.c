@@ -125,7 +125,7 @@ int parse_line(char * line) {
   if (line[i] == '\n' || line[i] == '\0') {
     temp[j] = '\0';
     if (strlen(temp)) {
-      if(check_if_its_data(temp,0)!=1)
+      if(check_if_its_data(temp,0)!=1||check_if_its_string(temp,0))
       if (check_if_command(temp,line) == 0)
         check_line(temp);
 
@@ -588,16 +588,40 @@ param: string  line
 functionality: get data input to array
 */
 int  string_parsing(char * line, int index) {
-  int ascii = 0;
+  int ascii = 0,string_flag=0,j=0;
+  int string_starting_flag=0;
+  
   while (line[index] != '\n' && line[index] != '\0') {
+    
     if (line[index] == '"') {
+      string_starting_flag++;
       break;
+    }
+    if(line[index]!=' '&&line[index]!='\t'){
+      printf("ERROR: string formating wrong : %c\n",line[index]);
     }
     index++;
   }
   index++;
+  j=index;
+  while (line[j] != '"' && line[j] != '\n' && line[j] != '\0') {
+ j++;
+  }
+   if(line[j]=='\"'){
+      string_starting_flag++;
+  }
+  if(string_starting_flag!=2){
+    printf("ERROR: string must start with \" \"\n");
+  }
+  j++;
+  while(line[j]!='\0'){
+    if(line[j]!=' '&&line[j]!='\t'){
+      printf("ERROR: string has char after end :%c\n",line[j]);
+    }
+    j++;
+  }
   while (line[index] != '"' && line[index] != '\n' && line[index] != '\0') {
-    
+    string_flag=1;
     printf("\nstr:%c\n", line[index]);
 
     sprintf(arr[index_of_datatable].Adress, "%04d", IC);
@@ -610,6 +634,10 @@ int  string_parsing(char * line, int index) {
     printf("str_IC      : %d\n", IC);
     IC++;
     index++;
+  }
+
+  if(string_flag==0){
+    printf("ERROR : string has no values\n");
   }
   sprintf(arr[index_of_datatable].Adress, "%04d", IC);
   ascii = 0;
@@ -628,10 +656,11 @@ functionality: check if its string
 */
 int check_if_its_string(char * line,int test) {
   int i = 0;
+
   while (line[i] != '\n' && line[i] != '\0') {
     if (line[i] == '.') {
       if (line[i + 1] == 's' && line[i + 2] == 't' && line[i + 3] == 'r' && line[i + 4] == 'i' && line[i + 5] == 'n' && line[i + 6] == 'g') {
-        printf("string:%s\n",line);
+        printf("xxstring:%s\n",line);
         printf("its string\n");
           if(test==1){
           return 1;
