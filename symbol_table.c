@@ -32,12 +32,18 @@ int init_array() {
 
 void append_entry_tofile(char * filename) {
   int i=0;
+
   file_pointer = fopen(filename, "a");
+
   if (file_pointer == NULL) {
     printf("error creating file %s \n", filename);
     exit(0);
   }
-    printf("append:%ld\n",strlen(array[i].attribute));
+        printf("a9******************************sdsad:\n");
+
+    if(array[i].attribute!=NULL){
+      
+    
     for(i=0;i<size_table;i++){
         if(strstr(array[i].attribute,"entry")!=NULL){
       fputs(array[i].symbol, file_pointer);
@@ -47,6 +53,7 @@ void append_entry_tofile(char * filename) {
   fputs("\n", file_pointer);
 
         }
+    }
     }
 
 }

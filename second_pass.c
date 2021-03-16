@@ -36,13 +36,18 @@ int secondpass(char * filename) {
     return 0;
   }
   while (fgets(buffer, bufferLength, filePointer)) {
-
     secondpass_pasrsing(buffer);
   }
+
   fill_table();
+
   check_for_label_error();
+
   fclose(filePointer);
+
   append_entry_tofile("ps.ent");
+    printf("asdsad:%s\n",filename);
+
   append_extern_tofile("ps.ext");
 
   return 0;

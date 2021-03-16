@@ -105,6 +105,7 @@ int parse_line(char * line) {
 
         }
 
+       
         if (check_if_its_data(line,0) != 1&&check_if_its_string(line,0) != 1) {
           
           check_comma(line);
@@ -124,6 +125,7 @@ int parse_line(char * line) {
   if (line[i] == '\n' || line[i] == '\0') {
     temp[j] = '\0';
     if (strlen(temp)) {
+      if(check_if_its_data(temp,0)!=1)
       if (check_if_command(temp,line) == 0)
         check_line(temp);
 
@@ -271,10 +273,7 @@ int check_if_extern(char * line,int test) {
   int i = 0;
   line[strlen(line)] = '\n';
  
-   if (strlen(line) < 7) {
-    printf("ERROR \n");
-    return 0;
-  }
+   
   /*check if its .extern */
   if (line[i] != '.' || line[i + 1] != 'e' || line[i + 2] != 'x' || line[i + 3] != 't' || line[i + 4] != 'e' || line[i + 5] != 'r' || line[i + 6] != 'n' || (line[i + 7] != ' ' && line[i + 7] != '\t')) {
     return 0;
@@ -499,6 +498,7 @@ functionality: check if its data
 int check_if_its_data(char * line,int test) {
 
   int i = 0;
+  printf("Line:%s\n",line);
   while (line[i] != '\n' && line[i] != '\0') {
     if (line[i] == '.') {
       if (line[i + 1] == 'd' && line[i + 2] == 'a' && line[i + 3] == 't' && line[i + 4] == 'a') {
@@ -523,7 +523,6 @@ functionality: get data input to array
 */
 void data_parsing(char * line,int i) {
   char * p = line;
-  
   int val,comma_counter=0,number_counter=0,number_flag=0;
     printf("LINE:%s\n",line);
 p+=i;
@@ -569,11 +568,18 @@ p+=i;
     }
 
   }
-  printf("num:[%d],comma:[%d]\n",number_counter,comma_counter);
-  if(number_counter<comma_counter){
+  
+  printf("************************%d > %d\n",number_counter,comma_counter);
+  if(number_counter==0){
+    printf("ERROR: data is missing please insert numbers\n");
+  }
+  if(number_counter<=comma_counter){
     printf("ERROR: to many comma's missing numbers\n");
   }
-   
+   if(number_counter>comma_counter+1){
+         printf("ERROR: to many numbers missing comma's  \n");
+
+   }
 
 }
 
