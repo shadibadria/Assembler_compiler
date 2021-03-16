@@ -37,8 +37,13 @@ int firstpass(char * filename) {
     return 0;
   }
   while (fgets(buffer, bufferLength, filePointer)) {
+    if(strlen(buffer)>=80){
+      printf("ERROR: line to long must be be 80 \n");
 
+    }else{
     assemble_parsing(buffer);
+
+    }
 
   }   
         fclose(filePointer);
@@ -57,7 +62,7 @@ int assemble_parsing(char * line) {
   printf("\n******************************\n");
   printf("\nCommand :%s\n", line);
   label_flag = 0;
- 
+
  parse_line(line);
 
   
@@ -70,7 +75,7 @@ functionality: parse the line to data we needby calling functions
 */
 int parse_line(char * line) {
   int i = 0, j = 0;
-  char temp[80];
+  char temp[500];
    
   if (line[i] == ';') {
     printf("comment\n");
@@ -498,7 +503,9 @@ int check_if_its_data(char * line,int test) {
     if (line[i] == '.') {
       if (line[i + 1] == 'd' && line[i + 2] == 'a' && line[i + 3] == 't' && line[i + 4] == 'a') {
         if(test==0){
-        data_parsing(line);
+                  printf("its data :%s\n",line);
+
+        data_parsing(line,i+4);
         return 1;
         }
         
@@ -514,10 +521,16 @@ int check_if_its_data(char * line,int test) {
 param: data line
 functionality: get data input to array
 */
-void data_parsing(char * line) {
+void data_parsing(char * line,int i) {
   char * p = line;
+  
   int val,comma_counter=0,number_counter=0,number_flag=0;
+    printf("LINE:%s\n",line);
+p+=i;
   line[strlen(line)] = '\0';
+
+      printf("afLINE:%s\n",line);
+
   while(*p){
     if(*p==','){
       if(number_flag==0){
@@ -535,11 +548,13 @@ void data_parsing(char * line) {
     p++;
   }
   p=line;
+  p+=i;
   while ( * p) {
 
     if (isdigit( * p) || (( * p == '-' || * p == '+') && isdigit( * (p + 1)))) {
       number_counter++;
       val = strtol(p, & p, 10);
+      printf("VAL[%d]\n",val);
       sprintf(arr[index_of_datatable].Adress, "%04d", IC);
       sprintf(arr[index_of_datatable].opcode, "%03X", val);
       sprintf(arr[index_of_datatable].TAG, "%c", 'A');
@@ -554,7 +569,8 @@ void data_parsing(char * line) {
     }
 
   }
-  if(number_counter<=comma_counter){
+  printf("num:[%d],comma:[%d]\n",number_counter,comma_counter);
+  if(number_counter<comma_counter){
     printf("ERROR: to many comma's missing numbers\n");
   }
    

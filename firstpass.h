@@ -11,7 +11,7 @@ explain: this header file has all the function declration for firstpass.c
 
 #include<stdlib.h>
 
-#define bufferLength 80
+#define bufferLength 500
 
 int firstpass(char * filename);
 int assemble_parsing(char * line);
@@ -23,7 +23,7 @@ int check_if_label(char * line,int test);
 int parse_line(char * line);
 int check_if_its_data(char * line,int test);
 int check_if_its_string(char * line,int test);
-void data_parsing(char * line);
+void data_parsing(char * line,int i);
 int string_parsing(char * line, int index);
 int check_if_command(char * command,char *line);
 int find_adressing_method(char * string, int label_flag);

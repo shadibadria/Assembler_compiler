@@ -2,7 +2,7 @@
 file name : second_pass.h
 explain: this header file has declrations of the second_pass.c file
 */
-#define bufferLength 80
+#define bufferLength 500
 int secondpass_pasrsing(char *line);
 int secondpass(char *filename);
 int check_for_label(char * line);
