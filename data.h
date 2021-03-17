@@ -18,11 +18,12 @@ typedef struct command {
   char command_name[COMMAND_NAME_MAX_SIZE];
   char funct[5];
   char opcode[5];
+  int allowed_operand;
 }
 command;
 
 void init_commands();
-int check_command(char * command,char *line);
+int check_command(char * command,char *line,int argument_counter);
 int check_line(char * line);
 const char * reg[REGISTERS_COUNT];
 void init_registers();

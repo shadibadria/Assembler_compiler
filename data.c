@@ -23,97 +23,120 @@ void init_commands() {
   strcpy(mycommands[i].command_name, "mov\0");
   strcpy(mycommands[i].opcode, "0000\0");
   strcpy(mycommands[i].funct, "0000\0");
+  mycommands[i].allowed_operand=2;
 
   i++;
   strcpy(mycommands[i].command_name, "cmp\0");
   strcpy(mycommands[i].opcode, "0001\0");
   strcpy(mycommands[i].funct, "0000\0");
+  mycommands[i].allowed_operand=2;
 
   i++;
   strcpy(mycommands[i].command_name, "add\0");
   strcpy(mycommands[i].opcode, "0010\0");
   strcpy(mycommands[i].funct, "1010\0");
+    mycommands[i].allowed_operand=2;
+
   i++;
   strcpy(mycommands[i].command_name, "sub\0");
   strcpy(mycommands[i].opcode, "0010\0");
   strcpy(mycommands[i].funct, "1011\0");
+    mycommands[i].allowed_operand=2;
+
 
   i++;
   strcpy(mycommands[i].command_name, "lea\0");
   strcpy(mycommands[i].opcode, "0100\0");
   strcpy(mycommands[i].funct, "0000\0");
+    mycommands[i].allowed_operand=2;
+
 
   i++;
 
   strcpy(mycommands[i].command_name, "clr\0");
   strcpy(mycommands[i].opcode, "0101\0");
   strcpy(mycommands[i].funct, "1010\0");
-
+    mycommands[i].allowed_operand=1;
   i++;
 
   strcpy(mycommands[i].command_name, "not\0");
   strcpy(mycommands[i].opcode, "0101\0");
   strcpy(mycommands[i].funct, "1011\0");
+    mycommands[i].allowed_operand=1;
 
   i++;
 
   strcpy(mycommands[i].command_name, "inc\0");
   strcpy(mycommands[i].opcode, "0101\0");
   strcpy(mycommands[i].funct, "1100\0");
-
+  mycommands[i].allowed_operand=1;
   i++;
 
   strcpy(mycommands[i].command_name, "dec\0");
   strcpy(mycommands[i].opcode, "0101\0");
   strcpy(mycommands[i].funct, "1101\0");
+  mycommands[i].allowed_operand=1;
 
   i++;
 
   strcpy(mycommands[i].command_name, "jmp\0");
   strcpy(mycommands[i].opcode, "1001\0");
   strcpy(mycommands[i].funct, "1010\0");
+  mycommands[i].allowed_operand=1;
 
   i++;
 
   strcpy(mycommands[i].command_name, "bne\0");
   strcpy(mycommands[i].opcode, "1001\0");
   strcpy(mycommands[i].funct, "1011\0");
+  mycommands[i].allowed_operand=1;
 
   i++;
 
   strcpy(mycommands[i].command_name, "jsr\0");
   strcpy(mycommands[i].opcode, "1001\0");
   strcpy(mycommands[i].funct, "1100\0");
+    mycommands[i].allowed_operand=1;
+
   i++;
 
   strcpy(mycommands[i].command_name, "red\0");
   strcpy(mycommands[i].opcode, "1100\0");
   strcpy(mycommands[i].funct, "0000\0");
+    mycommands[i].allowed_operand=1;
+
   i++;
 
   strcpy(mycommands[i].command_name, "prn\0");
   strcpy(mycommands[i].opcode, "1101\0");
   strcpy(mycommands[i].funct, "0000\0");
+    mycommands[i].allowed_operand=1;
+
   i++;
 
   strcpy(mycommands[i].command_name, "rts\0");
   strcpy(mycommands[i].opcode, "1110\0");
   strcpy(mycommands[i].funct, "0000\0");
+    mycommands[i].allowed_operand=1;
+
   i++;
 
   strcpy(mycommands[i].command_name, "stop\0");
   strcpy(mycommands[i].opcode, "1111\0");
   strcpy(mycommands[i].funct, "0000\0");
+  mycommands[i].allowed_operand=0;
 
 }
 
 /*
 check if its command and inc the IC 
 */
-int check_command(char * command,char *line) {
+int check_command(char * command,char *line,int argument_counter) {
   int i = 0;
   int coma_flag=0;
   
+
+  printf("CHECK:%d\n",argument_counter);
   if(command[strlen(command)-1]==','){
     command[strlen(command)-1]='\0';
     coma_flag=1;
@@ -131,6 +154,9 @@ i=strlen(command);
   command[strlen(command)] = '\0';
   for (i = 0; i < COMMANDS_AMOUNT; i++) {
     if (strcmp(mycommands[i].command_name, command) == 0) {
+        if(mycommands[i].allowed_operand!=argument_counter){
+          printf("ERROR: not correct operands\n");
+        }
       if(coma_flag==1){
         printf("ERROR:to many commas\n");
       }

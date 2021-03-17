@@ -25,7 +25,7 @@ FILE * filePointer;
 char buffer[bufferLength];
 int extern index_of_datatable;
 int label_flag = 0;
-
+int arguments_counter=0;
 /*
 param: filename of the assembly 
 functionality: function take file name and scan it and sent line to parsing
@@ -62,7 +62,7 @@ int assemble_parsing(char * line) {
   printf("\n******************************\n");
   printf("\nCommand :%s\n", line);
   label_flag = 0;
-
+  check_line_arguments(line);
  parse_line(line);
 
   
@@ -76,7 +76,7 @@ functionality: parse the line to data we needby calling functions
 int parse_line(char * line) {
   int i = 0, j = 0;
   char temp[500];
-   
+ 
   if (line[i] == ';') {
     printf("comment\n");
     return 0;
@@ -92,19 +92,23 @@ int parse_line(char * line) {
           label_flag = 1;
         }
 
+      
   while (line[i] != '\0' && line[i] != '\n') {
     if (line[i] != ' ' && line[i] != '\t') {
+   
+      
       temp[j++] = line[i];
     } else {
       temp[j] = '\0';
       if (j != 0) {
-        
+       
+       
 
+       
         if (check_if_command(temp,line) == 1) {
           find_adressing_method(line, label_flag);
 
         }
-
        
         if (check_if_its_data(line,0) != 1&&check_if_its_string(line,0) != 1) {
           
@@ -121,6 +125,7 @@ int parse_line(char * line) {
 
     i++;
   } /*end while*/
+
 
   if (line[i] == '\n' || line[i] == '\0') {
     temp[j] = '\0';
@@ -141,7 +146,6 @@ while(line[i]!='\0'){
 if(line[i]==',') counter++;
   i++;
 }
-printf("counter:%d\n",counter);
 if(counter>1) printf("ERROR : to many comma\n");
 }
 /*
@@ -356,7 +360,7 @@ functionality: remove space/tab from index till first non tab/space
 char * remove_spaces_from_index(char * string, int i) {
   char * newstring;
   int j = 0;
-  if (string[i] != '\t' && string[i] != ' ' && string[i] == '\n' && isspace(string[i])) {
+  if (string[i]!='\0'&&string[i] != '\t' && string[i] != ' ' && string[i] == '\n' && isspace(string[i])) {
     return 0;
   }
   newstring = (char * ) malloc(strlen(string) * sizeof(char));
@@ -498,7 +502,7 @@ functionality: check if its data
 int check_if_its_data(char * line,int test) {
 
   int i = 0;
-  printf("Line:%s\n",line);
+  
   while (line[i] != '\n' && line[i] != '\0') {
     if (line[i] == '.') {
       if (line[i + 1] == 'd' && line[i + 2] == 'a' && line[i + 3] == 't' && line[i + 4] == 'a') {
@@ -541,6 +545,11 @@ p+=i;
     }else{
            if (isdigit( * p) || (( * p == '-' || * p == '+') && isdigit( * (p + 1)))) {
              number_flag=1;
+           }else{
+             if(*p!=' '&&*p!='\t'&&number_flag){
+
+              printf("ERROR: to many argument on line :%c \n",*p);
+             }
            }
 
     }
@@ -679,10 +688,143 @@ functionality : check if its command
 */
 int check_if_command(char * command,char *line) {
 
+  printf("COMMANDbef:%s\n",command);
+
+  
+  if(label_flag==1){
+
+  remove_label(command);
+  }
+ printf("COMMANDAFTER:%s\n",command);
   /*check command*/
-  if (check_command(command,line) == 0) {
+  if (check_command(command,line,arguments_counter) == 0) {
     return 0;
   }
 
   return 1;
+}
+int check_line_arguments(char *line){
+  int i=0,j=0;
+  int label_flag=0;
+  char *temp_string;
+  int comma_counter=0;
+  arguments_counter=0;
+  temp_string =(char*)malloc(strlen(line)*sizeof(char));
+  if(temp_string==NULL){
+    printf("ERROR: problem\n");
+    exit(0);
+  }
+  /*remove label*/
+  while(line[i]!='\0'){
+    if(line[i]==':'){
+      label_flag=1;
+      break;
+    } 
+    i++;
+  }
+  if(label_flag==0){
+  i=0;
+}else{
+  i++;
+}
+  
+  while(line[i]!='\0'){
+    if(line[i]!=' '&&line[i]!='\t'){
+      break;
+    }
+    i++;
+  }
+
+while (line[i]!='\0')
+{
+  if(line[i]==' '||line[i]=='\t'){
+    break;
+  }
+  i++;
+}
+while(line[i]!='\0'){
+    if(line[i]!=' '&&line[i]!='\t'){
+      break;
+    }
+    i++;
+  }
+
+ while(line[i]!='\0'&&line[i]!='\n'){
+
+            temp_string[j++]=line[i];
+
+          if(line[i]==','){
+            comma_counter+=1;
+          }             
+
+    i++;
+ }
+
+ arguments_counter=count_word(temp_string);
+ if(comma_counter==1&&count_word(temp_string)>2){
+   printf("ERROR: to many arguments x\n");
+ }
+ if(comma_counter==0&&count_word(temp_string)>1){
+   printf("ERROR: to many arguments x\n");
+
+ }
+ if(comma_counter>2){
+      printf("ERROR: to many comma's\n");
+
+ }
+
+free(temp_string);
+  return arguments_counter;
+}
+
+int count_word( char *s) {          
+    int count = 0, hassep = 1;
+
+    while (*s) {
+        if (isspace((unsigned char)*s)||*s==',') {
+            hassep = 1;
+        } else {
+            count += hassep;
+            hassep = 0;
+        }
+        s++;
+    }
+    return count;
+}
+
+void remove_label(char *line){
+int i=0,j=0;
+char *newstring;
+int flag=0;
+if(label_flag==1){
+
+  newstring=(char*)malloc(strlen(line)*sizeof(char));
+  if(newstring==NULL){
+    printf("ERROR: zekron\n");
+    exit(1);
+  }
+  while (line[i]!='\0')
+  {
+
+    if(line[i]==':'){
+      flag=1;
+      break;
+    }
+    i++;
+  }
+  if(flag==1){
+      i++;
+
+    while(line[i]!='\0'){
+    
+        newstring[j++]=line[i];
+    i++;
+  }
+
+  strcpy(line,newstring);
+
+  }
+  
+  free(newstring);
+}
 }

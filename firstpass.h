@@ -28,3 +28,6 @@ int string_parsing(char * line, int index);
 int check_if_command(char * command,char *line);
 int find_adressing_method(char * string, int label_flag);
 void check_comma(char *line);
+int check_line_arguments(char *line);
+int count_word( char *s);
+void remove_label(char *line);
