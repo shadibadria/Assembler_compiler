@@ -706,14 +706,10 @@ int check_if_command(char * command,char *line) {
 int check_line_arguments(char *line){
   int i=0,j=0;
   int label_flag=0;
-  char *temp_string;
+  char *temp_string=NULL;
   int comma_counter=0;
   arguments_counter=0;
-  temp_string =(char*)malloc(strlen(line)*sizeof(char));
-  if(temp_string==NULL){
-    printf("ERROR: problem\n");
-    exit(0);
-  }
+  
   /*remove label*/
   while(line[i]!='\0'){
     if(line[i]==':'){
@@ -748,19 +744,29 @@ while(line[i]!='\0'){
     }
     i++;
   }
-
+if(line[i]!='\0'&&line[i]!='\n'){
+  temp_string =(char*)malloc(strlen(line)*sizeof(char));
+  if(temp_string==NULL){
+    printf("ERROR: problem\n");
+    exit(0);
+  }
+}
  while(line[i]!='\0'&&line[i]!='\n'){
 
             temp_string[j++]=line[i];
-
+            
           if(line[i]==','){
             comma_counter+=1;
           }             
 
     i++;
  }
-
+ 
+ 
  arguments_counter=count_word(temp_string);
+ if(arguments_counter==0){
+   printf("ERROR: missing arguments\n");
+ }
  if(comma_counter==1&&count_word(temp_string)>2){
    printf("ERROR: to many arguments x\n");
  }
@@ -779,7 +785,10 @@ free(temp_string);
 
 int count_word( char *s) {          
     int count = 0, hassep = 1;
-
+    
+    if(s==NULL){
+return 0;
+ }
     while (*s) {
         if (isspace((unsigned char)*s)||*s==',') {
             hassep = 1;
@@ -787,6 +796,7 @@ int count_word( char *s) {
             count += hassep;
             hassep = 0;
         }
+      
         s++;
     }
     return count;
