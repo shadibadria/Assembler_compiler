@@ -105,9 +105,8 @@ int parse_line(char * line) {
        
 
        
-        if (check_if_command(temp,line) == 1) {
-          find_adressing_method(line, label_flag);
-        }
+         check_if_command(temp,line,label_flag);
+        
 
         if (check_if_its_data(line,0) != 1&&check_if_its_string(line,0) != 1) {
           
@@ -130,7 +129,7 @@ int parse_line(char * line) {
     temp[j] = '\0';
     if (strlen(temp)) {
       if(check_if_its_data(temp,0)!=1||check_if_its_string(temp,0))
-      if (check_if_command(temp,line) == 0)
+      if (check_if_command(temp,line,label_flag) == 0)
                            printf("temp*****:%s\n",temp);
 
         check_line(temp);
@@ -149,126 +148,8 @@ if(line[i]==',') counter++;
 }
 if(counter>1) printf("ERROR : to many comma\n");
 }
-/*
-find adress method and create the bits of it 
 
-*/
-int find_adressing_method(char * string, int label_flag) {
 
-  int i = 0;
-  char temp[80];
-  char * tempstring;
-  char last_bits[5] = "0000\n";
-  int j = 0, k = 0, commaflag = 0, number_temp = 0;
-
-  tempstring = (char * ) malloc(strlen(string) * sizeof(char));
-  if (tempstring == NULL) {
-    printf("Something Went Wrong no memory\n");
-    return 0;
-
-  }
-  strcpy(tempstring, string);
-  tempstring[strlen(tempstring)] = '\0';
-  if (label_flag == 1) {
-    while (tempstring[i] != '\0') {
-      if (tempstring[i] == ':') {
-
-        break;
-      }
-      i++;
-    }
-    i++;
-  }
-  remove_spaces_from_index(tempstring, i);
-  tempstring[strlen(tempstring)] = '\0';
-
-  i = 0;
-  while (tempstring[i] != '\0') {
-    if (tempstring[i] == ' ' || tempstring[i] == '\t') {
-      break;
-    }
-    i++;
-  }
-  remove_spaces_from_index(tempstring, i);
-  i = 0;
-  tempstring[strlen(tempstring)] = '\0';
-
-  while (tempstring[i] != '\0') {
-
-    temp[j++] = tempstring[i];
-    if (tempstring[i] == ',') {
-      temp[j - 1] = '\0';
-      j = 0;
-      commaflag = 1;
-      if (check_for_reg(temp, 0) == 1) {
-        last_bits[k++] = '1';
-        last_bits[k++] = '1';
-      } else {
-        last_bits[k++] = '0';
-        last_bits[k++] = '1';
-      }
-
-    }
-    i++;
-
-  }
-  free(tempstring);
-  temp[j] = '\0';
-
-  if (commaflag == 1) {
-    if (check_for_reg(temp, 0) == 1) {
-
-      last_bits[k++] = '1';
-      last_bits[k++] = '1';
-    } else
-    if (temp[0] == '#') {
-      last_bits[k++] = '0';
-      last_bits[k++] = '0';
-    } else
-    if (temp[0] == '%') {
-
-      last_bits[k++] = '1';
-      last_bits[k++] = '0';
-    } else {
-      last_bits[k++] = '0';
-      last_bits[k++] = '1';
-    }
-
-  }
-  if (commaflag == 0) {
-    if (check_for_reg(temp, 0) == 1) {
-      last_bits[k++] = '0';
-      last_bits[k++] = '0';
-      last_bits[k++] = '1';
-      last_bits[k++] = '1';
-    } else
-    if (temp[0] == '#') {
-      last_bits[k++] = '0';
-      last_bits[k++] = '0';
-      last_bits[k++] = '0';
-      last_bits[k++] = '0';
-
-    } else
-    if (temp[0] == '%') {
-      last_bits[k++] = '0';
-      last_bits[k++] = '0';
-      last_bits[k++] = '1';
-      last_bits[k++] = '0';
-    } else {
-      last_bits[k++] = '0';
-      last_bits[k++] = '0';
-      last_bits[k++] = '0';
-      last_bits[k++] = '1';
-    }
-
-  }
-  last_bits[5] = '\0';
-  number_temp = strtol(last_bits, NULL, 2);
-  printf("Lastbits:%s\n", last_bits);
-  sprintf(arr[index_of_datatable].adress_method, "%X", number_temp);
-  index_of_datatable++;
-  return 1;
-}
 /*
 param: line from file
 functionality: check if the line is .extern 
@@ -276,8 +157,8 @@ functionality: check if the line is .extern
 
 int check_if_extern(char * line,int test) {
   int i = 0;
-  line[strlen(line)] = '\n';
- 
+  remove_spaces_from_index(line,0);
+  printf("EXTERN:%s\n",line);
    
   /*check if its .extern */
   if (line[i] != '.' || line[i + 1] != 'e' || line[i + 2] != 'x' || line[i + 3] != 't' || line[i + 4] != 'e' || line[i + 5] != 'r' || line[i + 6] != 'n' || (line[i + 7] != ' ' && line[i + 7] != '\t')) {
@@ -692,7 +573,7 @@ int check_if_its_string(char * line,int test) {
 param : line from file
 functionality : check if its command
 */
-int check_if_command(char * command,char *line) {
+int check_if_command(char * command,char *line,int label_flag) {
 
   printf("COMMANDbef:%s\n",command);
 
@@ -703,7 +584,7 @@ int check_if_command(char * command,char *line) {
   }
  printf("COMMANDAFTER:%s\n",command);
   /*check command*/
-  if (check_command(command,line,arguments_counter) == 0) {
+  if (check_command(command,line,arguments_counter,label_flag) == 0) {
     return 0;
   }
 

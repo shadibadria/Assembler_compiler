@@ -131,7 +131,7 @@ void init_commands() {
 /*
 check if its command and inc the IC 
 */
-int check_command(char * command,char *line,int argument_counter) {
+int check_command(char * command,char *line,int argument_counter,int label_flag) {
   int i = 0;
   int coma_flag=0;
   
@@ -162,16 +162,195 @@ i=strlen(command);
       }
       sprintf(arr[index_of_datatable].Adress, "%04d", IC);
       printf("COMMAND_IC:%d\n", IC);
-      IC++;
-      if (code_opcode_parsing(mycommands[i].opcode, mycommands[i].funct) == 0) {
-        return 1;
-      }
 
-      /* printf("Command_name :%s\nopcode :%d \nfunct: %d\n ",mycommands[i].command_name,mycommands[i].opcode,mycommands[i].funct);*/
+      IC++;
+            printf("lineeeee::%s\n", line);
+
+      code_opcode_parsing(mycommands[i].opcode, mycommands[i].funct);
+      
+          find_adressing_method(line,label_flag,command);
+
       return 1;
     }
   }
   return 0;
+}
+
+/*
+find adress method and create the bits of it 
+
+*/
+int find_adressing_method(char * string, int label_flag,char * command) {
+
+  int i = 0;
+  char temp[80];
+  char * tempstring;
+  int dest,source;
+  char last_bits[5] = "0000\n";
+  int j = 0, k = 0, commaflag = 0, number_temp = 0;
+  printf("HERE:%s\n",string);
+  tempstring = (char * ) malloc(strlen(string) * sizeof(char));
+  if (tempstring == NULL) {
+    printf("Something Went Wrong no memory\n");
+    return 0;
+
+  }
+  strcpy(tempstring, string);
+  tempstring[strlen(tempstring)] = '\0';
+  if (label_flag == 1) {
+    while (tempstring[i] != '\0') {
+      if (tempstring[i] == ':') {
+
+        break;
+      }
+      i++;
+    }
+    i++;
+  }
+  remove_spaces_from_index(tempstring, i);
+  tempstring[strlen(tempstring)] = '\0';
+
+  i = 0;
+  while (tempstring[i] != '\0') {
+    if (tempstring[i] == ' ' || tempstring[i] == '\t') {
+      break;
+    }
+    i++;
+  }
+  remove_spaces_from_index(tempstring, i);
+  
+  i = 0;
+  tempstring[strlen(tempstring)] = '\0';
+  while(tempstring[i]!='\0'){
+    temp[j++]=tempstring[i];
+    if(tempstring[i]==','){
+      commaflag=1;
+
+      break;
+    }
+    i++;
+  }
+      i++;
+
+  if(commaflag==0){
+
+    if (check_for_reg(tempstring, 0) == 1) {
+      last_bits[k++] = '0';
+      last_bits[k++] = '0';
+      last_bits[k++] = '1';
+      last_bits[k++] = '1';
+    } else
+    if (tempstring[0] == '#') {
+      last_bits[k++] = '0';
+      last_bits[k++] = '0';
+      last_bits[k++] = '0';
+      last_bits[k++] = '0';
+
+    } else
+    if (tempstring[0] == '%') {
+      last_bits[k++] = '0';
+      last_bits[k++] = '0';
+      last_bits[k++] = '1';
+      last_bits[k++] = '0';
+    } else {
+      last_bits[k++] = '0';
+      last_bits[k++] = '0';
+      last_bits[k++] = '0';
+      last_bits[k++] = '1';
+    }
+
+  }else{
+    temp[j-1]='\0';
+      j=0;
+
+     if (check_for_reg(temp, 0) == 1) {
+
+      last_bits[k++] = '1';
+      last_bits[k++] = '1';
+    } else
+    if (temp[0] == '#') {
+      last_bits[k++] = '0';
+      last_bits[k++] = '0';
+      
+
+    } else
+    if (temp[0] == '%') {
+    
+      last_bits[k++] = '1';
+      last_bits[k++] = '0';
+    } else {
+     
+      last_bits[k++] = '0';
+      last_bits[k++] = '1';
+    }
+  j=0;
+
+    while(tempstring[i]!='\0'){
+
+      temp[j++]=tempstring[i];
+      i++;
+    }
+          temp[j]='\0';
+    
+    if (check_for_reg(temp, 0) == 1) {
+    
+      last_bits[k++] = '1';
+      last_bits[k++] = '1';
+    } else
+    if (temp[0] == '#') {
+      last_bits[k++] = '0';
+      last_bits[k++] = '0';
+ 
+
+    } else
+    if (temp[0] == '%') {
+     
+      last_bits[k++] = '1';
+      last_bits[k++] = '0';
+    } else {
+
+      last_bits[k++] = '0';
+      last_bits[k++] = '1';
+    }
+
+  }
+    last_bits[5] = '\0';
+      last_bits[5] = '\0';
+
+  
+  free(tempstring);
+
+  
+  number_temp = strtol(last_bits, NULL, 2);
+  printf("Lastbits:%s\n", last_bits);
+  temp[0]=last_bits[0];
+  temp[1]=last_bits[1];
+  temp[3]='\0';
+  source = strtol(temp, NULL, 2);
+  temp[0]=last_bits[2];
+  temp[1]=last_bits[3];
+  temp[2]='\0';
+  dest = strtol(temp, NULL, 2);
+          printf("*******************command is :%X \n",number_temp);
+
+  sprintf(arr[index_of_datatable].adress_method, "%X", number_temp);
+  index_of_datatable++;
+    check_command_corrections(source,dest,command);
+
+  return 1;
+}
+int  check_command_corrections(int source,int dest,char *command){
+  int i=0;
+  for (i = 0; i < COMMANDS_AMOUNT; i++) {
+    if (strcmp(mycommands[i].command_name, command) == 0) {
+   
+        printf("command is :%s , source is :%d , dest is :%d\n",command,source,dest);
+      return 1;
+    }
+  }
+
+
+return 1;
 }
 /*
 opcode parsing 
@@ -182,6 +361,8 @@ then create hex value and insert it to the file
 int code_opcode_parsing(char * command_code, char * command_func) {
 
   int number_temp = 0;
+  
+
   if (strcmp(command_code, "1111") == 0) {
     number_temp = strtol(command_code, NULL, 2);
     printf("firsr 4 bits:%s", command_code);
@@ -194,6 +375,8 @@ int code_opcode_parsing(char * command_code, char * command_func) {
 
     return 0;
   }
+  printf("***********commandcode:%s\n",command_code);
+    printf("***********commandfunct:%s\n",command_code);
   printf("COMMAND:%s\n", command_code);
   number_temp = strtol(command_code, NULL, 2);
   printf("firsr 4 bits:%s", command_code);
@@ -203,7 +386,7 @@ int code_opcode_parsing(char * command_code, char * command_func) {
   sprintf(arr[index_of_datatable].TAG, "%c", 'A');
   printf("%s\n", command_func);
 
-  return 1;
+  return 0;
 }
 int check_if_number(char *string){
   int i=0;
@@ -218,7 +401,9 @@ int check_if_number(char *string){
 
         number_temp = strtol(string, NULL, 10);
         printf("number_temp :%d\n", number_temp);
-
+        if(number_temp>2047||number_temp<-2047){
+          printf("ERROR: number must be between -2047 to 2047\n");
+        }
         sprintf(arr[index_of_datatable].opcode, "%03X", number_temp);
         if (number_temp < 0) {
           arr[index_of_datatable].opcode[0] = '\0';
