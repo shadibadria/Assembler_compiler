@@ -96,20 +96,19 @@ int parse_line(char * line) {
   while (line[i] != '\0' && line[i] != '\n') {
     if (line[i] != ' ' && line[i] != '\t') {
    
-      
       temp[j++] = line[i];
     } else {
+
       temp[j] = '\0';
       if (j != 0) {
-       
+
        
 
        
         if (check_if_command(temp,line) == 1) {
           find_adressing_method(line, label_flag);
-
         }
-       
+
         if (check_if_its_data(line,0) != 1&&check_if_its_string(line,0) != 1) {
           
           check_comma(line);
@@ -132,6 +131,8 @@ int parse_line(char * line) {
     if (strlen(temp)) {
       if(check_if_its_data(temp,0)!=1||check_if_its_string(temp,0))
       if (check_if_command(temp,line) == 0)
+                           printf("temp*****:%s\n",temp);
+
         check_line(temp);
 
     }
@@ -310,10 +311,7 @@ functionality: check if its entry line
 int check_if_entry(char * line,int test) {
   int i = 0;
   line[strlen(line)] = '\n';
-  if (strlen(line) < 7) {
-    printf("ERROR \n");
-    return 0;
-  }
+
   line = remove_spaces_from_index(line, i);
   /*check if its .extern */
   if (line[i] != '.' || line[i + 1] != 'e' || line[i + 2] != 'n' || line[i + 3] != 't' || line[i + 4] != 'r' || line[i + 5] != 'y' || (line[i + 6] != ' ' && line[i + 6] != '\t')) {
@@ -563,6 +561,14 @@ p+=i;
       number_counter++;
       val = strtol(p, & p, 10);
       printf("VAL[%d]\n",val);
+
+      if(val>2047){
+        printf("ERROR:Val is to large****************************\n");
+      }
+      if(val<-2047){
+                printf("ERROR:Val is to small to fit 12 bit****************************\n");
+
+      }
       sprintf(arr[index_of_datatable].Adress, "%04d", IC);
       sprintf(arr[index_of_datatable].opcode, "%03X", val);
       sprintf(arr[index_of_datatable].TAG, "%c", 'A');
@@ -764,9 +770,7 @@ if(line[i]!='\0'&&line[i]!='\n'){
  
  
  arguments_counter=count_word(temp_string);
- if(arguments_counter==0){
-   printf("ERROR: missing arguments\n");
- }
+ 
  if(comma_counter==1&&count_word(temp_string)>2){
    printf("ERROR: to many arguments x\n");
  }

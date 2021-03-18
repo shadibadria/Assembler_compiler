@@ -205,108 +205,19 @@ int code_opcode_parsing(char * command_code, char * command_func) {
 
   return 1;
 }
-/*
-check command if register / label / number
-*/
-int check_line(char * line) {
-
-  int i = 0, j = 0;
-  char temp[80];
-  int comma_flag = 0;
-  int number_temp = 0;
-
-  while (line[i] != '\n' && line[i] != '\0') {
-
-    temp[j++] = line[i];
-    if (line[i] == ',') {
-      temp[j - 1] = '\0';
-
-      comma_flag = 1;
-      if (check_for_reg(temp, 1) == 0) {
-   
-        printf("xother_IC:%d\n", IC);
-           
-
-        sprintf(arr[index_of_datatable].Adress, "%04d", IC);
-        if (strcmp(find_label(temp), "?") == 0) {
-
-          sprintf(arr[index_of_datatable].label_name, "%s", temp);
-          sprintf(arr[index_of_datatable].opcode, "%s", "?");
-
-        } 
-        index_of_datatable++;
-        IC++;
-
-      }
-      temp[0] = '\0';
-      j = 0;
-    }
-
-    i++;
-  }
-
-  temp[j] = '\0';
-
-  if (comma_flag == 1) {
-    if (check_for_reg(temp, 1)) {
-      return 1;
-    } else {
-
-      i = 0;
-      while (temp[i] != '\0') {
-        if ((temp[i] == '#' && isdigit(temp[i + 1]) != 0) || (temp[i] == '#' && temp[i + 1] == '-' && isdigit(temp[i + 2]) != 0)) {
-
-          printf("number_ic:%d\n", IC);
-          sprintf(arr[index_of_datatable].Adress, "%04d", IC);
-          sprintf(arr[index_of_datatable].TAG, "%c", 'A');
-
-          memmove(temp, temp + 1, strlen(temp));
-          number_temp = strtol(temp, NULL, 10);
-          sprintf(arr[index_of_datatable].opcode, "%03X", number_temp);
-          if (number_temp < 0) {
-            arr[index_of_datatable].opcode[0] = '\0';
-            arr[index_of_datatable].funct[4] = '\0';
-          }
-          index_of_datatable++;
-          IC++;
-          return 1;
-        }
-        i++;
-      }
-      
-    
-    
-              printf("hereother_IC:%d \n", IC);
-
-
-
-      sprintf(arr[index_of_datatable].Adress, "%04d", IC);
-
-      if (strcmp(find_label(temp), "?") == 0) {
-
-        sprintf(arr[index_of_datatable].label_name, "%s", temp);
-        sprintf(arr[index_of_datatable].opcode, "%s", "?");
-      } 
-      index_of_datatable++;
-      IC++;
-    }
-  } else {
-
-    i = 0;
-    if (check_for_reg(temp, 1) == 1) {
-      return 1;
-    }
-
-    while (temp[i] != '\0') {
-      if ((temp[i] == '#' && isdigit(temp[i + 1]) != 0) || (temp[i] == '#' && temp[i + 1] == '-' && isdigit(temp[i + 2]) != 0)) {
+int check_if_number(char *string){
+  int i=0;
+  int number_temp;
+   while (string[i] != '\0') {
+      if ((string[i] == '#' && isdigit(string[i + 1]) != 0) || (string[i] == '#' && string[i + 1] == '-' && isdigit(string[i + 2]) != 0)) {
         printf("number_ic:%d\n", IC);
         sprintf(arr[index_of_datatable].Adress, "%04d", IC);
-        memmove(temp, temp + 1, strlen(temp));
-        printf("NUMBERIS :%s\n", temp);
+        memmove(string, string + 1, strlen(string));
+        printf("NUMBERIS :%s\n", string);
         sprintf(arr[index_of_datatable].TAG, "%c", 'A');
 
-        number_temp = strtol(temp, NULL, 10);
-        printf("tempnum :%d\n", number_temp);
+        number_temp = strtol(string, NULL, 10);
+        printf("number_temp :%d\n", number_temp);
 
         sprintf(arr[index_of_datatable].opcode, "%03X", number_temp);
         if (number_temp < 0) {
@@ -321,28 +232,94 @@ int check_line(char * line) {
 
       i++;
     }
-    i = 0;
-    remove_space_tabs(temp);
-    if (temp[0] != '\0') {
+    return 0;
+}
+/*
+check command if register / label / number
+*/
+int check_line(char * line) {
 
-       
-              printf("other_IC:%d istemp:%s\n", IC, temp);
-      sprintf(arr[index_of_datatable].Adress, "%04d", IC);
+  int i = 0, j = 0;
+  char temp[80];
+  int comma_flag = 0;
+
+    if(strcmp("stop",line)==0){
+      return 1;
+    }
+
+
+  while (line[i] != '\n' && line[i] != '\0') {
+ 
+    temp[j++] = line[i];
+
+    if (line[i] == ',') {
+      comma_flag=1;
+      temp[j - 1] = '\0';
+      if(check_if_number(temp)==1){
+        break;
+       }
+       if(check_for_reg(temp,1)==1){
+         break;
+       }
+       printf("xother_IC:%d\n", IC);
+        sprintf(arr[index_of_datatable].Adress, "%04d", IC);
+        if (strcmp(find_label(temp), "?") == 0) {
+          sprintf(arr[index_of_datatable].label_name, "%s", temp);
+          sprintf(arr[index_of_datatable].opcode, "%s", "?");
+
+        } 
+        index_of_datatable++;
+        IC++;
+        break;
+        }
+        i++;
+    }
+
+
+  if (comma_flag == 0) {
+      line[strlen(line)]='\0';
+    if(check_if_number(line)==1) return 1;
+    if(check_for_reg(line,1)) return 1;
+     printf("hereother_IC:%d \n", IC);
+         sprintf(arr[index_of_datatable].Adress, "%04d", IC);
+         printf("tempppp:%s*******\n",line);
+
+
+      if (strcmp(find_label(line), "?") == 0) {
+
+        sprintf(arr[index_of_datatable].label_name, "%s", line);
+        sprintf(arr[index_of_datatable].opcode, "%s", "?");
+      } 
+      index_of_datatable++;
+      IC++;
+   return 0;
+  }
+    i++;
+       temp[0] = '\0';
+       j=0;
+      while(line[i]!='\0'){
+
+          temp[j++]=line[i];
+        i++;
+      }
+        temp[j]='\0';
+
+        if(check_if_number(temp)==1)
+          return 1;
+        if(check_for_reg(temp,1)==1)
+          return 1;
+
+         printf("hereother_IC:%d \n", IC);
+         sprintf(arr[index_of_datatable].Adress, "%04d", IC);
+         printf("tempppp:%s*******\n",temp);
 
       if (strcmp(find_label(temp), "?") == 0) {
-            printf("HERE:\n");
 
         sprintf(arr[index_of_datatable].label_name, "%s", temp);
         sprintf(arr[index_of_datatable].opcode, "%s", "?");
-      } else {
-        sprintf(arr[index_of_datatable].opcode, "%s", "found");
-
-      }
+      } 
       index_of_datatable++;
       IC++;
-    }
-
-  }
 
   return 0;
 }

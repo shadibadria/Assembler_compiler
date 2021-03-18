@@ -31,3 +31,4 @@ char command_code[13];
 int code_opcode_parsing(char * command_code, char * command_func);
 
 int check_for_reg(char * string, int add_to_table_flag);
+int check_if_number(char *string);
