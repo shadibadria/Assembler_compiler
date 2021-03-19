@@ -19,6 +19,9 @@ typedef struct command {
   char funct[5];
   char opcode[5];
   int allowed_operand;
+  char source_operands[8];
+  char dest_operands[8];
+
 }
 command;
 

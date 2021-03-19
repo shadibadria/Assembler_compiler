@@ -24,32 +24,40 @@ void init_commands() {
   strcpy(mycommands[i].opcode, "0000\0");
   strcpy(mycommands[i].funct, "0000\0");
   mycommands[i].allowed_operand=2;
+  strcpy(mycommands[i].source_operands,"0,1,3\0");
+  strcpy(mycommands[i].dest_operands,"1,3\0");
 
   i++;
   strcpy(mycommands[i].command_name, "cmp\0");
   strcpy(mycommands[i].opcode, "0001\0");
   strcpy(mycommands[i].funct, "0000\0");
   mycommands[i].allowed_operand=2;
+  strcpy(mycommands[i].source_operands,"0,1,3\0");
+  strcpy(mycommands[i].dest_operands,"0,1,3\0");
 
   i++;
   strcpy(mycommands[i].command_name, "add\0");
   strcpy(mycommands[i].opcode, "0010\0");
   strcpy(mycommands[i].funct, "1010\0");
-    mycommands[i].allowed_operand=2;
+  mycommands[i].allowed_operand=2;
+  strcpy(mycommands[i].source_operands,"0,1,3\0");
+  strcpy(mycommands[i].dest_operands,"1,3\0");
 
   i++;
   strcpy(mycommands[i].command_name, "sub\0");
   strcpy(mycommands[i].opcode, "0010\0");
   strcpy(mycommands[i].funct, "1011\0");
     mycommands[i].allowed_operand=2;
-
+strcpy(mycommands[i].source_operands,"0,1,3\0");
+  strcpy(mycommands[i].dest_operands,"1,3\0");
 
   i++;
   strcpy(mycommands[i].command_name, "lea\0");
   strcpy(mycommands[i].opcode, "0100\0");
   strcpy(mycommands[i].funct, "0000\0");
     mycommands[i].allowed_operand=2;
-
+strcpy(mycommands[i].source_operands,"1\0");
+  strcpy(mycommands[i].dest_operands,"1,3\0");
 
   i++;
 
@@ -57,12 +65,16 @@ void init_commands() {
   strcpy(mycommands[i].opcode, "0101\0");
   strcpy(mycommands[i].funct, "1010\0");
     mycommands[i].allowed_operand=1;
+    strcpy(mycommands[i].source_operands,"n\0");
+  strcpy(mycommands[i].dest_operands,"1,3\0");
   i++;
 
   strcpy(mycommands[i].command_name, "not\0");
   strcpy(mycommands[i].opcode, "0101\0");
   strcpy(mycommands[i].funct, "1011\0");
     mycommands[i].allowed_operand=1;
+        strcpy(mycommands[i].source_operands,"n\0");
+  strcpy(mycommands[i].dest_operands,"1,3\0");
 
   i++;
 
@@ -70,12 +82,16 @@ void init_commands() {
   strcpy(mycommands[i].opcode, "0101\0");
   strcpy(mycommands[i].funct, "1100\0");
   mycommands[i].allowed_operand=1;
+      strcpy(mycommands[i].source_operands,"n\0");
+  strcpy(mycommands[i].dest_operands,"1,3\0");
   i++;
 
   strcpy(mycommands[i].command_name, "dec\0");
   strcpy(mycommands[i].opcode, "0101\0");
   strcpy(mycommands[i].funct, "1101\0");
   mycommands[i].allowed_operand=1;
+      strcpy(mycommands[i].source_operands,"n\0");
+  strcpy(mycommands[i].dest_operands,"1,3\0");
 
   i++;
 
@@ -83,6 +99,8 @@ void init_commands() {
   strcpy(mycommands[i].opcode, "1001\0");
   strcpy(mycommands[i].funct, "1010\0");
   mycommands[i].allowed_operand=1;
+      strcpy(mycommands[i].source_operands,"n\0");
+  strcpy(mycommands[i].dest_operands,"1,2\0");
 
   i++;
 
@@ -90,13 +108,16 @@ void init_commands() {
   strcpy(mycommands[i].opcode, "1001\0");
   strcpy(mycommands[i].funct, "1011\0");
   mycommands[i].allowed_operand=1;
-
+     strcpy(mycommands[i].source_operands,"n\0");
+  strcpy(mycommands[i].dest_operands,"1,2\0");
   i++;
 
   strcpy(mycommands[i].command_name, "jsr\0");
   strcpy(mycommands[i].opcode, "1001\0");
   strcpy(mycommands[i].funct, "1100\0");
     mycommands[i].allowed_operand=1;
+         strcpy(mycommands[i].source_operands,"n\0");
+  strcpy(mycommands[i].dest_operands,"1,2\0");
 
   i++;
 
@@ -104,6 +125,8 @@ void init_commands() {
   strcpy(mycommands[i].opcode, "1100\0");
   strcpy(mycommands[i].funct, "0000\0");
     mycommands[i].allowed_operand=1;
+         strcpy(mycommands[i].source_operands,"n\0");
+  strcpy(mycommands[i].dest_operands,"1,3\0");
 
   i++;
 
@@ -111,6 +134,8 @@ void init_commands() {
   strcpy(mycommands[i].opcode, "1101\0");
   strcpy(mycommands[i].funct, "0000\0");
     mycommands[i].allowed_operand=1;
+         strcpy(mycommands[i].source_operands,"n\0");
+  strcpy(mycommands[i].dest_operands,"0,1,3\0");
 
   i++;
 
@@ -118,14 +143,16 @@ void init_commands() {
   strcpy(mycommands[i].opcode, "1110\0");
   strcpy(mycommands[i].funct, "0000\0");
     mycommands[i].allowed_operand=1;
-
+     strcpy(mycommands[i].source_operands,"n\0");
+  strcpy(mycommands[i].dest_operands,"1,2\0");
   i++;
 
   strcpy(mycommands[i].command_name, "stop\0");
   strcpy(mycommands[i].opcode, "1111\0");
   strcpy(mycommands[i].funct, "0000\0");
   mycommands[i].allowed_operand=0;
-
+     strcpy(mycommands[i].source_operands,"n\0");
+  strcpy(mycommands[i].dest_operands,"n\0");
 }
 
 /*
@@ -262,7 +289,7 @@ int find_adressing_method(char * string, int label_flag,char * command) {
   }else{
     temp[j-1]='\0';
       j=0;
-
+        printf("***********ftemp:%s\n",temp);
      if (check_for_reg(temp, 0) == 1) {
 
       last_bits[k++] = '1';
@@ -291,7 +318,8 @@ int find_adressing_method(char * string, int label_flag,char * command) {
       i++;
     }
           temp[j]='\0';
-    
+            printf("***********lasttemp:%c\n",temp[0]);
+        remove_space_tabs(temp);
     if (check_for_reg(temp, 0) == 1) {
     
       last_bits[k++] = '1';
@@ -300,7 +328,9 @@ int find_adressing_method(char * string, int label_flag,char * command) {
     if (temp[0] == '#') {
       last_bits[k++] = '0';
       last_bits[k++] = '0';
- 
+       last_bits[5] = '\0';
+            printf("***********lastbit:%s\n",last_bits);
+
 
     } else
     if (temp[0] == '%') {
@@ -315,7 +345,6 @@ int find_adressing_method(char * string, int label_flag,char * command) {
 
   }
     last_bits[5] = '\0';
-      last_bits[5] = '\0';
 
   
   free(tempstring);
@@ -340,10 +369,32 @@ int find_adressing_method(char * string, int label_flag,char * command) {
   return 1;
 }
 int  check_command_corrections(int source,int dest,char *command){
-  int i=0;
+  int i=0,j=0;
+  int source_flag=0;
+  int dest_flag=0;
   for (i = 0; i < COMMANDS_AMOUNT; i++) {
     if (strcmp(mycommands[i].command_name, command) == 0) {
-   
+          while(mycommands[i].dest_operands[j]!='\0'){
+
+                if((mycommands[i].dest_operands[j]-'0')==dest){
+                                        printf("FOUND dest********\n");
+                    dest_flag=1;
+                }
+            
+            j++;
+          }
+          j=0;
+          while(mycommands[i].source_operands[j]!='\0'){
+                 if((mycommands[i].source_operands[j]-'0')==source){
+                                        printf("FOUND source********\n");
+                                        source_flag=1;
+
+                }
+            j++;
+          }
+          if(!source_flag||!dest_flag){
+            printf("operand addressing errors\n");
+          }
         printf("command is :%s , source is :%d , dest is :%d\n",command,source,dest);
       return 1;
     }
