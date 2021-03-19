@@ -6,7 +6,7 @@
 
 #define SIZEOFCODE 5
 #define SIZEOFADRESS 5
-
+#define MAX_Data 100
 /*
 file name : data_image
 explain: this file is is header file that responsible for declre the function and the data image sruct

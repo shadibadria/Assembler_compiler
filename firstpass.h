@@ -15,7 +15,7 @@ explain: this header file has all the function declration for firstpass.c
 #define MAX_LINE 80
 #define MAX_LABEL 31
 #define MAX_DATA 2047
-#define MIN_DATA -2047
+#define MIN_DATA -2048
 
 int firstpass(char * filename);
 int assemble_parsing(char * line);
@@ -34,3 +34,4 @@ void check_comma(char *line);
 int check_line_arguments(char *line);
 int count_word( char *s);
 void remove_label(char *line);
+int check_for_char(char *string);

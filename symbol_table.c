@@ -39,7 +39,6 @@ void append_entry_tofile(char * filename) {
     printf("error creating file %s \n", filename);
     exit(0);
   }
-        printf("a9******************************sdsad:\n");
 
     if(array[i].attribute!=NULL){
       
@@ -90,7 +89,6 @@ void insert(int key, int value, char * symbol, char * attribute) {
     printf("ERROR: using realloc at symbol_table.c\n");
     exit(0);
   }
-      printf("symbxxxxxxxxxxxxxxol:%s\n",symbol);
 
 
   if (array[index].amount == 0) {
@@ -136,10 +134,9 @@ void insert(int key, int value, char * symbol, char * attribute) {
     strcpy(array[index].attribute, attribute);
    
     size_table++;
-   printf("\n Key (%d) has been inserted \n", key);
   } else if (array[index].key_value == key) {
     /*  updating already existing key  */
-    printf("\n Key (%d) already present, hence updating its value \n", key);
+   
     array[index].amount += 1;
   } else {
     /*  key cannot be insert as the index is already containing some other key  */

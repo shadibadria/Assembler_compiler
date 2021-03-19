@@ -24,7 +24,7 @@ void append_command_to_file(char * filename, data_image data) {
   fputs("        ", file_pointer);
   fputs(data.TAG, file_pointer);
   fputs("\n", file_pointer);
-    fclose(file_pointer);
+  fclose(file_pointer);
 
 }
 
@@ -37,7 +37,7 @@ void append_extern_tofile(char * filename) {
     exit(0);
   }
 
-  for (i = 0; i < 100; i++) {
+  for (i = 0; i < MAX_Data; i++) {
     if (strstr(arr[i].TAG, "E") != NULL) {
       fputs(arr[i].label_name, file_pointer);
       fputs("          ", file_pointer);
