@@ -177,10 +177,9 @@ check for duplicate at the symbol table
 int checkforduplicate(char * symbol) {
 
   int i;
-
+    
   for (i = 0; i < size_table; i++) {
     if (strcmp(array[i].symbol,symbol)==0) {
-      printf("Symbol Already Exsist \n");
       return 0;
     }
 

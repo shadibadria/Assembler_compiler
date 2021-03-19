@@ -22,8 +22,8 @@ typedef struct command {
   char source_operands[8];
   char dest_operands[8];
 
-}
-command;
+}command;
+
 
 void init_commands();
 int check_command(char * command,char *line,int argument_counter,int label_flag);

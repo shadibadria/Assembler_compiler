@@ -21,6 +21,7 @@ and to the RAM
 int IC = 100;
 int DC = 0;
 int count = 0;
+int program_line=1;/*to count program lines*/
 FILE * filePointer;
 char buffer[bufferLength];
 int extern index_of_datatable;
@@ -33,20 +34,25 @@ functionality: function take file name and scan it and sent line to parsing
 int firstpass(char * filename) {
   filePointer = fopen(filename, "r");
   if (filePointer == NULL) {
-    printf("\ncant open file \n");
-    return 0;
+    printf("*** ERROR: Cant open file name :%s ***\n",filename);
+    exit(0);
   }
   while (fgets(buffer, bufferLength, filePointer)) {
-    if(strlen(buffer)>=80){
-      printf("ERROR: line to long must be be 80 \n");
-
-    }else{
-    assemble_parsing(buffer);
-
+    if(strlen(buffer)>MAX_LINE){
+      printf("*** ERROR File is to big must contain max 4095 \n ***");
+        exit(0);
     }
-
+    else{
+      if(IC>bufferLength){
+         printf("*** ERROR at line %d line is  to long, max length is  80 \n ***",program_line);
+        return 0;
+      }
+    }
+    
+    assemble_parsing(buffer);/*send the line to parsing */
+   
   }   
-        fclose(filePointer);
+  fclose(filePointer);
   return 0;
 }
 
@@ -56,17 +62,16 @@ functionality: send the line to function parse_line after removing spaces and ta
 at the beginning , and checks if line empty or EOF
 */
 int assemble_parsing(char * line) {
-  if (line[0] == '\n' || line[0] == '\0') {
+  if (line[0] == '\n' || line[0] == '\0') {/*if line is empty */
     return 0;
   }
   printf("\n******************************\n");
   printf("\nCommand :%s\n", line);
   label_flag = 0;
-  check_line_arguments(line);
- parse_line(line);
-
+  check_line_arguments(line);/*check if arguments for error*/
+ parse_line(line);/*send line to proccess it */
+    program_line++;/*count line*/
   
-
   return 1;
 }
 /*
@@ -76,23 +81,23 @@ functionality: parse the line to data we needby calling functions
 int parse_line(char * line) {
   int i = 0, j = 0;
   char temp[500];
- 
+ /*if line is comment*/
   if (line[i] == ';') {
-    printf("comment\n");
-    return 0;
-  }
    
-  if (check_if_extern(line,0) == 1) {
+    return 1;
+  }
+   if (check_if_extern(line,0) == 1) {
     return 0;
   }
  if (check_if_entry(line,0) == 1) {
     return 0;
   }
+  
+  /*if line is label*/
    if (check_if_label(line,0) == 1) {
           label_flag = 1;
         }
-
-      
+      /*get word by word*/
   while (line[i] != '\0' && line[i] != '\n') {
     if (line[i] != ' ' && line[i] != '\t') {
    
@@ -102,18 +107,15 @@ int parse_line(char * line) {
       temp[j] = '\0';
       if (j != 0) {
 
-       
-
-       
+            /*check for command*/
          check_if_command(temp,line,label_flag);
         
-
+          /*check if line is data or string and check comma (',') correction*/
         if (check_if_its_data(line,0) != 1&&check_if_its_string(line,0) != 1) {
           
           check_comma(line);
         }else{
                     return 0;
-
         }
       
       }
@@ -124,31 +126,31 @@ int parse_line(char * line) {
     i++;
   } /*end while*/
 
-
+    /*check if its end of line and then check the word if its string/data/command*/
   if (line[i] == '\n' || line[i] == '\0') {
     temp[j] = '\0';
     if (strlen(temp)) {
       if(check_if_its_data(temp,0)!=1||check_if_its_string(temp,0))
       if (check_if_command(temp,line,label_flag) == 0)
-                           printf("temp*****:%s\n",temp);
-
         check_line(temp);
-
     }
-
   }
-
   return 1;
 }
+/*
+check if line comma's are correct 
+*/
 void check_comma(char *line){
 int i=0,counter=0;
 while(line[i]!='\0'){
 if(line[i]==',') counter++;
   i++;
 }
-if(counter>1) printf("ERROR : to many comma\n");
-}
+if(counter>1){
+ printf("*** ERROR at line %d to many comma's ***\n",program_line);
 
+}
+}
 
 /*
 param: line from file
@@ -158,13 +160,12 @@ functionality: check if the line is .extern
 int check_if_extern(char * line,int test) {
   int i = 0;
   remove_spaces_from_index(line,0);
-  printf("EXTERN:%s\n",line);
    
   /*check if its .extern */
   if (line[i] != '.' || line[i + 1] != 'e' || line[i + 2] != 'x' || line[i + 3] != 't' || line[i + 4] != 'e' || line[i + 5] != 'r' || line[i + 6] != 'n' || (line[i + 7] != ' ' && line[i + 7] != '\t')) {
     return 0;
   }
-  if(test==1){
+  if(test==1){/*if we just want to know its extern*/
     return 1;
   }
  
@@ -176,11 +177,11 @@ int check_if_extern(char * line,int test) {
   line[strlen(line)] = '\0';
   remove_space_tabs(line);
 if (checkforduplicate(line) == 0) {
-    printf("ERROR extern duplicate found \n");
+    printf("*** ERROR at line %d the Label %s is already in use *** \n",program_line,line);
     return 0;
   }
- insert(DC++,0, line,"external");
-
+  /*insert external label*/
+   insert(DC++,0, line,"external");
   printf("\n\nits extern !!!\n");
   return 1;
 }
@@ -194,7 +195,7 @@ int check_if_entry(char * line,int test) {
   line[strlen(line)] = '\n';
 
   line = remove_spaces_from_index(line, i);
-  /*check if its .extern */
+  /*check if its .entry */
   if (line[i] != '.' || line[i + 1] != 'e' || line[i + 2] != 'n' || line[i + 3] != 't' || line[i + 4] != 'r' || line[i + 5] != 'y' || (line[i + 6] != ' ' && line[i + 6] != '\t')) {
     return 0;
   }
@@ -217,18 +218,16 @@ int check_if_entry(char * line,int test) {
   }
   count++;
   remove_space_tabs(line);
-  if(test==0){
+  if(test==0){/*if test exit and if its pass1*/
     return 1;
   }
+  /*check for label duplicate and insert*/
    if (checkforduplicate(line) == 0) {
         insert_entry(line);
-
-   
   } else {
- printf("ERROR: entry not found in symbol table \n");
+ printf("*** ERROR at line %d entry label %s is  not found on symbol table \n",program_line,line);/*second pass error*/
     return 0;
   }
-  
   printf("\n\nits entry !!!\n");
   return 1;
 }
@@ -244,22 +243,21 @@ char * remove_spaces_from_index(char * string, int i) {
   }
   newstring = (char * ) malloc(strlen(string) * sizeof(char));
   if (newstring == NULL) {
-    printf("Something Went Wrong no memory\n");
-    return "bad";
+    printf("*** ERROR  Something Went Wrong no memory ***\n");
+    exit(0);
   }
 
-  while (string[i] != '\n' && string[i] != '\0') {
+  while (string[i] != '\n' && string[i] != '\0') {/*find first appering of word*/
     if (string[i] != ' ' && string[i] != '\t' && !isspace(string[i])) {
-
       break;
     }
     i++;
   }
+  /*add values to string*/
   while (string[i] != '\n' && string[i] != '\0') {
     newstring[j++] = string[i];
     i++;
   }
-
   newstring[j] = '\0';
   strcpy(string, newstring);
   free(newstring);
@@ -275,11 +273,10 @@ char * remove_space_tabs(char * string) {
   int string_len=(strlen(string)+1);
   newstring = (char * )malloc( string_len * sizeof(char));
   if (newstring == NULL) {
-    printf("Something Went Wrong no memory\n");
-      free(newstring);
-
-    return "bad";
+    printf("*** ERROR Something Went Wrong no memory ***\n");
+    exit(0);
   }
+  /*create new string without spaces/tabs*/
   while (string[i] != '\n' && string[i] != '\0') {
     if (string[i] != ' ' && string[i] != '\t') {
       newstring[j++] = string[i];
@@ -305,65 +302,61 @@ int check_if_label(char * line,int test) {
   char *temp;
    temp = (char * ) malloc((strlen(line)+1) * sizeof(char));
   if (temp == NULL) {
-    printf("Something Went Wrong no memory\n");
-    return 0;
-
+    printf("*** ERROR Something Went Wrong no memory ***\n");
+    exit(0);
   }
+  /*search for end of the label char ':' */
   while (line[i] != '\n' && line[i] != '\0') {
-   
- 
       temp[j++] = line[i];
-      
     if (line[i] == ':') {
           temp[j] = '\n';
-          printf("[%d]\n",j);
           j=0;
+
           while(temp[j]!=':'){
-           if(temp[j]==' '||temp[j]=='\t'){
-            printf("\nERROR:Label has space/tab in it\n");
+           if(temp[j]==' '||temp[j]=='\t'){/*check if label has spaces/tabs in it*/
+            printf("*** ERROR at line: %d: Label has space/tab in it ***\n",program_line);
             break;
           }
           j++;
           }
-         
-        if(isdigit(temp[0])){
-            printf("ERROR:label must start with letter\n");           
-        }
-        if(strlen(temp)>31){
-                      printf("\nERROR:label is to long must be 31 char\n");           
 
+        if(isdigit(temp[0])){/*check if label start with letters*/
+            printf("*** ERROR at line: %d: label must start with letters *** \n",program_line); 
+        }
+        if(strlen(temp)>MAX_LABEL){
+                      printf("\n*** ERROR at line %d: label is to long must be 31 char ***\n",program_line);          
         }
           while(temp[j]!=':'){
             j++;
           }
-          if(temp[j]==':'){
-            j++;
-          }
+                             printf("LINExx:%s\n",temp);
 
-      if(test==1){
+
+      if(test==1){/*if only testing if its label*/
         free(temp);
         return 1;
       }
-
-      temp[j] = '\n';
-      printf("label:%s\n", remove_space_tabs(temp));
+      remove_space_tabs(temp);
+        if(temp[j-1]==':'){/*remove the ':' if exsist*/
+          temp[j-1]='\0';
+        }
+        if(checkforduplicate(remove_space_tabs(temp))==0){/*check for duplicate of the label*/
+          printf("*** ERROR at line %d \"%s\" has already exsisted ***\n",program_line,temp);
+        }
+        printf("label:%s\n", remove_space_tabs(temp));
       if(temp[i]==','){
           free(temp);
         return 0;
       }
+      /*insert label with info*/
       if(check_if_its_data(line,1)==1){
-
       insert(DC++, IC, remove_space_tabs(temp), "data");
-
       }else
       if(check_if_its_string(line,1)==1)
       {
       insert(DC++, IC, remove_space_tabs(temp), "data");
-
       }else{
-        
-              insert(DC++, IC, remove_space_tabs(temp), "code");
-
+        insert(DC++, IC, remove_space_tabs(temp), "code");
       }
   free(temp);
       return 1;
@@ -381,14 +374,15 @@ functionality: check if its data
 int check_if_its_data(char * line,int test) {
 
   int i = 0;
-  
+  /*check if its data*/
+  printf("HERE\n");
   while (line[i] != '\n' && line[i] != '\0') {
     if (line[i] == '.') {
       if (line[i + 1] == 'd' && line[i + 2] == 'a' && line[i + 3] == 't' && line[i + 4] == 'a') {
-        if(test==0){
-                  printf("its data :%s\n",line);
+        if(test==0){/*if its not testing only*/
+                  printf("xits data :%s\n",line);
 
-        data_parsing(line,i+4);
+        data_parsing(line,i+4);/*parse the data to numbers*/
         return 1;
         }
         
@@ -404,20 +398,16 @@ int check_if_its_data(char * line,int test) {
 param: data line
 functionality: get data input to array
 */
-void data_parsing(char * line,int i) {
+int data_parsing(char * line,int i) {
   char * p = line;
   int val,comma_counter=0,number_counter=0,number_flag=0;
-    printf("LINE:%s\n",line);
-p+=i;
+    p+=i;
   line[strlen(line)] = '\0';
-
-      printf("afLINE:%s\n",line);
-
+  /*check data if correct*/
   while(*p){
     if(*p==','){
       if(number_flag==0){
-            printf("ERROR: to many comma's missing numbers\n");
-
+            printf("*** ERROR at line %d to many comma's inserted missing numbers ***\n",program_line);
       }
       number_flag=0;
       comma_counter++;
@@ -425,10 +415,7 @@ p+=i;
            if (isdigit( * p) || (( * p == '-' || * p == '+') && isdigit( * (p + 1)))) {
              number_flag=1;
            }else{
-             if(*p!=' '&&*p!='\t'&&number_flag){
-
-              printf("ERROR: to many argument on line :%c \n",*p);
-             }
+            
            }
 
     }
@@ -436,20 +423,22 @@ p+=i;
   }
   p=line;
   p+=i;
+  /*insert data*/
   while ( * p) {
 
     if (isdigit( * p) || (( * p == '-' || * p == '+') && isdigit( * (p + 1)))) {
       number_counter++;
+
       val = strtol(p, & p, 10);
-      printf("VAL[%d]\n",val);
-
-      if(val>2047){
-        printf("ERROR:Val is to large****************************\n");
+      if(val>MAX_DATA){
+        printf("*** ERROR at line %d data value is bigger than %d *** \n",program_line,MAX_DATA);
       }
-      if(val<-2047){
-                printf("ERROR:Val is to small to fit 12 bit****************************\n");
 
+      if(val<MIN_DATA){
+        printf("*** ERROR at line %d data value is smaller than %d *** \n",program_line,MIN_DATA);
       }
+          
+      /*insert data values */
       sprintf(arr[index_of_datatable].Adress, "%04d", IC);
       sprintf(arr[index_of_datatable].opcode, "%03X", val);
       sprintf(arr[index_of_datatable].TAG, "%c", 'A');
@@ -462,22 +451,11 @@ p+=i;
     } else {
       p++;
     }
-
   }
   
-  printf("************************%d > %d\n",number_counter,comma_counter);
-  if(number_counter==0){
-    printf("ERROR: data is missing please insert numbers\n");
-  }
-  if(number_counter<=comma_counter){
-    printf("ERROR: to many comma's missing numbers\n");
-  }
-   if(number_counter>comma_counter+1){
-         printf("ERROR: to many numbers missing comma's  \n");
-
-   }
-
+return 1;
 }
+
 
 /*
 param: string  line
@@ -494,7 +472,7 @@ int  string_parsing(char * line, int index) {
       break;
     }
     if(line[index]!=' '&&line[index]!='\t'){
-      printf("ERROR: string formating wrong : %c\n",line[index]);
+      printf("*** ERROR at line %d  string formating wrong ***\n",program_line);
     }
     index++;
   }
@@ -507,19 +485,18 @@ int  string_parsing(char * line, int index) {
       string_starting_flag++;
   }
   if(string_starting_flag!=2){
-    printf("ERROR: string must start with \" \"\n");
+    printf("*** ERROR at line %d string must start with \" and end with \" ***\n",program_line);
   }
   j++;
   while(line[j]!='\0'){
     if(line[j]!=' '&&line[j]!='\t'){
-      printf("ERROR: string has char after end :%c\n",line[j]);
+      printf("*** ERROR at line %d string has char %c after end ***\n",program_line,line[j]);
     }
     j++;
   }
+  /*insert string to table by ascii code*/
   while (line[index] != '"' && line[index] != '\n' && line[index] != '\0') {
     string_flag=1;
-    printf("\nstr:%c\n", line[index]);
-
     sprintf(arr[index_of_datatable].Adress, "%04d", IC);
     ascii = (int) line[index];
     printf("ascii:%d\n", ascii);
@@ -531,16 +508,13 @@ int  string_parsing(char * line, int index) {
     IC++;
     index++;
   }
-
   if(string_flag==0){
-    printf("ERROR : string has no values\n");
+    printf("*** ERROR at line %d  string has no values ***\n",program_line);
   }
   sprintf(arr[index_of_datatable].Adress, "%04d", IC);
   ascii = 0;
-
   sprintf(arr[index_of_datatable].opcode, "%03X", ascii);
   sprintf(arr[index_of_datatable].TAG, "%c", 'A');
-
   index_of_datatable++;
   printf("str_IC : %d\n", IC);
   IC++;
@@ -555,13 +529,12 @@ int check_if_its_string(char * line,int test) {
 
   while (line[i] != '\n' && line[i] != '\0') {
     if (line[i] == '.') {
-      if (line[i + 1] == 's' && line[i + 2] == 't' && line[i + 3] == 'r' && line[i + 4] == 'i' && line[i + 5] == 'n' && line[i + 6] == 'g') {
-        printf("xxstring:%s\n",line);
+      if (line[i + 1] == 's' && line[i + 2] == 't' && line[i + 3] == 'r' && line[i + 4] == 'i' && line[i + 5] == 'n' && line[i + 6] == 'g') {/*check if string*/
         printf("its string\n");
           if(test==1){
           return 1;
         }
-        string_parsing(line, i + 7);
+        string_parsing(line, i + 7);/*parse string*/
         return 1;
       }
     }
@@ -575,28 +548,27 @@ functionality : check if its command
 */
 int check_if_command(char * command,char *line,int label_flag) {
 
-  printf("COMMANDbef:%s\n",command);
-
-  
   if(label_flag==1){
 
   remove_label(command);
   }
- printf("COMMANDAFTER:%s\n",command);
   /*check command*/
   if (check_command(command,line,arguments_counter,label_flag) == 0) {
     return 0;
   }
-
   return 1;
 }
+/*check arguments of line */
 int check_line_arguments(char *line){
   int i=0,j=0;
   int label_flag=0;
   char *temp_string=NULL;
   int comma_counter=0;
   arguments_counter=0;
-  
+  /**/
+  if(check_if_its_string(line,1)||check_if_its_data(line,1)){
+    return 1;
+  }
   /*remove label*/
   while(line[i]!='\0'){
     if(line[i]==':'){
@@ -610,14 +582,14 @@ int check_line_arguments(char *line){
 }else{
   i++;
 }
-  
+    /*find first word(command)*/
   while(line[i]!='\0'){
     if(line[i]!=' '&&line[i]!='\t'){
       break;
     }
     i++;
   }
-
+/*find space to the argument list*/
 while (line[i]!='\0')
 {
   if(line[i]==' '||line[i]=='\t'){
@@ -631,6 +603,7 @@ while(line[i]!='\0'){
     }
     i++;
   }
+
 if(line[i]!='\0'&&line[i]!='\n'){
   temp_string =(char*)malloc(strlen(line)*sizeof(char));
   if(temp_string==NULL){
@@ -650,31 +623,31 @@ if(line[i]!='\0'&&line[i]!='\n'){
  }
  
  
- arguments_counter=count_word(temp_string);
+ arguments_counter=count_word(temp_string);/*count arguments*/
  
  if(comma_counter==1&&count_word(temp_string)>2){
-   printf("ERROR: to many arguments x\n");
+   printf("*** ERROR at line %d to many arguments in the command ***\n",program_line);
  }
  if(comma_counter==0&&count_word(temp_string)>1){
-   printf("ERROR: to many arguments x\n");
+   printf("*** ERROR at line %d to many arguments in the command ***\n",program_line);
 
  }
  if(comma_counter>2){
-      printf("ERROR: to many comma's\n");
+   printf("*** ERROR at line %d to many comma's in the command ***\n",program_line);
 
  }
 
 free(temp_string);
   return arguments_counter;
 }
-
+/*function to count words in line*/
 int count_word( char *s) {          
     int count = 0, hassep = 1;
-    
+    /*if line is empty*/
     if(s==NULL){
-return 0;
+    return 0;
  }
-    while (*s) {
+    while (*s) {/*count words*/
         if (isspace((unsigned char)*s)||*s==',') {
             hassep = 1;
         } else {
@@ -686,7 +659,7 @@ return 0;
     }
     return count;
 }
-
+/*function to remove label from string end with : */
 void remove_label(char *line){
 int i=0,j=0;
 char *newstring;
@@ -695,7 +668,7 @@ if(label_flag==1){
 
   newstring=(char*)malloc(strlen(line)*sizeof(char));
   if(newstring==NULL){
-    printf("ERROR: zekron\n");
+    printf(" *** ERROR memory problem *** \n");
     exit(1);
   }
   while (line[i]!='\0')
