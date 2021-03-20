@@ -12,6 +12,7 @@ explain: all function of data (commands , datat ,string )
 int extern IC;
 int extern index_of_datatable;
 int extern program_line;
+int extern  first_pass_flag;
 command mycommands[COMMANDS_AMOUNT];
 
 /*
@@ -179,6 +180,8 @@ int check_command(char * command, char * line, int argument_counter, int label_f
       }
       if (coma_flag == 1) {
         printf("***ERROR at line %d to many comma's ***\n",program_line);
+                first_pass_flag=0;
+
       }
       sprintf(arr[index_of_datatable].Adress, "%04d", IC);
 
@@ -386,6 +389,8 @@ printf("s:%d\n",source);
       }
       if (!source_flag || !dest_flag) {/*check if correct*/
         printf("*** ERRORs at line %d operand addressing error ***\n",program_line);
+        
+        first_pass_flag=0;
       }
       return 1;
     }
@@ -435,6 +440,8 @@ int check_if_number(char * string) {
       number_temp = strtol(string, NULL, 10);
       if (number_temp > MAX_DATA || number_temp < MIN_DATA) {
         printf("*** ERROR at line %d  number must be between %d to %d ***\n",program_line,MIN_DATA,MAX_DATA);
+                first_pass_flag=0;
+
       }
       sprintf(arr[index_of_datatable].opcode, "%03X", number_temp);
       if (number_temp < 0) {

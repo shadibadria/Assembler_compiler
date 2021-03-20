@@ -32,41 +32,87 @@ int main(int argc, char * argv[]) {
 
   int i = 0;
   FILE * fp;
+  int extern first_pass_flag;
+  int extern second_pass_flag;
+  char *newfile;
+  int file_flag=0;
+
   char filename[bufferLength];
   init_array();
   init_registers();
   init_commands();
   if (argc <= 1) {
-    printf("\n**Error : Missing Arguments \n\n");
+    printf("*** Error  Missing Arguments ***\n");
     return 1;
   }
 
   for (i = 1; i < argc; i++) {
     if ((fp = fopen(argv[i], "r")) == NULL) {
-      printf("\nError :  could not open file named %s\n\n", argv[i]);
+            strcpy(filename, argv[i]);
+      file_flag=1;
 
-    } else {
+  newfile=(char*)malloc((sizeof(filename)+4)*sizeof(char));
+  if(newfile==NULL){
+    printf("ERROR cant alocate memory\n");
+    exit(0);
+  }
+  strcpy(newfile,filename);
+  strcat(newfile,".as\0");
+  
+  
+         
+    }            
+
       strcpy(filename, argv[i]);
+      if(file_flag==1){
 
-      if (check_file(filename)) {
+        if(check_file(newfile)==1){
+   firstpass(newfile);/*First Pass*/
 
-        firstpass(argv[i]);/*First Pass*/
-                 printf("DONExxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n");
-
-                          secondpass(argv[i]);/*second Pass*/
-    for (i = 0; i < 100; i++) {
-          if (strlen(arr[i].Adress) >= 1) {        
-            append_command_to_file("ps.ob", arr[i]);           
+          if(first_pass_flag==0){
+              return 0;
           }
+            printf("DONExxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n");
+
+            secondpass(newfile);/*second Pass*/
+           if(second_pass_flag==0){
+             return 0;
+           }
+         
+
+  append_datatable_tofile("ps.ob");        
+  append_entry_tofile("ps.ent");
+  append_extern_tofile("ps.ext");
+
+       free(newfile);
 
         }
-     
 
+      }else{
+          if(check_file(filename)==1){
+   firstpass(argv[i]);/*First Pass*/
+
+          if(first_pass_flag==0){
+              return 0;
+          }
+            printf("DONExxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n");
+
+            secondpass(argv[i]);/*second Pass*/
+           if(second_pass_flag==0){
+             return 0;
+           }
+         
+
+  append_datatable_tofile("ps.ob");        
+  append_entry_tofile("ps.ent");
+  append_extern_tofile("ps.ext");
+
+        }
       }
 
-      fclose(fp);
-    }
+    
   }
+  /* fclose(fp);*/
             display();
 
   free_symbol_table_memory();

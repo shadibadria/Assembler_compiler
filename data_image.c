@@ -28,22 +28,3 @@ void append_command_to_file(char * filename, data_image data) {
 
 }
 
-/*create and add extern labels to file*/
-void append_extern_tofile(char * filename) {
-  int i = 0;
-  file_pointer = fopen(filename, "a");
-  if (file_pointer == NULL) {
-    printf("error creating file %s \n", filename);
-    exit(0);
-  }
-
-  for (i = 0; i < MAX_Data; i++) {
-    if (strstr(arr[i].TAG, "E") != NULL) {
-      fputs(arr[i].label_name, file_pointer);
-      fputs("          ", file_pointer);
-      fputs(arr[i].Adress, file_pointer);
-      fputs("\n", file_pointer);
-    }
-  }
-
-}

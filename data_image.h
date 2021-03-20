@@ -28,4 +28,3 @@ data_image;
 data_image arr[100];
 void append_command_to_file(char * filename, data_image data);
 void append_register_to_file(char * filename, char * register_number);
-void append_extern_tofile(char * filename);

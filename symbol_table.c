@@ -9,7 +9,6 @@ symbol table uses HASH TABLE
 int capacity_table=1;
 int size_table = 0;
 
-FILE * file_pointer;
 int hashcode(int key) {
   return (key % capacity_table);
 }
@@ -30,32 +29,7 @@ int init_array() {
 
 /*append to file function*/
 
-void append_entry_tofile(char * filename) {
-  int i=0;
 
-  file_pointer = fopen(filename, "a");
-
-  if (file_pointer == NULL) {
-    printf("error creating file %s \n", filename);
-    exit(0);
-  }
-
-    if(array[i].attribute!=NULL){
-      
-    
-    for(i=0;i<size_table;i++){
-        if(strstr(array[i].attribute,"entry")!=NULL){
-      fputs(array[i].symbol, file_pointer);
-      fputs("      ", file_pointer);
-       fputs(array[i].value, file_pointer);
-
-  fputs("\n", file_pointer);
-
-        }
-    }
-    }
-
-}
 /*
 insert entry labels after second pass to the labels 
 at the symbol table

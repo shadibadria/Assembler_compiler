@@ -28,6 +28,7 @@ int extern index_of_datatable;
 int label_flag = 0;
 int arguments_counter=0;
 int command_exist_flag=0;
+int first_pass_flag=1;
 /*
 param: filename of the assembly 
 functionality: function take file name and scan it and sent line to parsing
@@ -45,8 +46,8 @@ int firstpass(char * filename) {
     }
     else{
       if(IC>bufferLength){
-         printf("*** ERROR at line %d line is  to long, max length is  80 \n ***",program_line);
-        return 0;
+         printf("*** ERROR at line %d line is  to long, max length is  %d \n ***",bufferLength,program_line);
+        exit(0);
       }
     }
     
@@ -56,6 +57,7 @@ int firstpass(char * filename) {
   fclose(filePointer);
   if(command_exist_flag==0){
     printf("*** ERROR at line %d undefined instruction name *** \n",program_line);
+    first_pass_flag=0;
   }
   return 0;
 }
@@ -159,6 +161,7 @@ if(line[i]==',') counter++;
 }
 if(counter>1){
  printf("*** ERROR at line %d to many comma's ***\n",program_line);
+ first_pass_flag=0;
 
 }
 }
@@ -226,6 +229,7 @@ int check_if_entry(char * line,int test) {
   while (line[i] != '\n' && line[i] != '\0') {
     if (line[i] != ' ' && line[i] != '\t' && line[i] != '\n' && isalpha(line[i])) {
       printf("*** ERROR at line %d  entry must be 1 parameter ***\n", program_line);
+      first_pass_flag=0;
       return 0;
       break;
     }
@@ -241,6 +245,8 @@ int check_if_entry(char * line,int test) {
         insert_entry(line);
   } else {
  printf("*** ERROR at line %d entry label %s is  not found on symbol table \n",program_line,line);/*second pass error*/
+       first_pass_flag=0;
+
     return 0;
   }
   return 1;
@@ -329,6 +335,8 @@ int check_if_label(char * line,int test) {
           while(temp[j]!=':'){
            if(temp[j]==' '||temp[j]=='\t'){/*check if label has spaces/tabs in it*/
             printf("*** ERROR at line: %d: Label has space/tab in it ***\n",program_line);
+                  first_pass_flag=0;
+
             break;
           }
           j++;
@@ -336,9 +344,13 @@ int check_if_label(char * line,int test) {
 
         if(isdigit(temp[0])){/*check if label start with letters*/
             printf("*** ERROR at line: %d: label must start with letters *** \n",program_line); 
+                  first_pass_flag=0;
+
         }
         if(strlen(temp)>MAX_LABEL){
-                      printf("\n*** ERROR at line %d: label is to long must be 31 char ***\n",program_line);        
+                      printf("\n*** ERROR at line %d: label is to long must be 31 char ***\n",program_line);   
+                            first_pass_flag=0;
+     
                       return 0;  
         }
           while(temp[j]!=':'){
@@ -356,6 +368,8 @@ int check_if_label(char * line,int test) {
         }
         if(checkforduplicate(remove_space_tabs(temp))==0){/*check for duplicate of the label*/
           printf("*** ERROR at line %d \"%s\" has already exsisted ***\n",program_line,temp);
+                first_pass_flag=0;
+
         }
       if(temp[i]==','){
           free(temp);
@@ -418,6 +432,8 @@ int data_parsing(char * line,int i) {
     if(*p==','){
       if(number_flag==0){
             printf("*** ERROR at line %d to many comma's inserted missing numbers ***\n",program_line);
+                  first_pass_flag=0;
+
       }
       number_flag=0;
       comma_counter++;
@@ -443,10 +459,14 @@ int data_parsing(char * line,int i) {
       val = strtol(p, & p, 10);
       if(val>MAX_DATA){
         printf("*** ERROR at line %d data value is bigger than %d *** \n",program_line,MAX_DATA);
+              first_pass_flag=0;
+
       }
 
       if(val<MIN_DATA){
         printf("*** ERROR at line %d data value is smaller than %d *** \n",program_line,MIN_DATA);
+              first_pass_flag=0;
+
       }
           
       /*insert data values */
@@ -466,18 +486,24 @@ int data_parsing(char * line,int i) {
   printf("datacounter=%d\n",number_counter);
   if(number_counter==0||number_flag==0){
     printf("*** ERROR at line %d missing values ***\n",program_line);
+          first_pass_flag=0;
+
     
   }else
  
   {
   if(number_counter<=comma_counter){
         printf("*** ERROR at line %d  to many numbers missing comma's ***\n",program_line);
+              first_pass_flag=0;
+
 
     
   }
   }
    if(number_counter>comma_counter+1){
         printf("*** ERROR at line %d  to many numbers missing comma's ***\n",program_line);
+              first_pass_flag=0;
+
 
    }
   
@@ -501,6 +527,8 @@ int  string_parsing(char * line, int index) {
     }
     if(line[index]!=' '&&line[index]!='\t'){
       printf("*** ERROR at line %d  string formating wrong ***\n",program_line);
+            first_pass_flag=0;
+
       break;
     }
     index++;
@@ -515,11 +543,15 @@ int  string_parsing(char * line, int index) {
   }
   if(string_starting_flag!=2){
     printf("*** ERROR at line %d string must start with \" and end with \" ***\n",program_line);
+          first_pass_flag=0;
+
   }
   j++;
   while(line[j]!='\0'){
     if(line[j]!=' '&&line[j]!='\t'){
       printf("*** ERROR at line %d invalid characters ***\n",program_line);
+            first_pass_flag=0;
+
       break;
     }
     j++;
@@ -539,6 +571,8 @@ int  string_parsing(char * line, int index) {
   }
   if(string_flag==0){
     printf("*** ERROR at line %d  string has no values ***\n",program_line);
+          first_pass_flag=0;
+
   }
   sprintf(arr[index_of_datatable].Adress, "%04d", IC);
   ascii = 0;

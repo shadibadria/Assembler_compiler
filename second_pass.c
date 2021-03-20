@@ -24,6 +24,7 @@ and to the RAM
 FILE * filePointer;
 char buffer[bufferLength];
 int extern size_table;
+int second_pass_flag=1;
 /*
 second pass function 
 it take the file name and start to read it line by line
@@ -32,23 +33,19 @@ and send it to parsing
 int secondpass(char * filename) {
   filePointer = fopen(filename, "r");
   if (filePointer == NULL) {
-    printf("\ncant open file \n");
-    return 0;
+    printf("***ERROR cant open file named %s ***\n",filename);
+    exit(0);
   }
   while (fgets(buffer, bufferLength, filePointer)) {
-    secondpass_pasrsing(buffer);
+    secondpass_pasrsing(buffer);/*parse line by line*/
   }
 
-  fill_table();
+  fill_table();/*fill table where the adress is not found*/
 
   check_for_label_error();
 
   fclose(filePointer);
 
-  append_entry_tofile("ps.ent");
-    printf("asdsad:%s\n",filename);
-
-  append_extern_tofile("ps.ext");
 
   return 0;
 
@@ -67,8 +64,7 @@ int secondpass_pasrsing(char * line) {
   while (line[i] != '\0' && line[i] != '\n') {
     if (line[i] != ' ' && line[i] != '\t') {
 
-      if (line[i] == ';') {
-        printf("comment\n");
+      if (line[i] == ';') {/*if comment found*/
         return 0;
       }
       temp[j++] = line[i];
@@ -80,10 +76,7 @@ int secondpass_pasrsing(char * line) {
           return 1;
         }
         if (check_if_label(temp, 1) != 1) {
-
-          if (check_if_its_string(line, 1) == 1 || check_if_its_data(line, 1) == 1 || check_if_extern(line, 1) == 1) {
-            return 1;
-          }
+         
           check_if_entry(line, 1);
         }
 
@@ -94,7 +87,7 @@ int secondpass_pasrsing(char * line) {
     }
     i++;
 
-  }
+  }/*while end*/
   return 1;
 }
 /*fill the data table where is labels are missing*/
@@ -143,15 +136,12 @@ void fill_table() {
         if (strcmp(arr[i].label_name, array[j].symbol) == 0) {
           number_temp = strtol(array[j].value, NULL, 10);
           sprintf(arr[i].opcode, "%03X", number_temp);
-            printf("extern:%s\n", array[j].value);
-            printf("[%d]\n",j);
           if (strcmp(array[j].attribute, "external") == 0) {
             strcpy(arr[i].TAG, "E");
             break;
           } else {
             if (strstr(array[j].attribute, "entry")) {
               strcpy(arr[i].TAG, "R");
-              printf("entry:%s\n", array[j].value);
               break;
 
             } else {
@@ -172,8 +162,10 @@ void check_for_label_error(){
       for (i = 0; i < 100; i++) 
         {
             if(strcmp(arr[i].opcode,"?")==0){
-              printf("ERROR: Label : %s not found in symbol table \n",arr[i].label_name);
-              
+              printf("ERROR LABEL %s is not found in symbol table \n",arr[i].label_name);
+              second_pass_flag=0;
+                break;
+
             }
         }
 
