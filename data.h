@@ -1,6 +1,6 @@
 /*
-file name : data.h
-explain : header file have declration of function for data.c and struct of command
+filename : data.h
+header file have declration of function for data.c and struct of command
 */
 #include<string.h>
 #include<stdio.h>
@@ -10,17 +10,22 @@ explain : header file have declration of function for data.c and struct of comma
 #define COMMANDS_AMOUNT 16
 #define REGISTERS_COUNT 8
 
-
-
+/*
+struct of the commands
+@val command_name - has the name of the command
+@val opcode - has the first 4 bits of the memory
+@val funct - has the second 4 bits of the memory
+@val allowed_operands   - how many operands must have
+@val source_operands  -  source number alowed
+@val dest_operands     - dest number alowed
+*/
 typedef struct command {
-
   char command_name[COMMAND_NAME_MAX_SIZE];
   char funct[5];
   char opcode[5];
   int allowed_operand;
   char source_operands[8];
   char dest_operands[8];
-
 }
 command;
 

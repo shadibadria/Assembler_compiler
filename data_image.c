@@ -1,7 +1,6 @@
 /*
-file name: data_image.c
-explain: this file has all function of data types (string / data )
-
+filename: data_image
+this file has all function of data types (string / data )
 */
 
 #include"data_image.h"
@@ -9,7 +8,12 @@ explain: this file has all function of data types (string / data )
 FILE * file_pointer;
 int index_of_datatable = 0;
 
-/*append to file function*/
+/*
+append the data table to file name .ob
+@param filename - name of the file 
+@param data  -  struct of data image
+@return void 
+*/
 void append_command_to_file(char * filename, data_image data) {
   file_pointer = fopen(filename, "a");
   if (file_pointer == NULL) {
@@ -25,6 +29,4 @@ void append_command_to_file(char * filename, data_image data) {
   fputs(data.TAG, file_pointer);
   fputs("\n", file_pointer);
   fclose(file_pointer);
-
 }
-
