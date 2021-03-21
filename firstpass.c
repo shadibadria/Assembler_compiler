@@ -1,12 +1,9 @@
 
 /*
-file name: firstpass.c
-explain: this file has all functions of firstpass of the compiler
-
+filename: firstpass.c
 first iteration of the assembly program
 its porpuse is to add all the labels and data to the symbol table 
-and to the RAM
-
+and to the datatable
 */
 #include"firstpass.h"
 
