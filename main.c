@@ -24,10 +24,11 @@ function main is the controller of the program
 @param argc - count of arguments
 @param argv - array of argumnets name
 */
+  FILE * fp;
+
 int main(int argc, char * argv[]) {
 
   int i = 0;
-  FILE * fp;
   int extern first_pass_flag;
   int extern second_pass_flag;
   char * newfile;
@@ -97,5 +98,6 @@ int main(int argc, char * argv[]) {
   } /*end loop*/
   display();
   free_symbol_table_memory(); /*free the symbol table*/
+  fclose(fp);
   return 0;
 }

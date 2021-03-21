@@ -209,7 +209,7 @@ int find_adressing_method(char * string, int label_flag, char * command) {
   int i = 0;
   char temp[80];
   char * tempstring = NULL;
-  int dest, source;
+  int dest=0, source=0;
   char last_bits[5] = "0000\n";
   int j = 0, k = 0, commaflag = 0, number_temp = 0;
   tempstring = (char * ) malloc((strlen(string) + 2) * sizeof(char));
@@ -217,7 +217,9 @@ int find_adressing_method(char * string, int label_flag, char * command) {
     printf("*** ERROR Something Went Wrong no memory ***\n");
     exit(0);
   }
+
   memset(tempstring, 0, (strlen(string) + 2) * sizeof(char));
+
   strcpy(tempstring, string);
   tempstring[strlen(tempstring)] = '\0';
   if (label_flag == 1) {
@@ -442,7 +444,7 @@ function check_if_number - check if the string/line we got is number
 */
 int check_if_number(char * string) {
   int i = 0;
-  int number_temp;
+  int number_temp=0;
   while (string[i] != '\0') {
     if ((string[i] == '#' && isdigit(string[i + 1]) != 0) || (string[i] == '#' && string[i + 1] == '-' && isdigit(string[i + 2]) != 0)) {
       sprintf(arr[index_of_datatable].Adress, "%04d", IC);

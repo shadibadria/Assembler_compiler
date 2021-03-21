@@ -17,7 +17,7 @@ int IC = 100;
 int DC = 0;
 int count = 0;
 int program_line = 1; /*to count program lines*/
-FILE * filePointer;
+FILE * filePointer=NULL;
 char buffer[bufferLength];
 int extern index_of_datatable;
 int label_flag = 0;
