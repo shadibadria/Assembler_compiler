@@ -194,6 +194,7 @@ if (checkforduplicate(line) == 0) {
     printf("*** ERROR at line %d the Label %s is already in use *** \n",program_line,line);
     return 0;
   }
+   
   /*insert external label*/
    insert(DC++,0, line,"external");
   return 1;
@@ -261,11 +262,12 @@ char * remove_spaces_from_index(char * string, int i) {
   if (string[i]!='\0'&&string[i] != '\t' && string[i] != ' ' && string[i] == '\n' && isspace(string[i])) {
     return 0;
   }
-  newstring = (char * ) malloc(strlen(string) * sizeof(char));
+  newstring = (char * ) malloc((strlen(string)+1) * sizeof(char));
   if (newstring == NULL) {
     printf("*** ERROR  Something Went Wrong no memory ***\n");
     exit(0);
   }
+  memset(newstring, 0, strlen(string)*sizeof(char));
 
   while (string[i] != '\n' && string[i] != '\0') {/*find first appering of word*/
     if (string[i] != ' ' && string[i] != '\t' && !isspace(string[i])) {
@@ -277,6 +279,9 @@ char * remove_spaces_from_index(char * string, int i) {
   while (string[i] != '\n' && string[i] != '\0') {
     newstring[j++] = string[i];
     i++;
+  }
+  if(newstring==NULL){
+    return 0;
   }
   newstring[j] = '\0';
   strcpy(string, newstring);
@@ -296,6 +301,8 @@ char * remove_space_tabs(char * string) {
     printf("*** ERROR Something Went Wrong no memory ***\n");
     exit(0);
   }
+    memset(newstring, 0, strlen(string)*sizeof(char));
+
   /*create new string without spaces/tabs*/
   while (string[i] != '\n' && string[i] != '\0') {
     if (string[i] != ' ' && string[i] != '\t') {
@@ -325,6 +332,8 @@ int check_if_label(char * line,int test) {
     printf("*** ERROR Something Went Wrong no memory ***\n");
     exit(0);
   }
+    memset(temp, 0, strlen(line)*sizeof(char));
+
   /*search for end of the label char ':' */
   while (line[i] != '\n' && line[i] != '\0') {
       temp[j++] = line[i];
@@ -407,6 +416,7 @@ int check_if_its_data(char * line,int test) {
       if (line[i + 1] == 'd' && line[i + 2] == 'a' && line[i + 3] == 't' && line[i + 4] == 'a') {
         if(test==0){/*if its not testing only*/
           printf("data\n");
+          command_exist_flag=1;
         data_parsing(line,i+4);/*parse the data to numbers*/
         return 1;
         }
@@ -595,6 +605,8 @@ int check_if_its_string(char * line,int test) {
           if(test==1){
           return 1;
         }
+                  command_exist_flag=1;
+
         string_parsing(line, i + 7);/*parse string*/
         return 1;
       }
@@ -628,14 +640,22 @@ int check_line_arguments(char *line){
   char *temp_string=NULL;
   int comma_counter=0;
   arguments_counter=0;
-  /**/
-    printf("LINE:%s\n",line);
-   if(strlen(line)==0){
-     return 0;
-   }
+   if(strlen(line)<=0) return 0;
+    temp_string=(char*)malloc((strlen(line)+1)*sizeof(char));
+  if(temp_string==NULL){
+    printf("*** ERROR problem allocate memory ***\n");
+    exit(0);
+  }
+  memset(temp_string, 0, (strlen(line)+1)*sizeof(char));
+  while(i<strlen(temp_string)){
+      temp_string[i]='0';
+    i++;
+  }
+ 
   
  i=0;
   if(check_if_its_string(line,1)||check_if_its_data(line,1)){
+    free(temp_string);
     return 1;
   }
   /*remove label*/
@@ -674,11 +694,7 @@ while(line[i]!='\0'){
   }
 
 if(line[i]!='\0'&&line[i]!='\n'){
-  temp_string =(char*)malloc(strlen(line)*sizeof(char));
-  if(temp_string==NULL){
-    printf("*** ERROR problem allocate memory ***\n");
-    exit(0);
-  }
+
 }
  while(line[i]!='\0'&&line[i]!='\n'){
 
@@ -690,7 +706,10 @@ if(line[i]!='\0'&&line[i]!='\n'){
 
     i++;
  }
- 
+  if(temp_string==NULL){
+    free(temp_string);
+    return 0;
+  }
  
  arguments_counter=count_word(temp_string);/*count arguments*/
  
@@ -701,21 +720,21 @@ free(temp_string);
 /*function to count words in line*/
 int count_word( char *s) {          
     int count = 0, flag = 1;
-   
-    /*if line is empty*/
+    int i=0;
+    /*if line  is empty*/
     if(s==NULL){
     return 0;
  }
-    while (*s) {/*count words*/
-        if (isspace((unsigned char)*s)||( (*s==',')&&check_for_char(s)) ){
+ while(s[i]!='\0'){
+     if (isspace((unsigned char)s[i])||( (s[i]==',')&&check_for_char(s)) ){
             flag = 1;
         } else {
             count += flag;
             flag = 0;
         }
-      
-        s++;
-    }
+   i++;
+ }
+
     return count;
 }
 /*function that check for any char*/
@@ -737,11 +756,14 @@ char *newstring;
 int flag=0;
 if(label_flag==1){
 
-  newstring=(char*)malloc(strlen(line)*sizeof(char));
+  newstring=(char*)malloc((strlen(line)+1)*sizeof(char));
   if(newstring==NULL){
     printf(" *** ERROR memory problem *** \n");
-    exit(1);
+    exit(0);
   }
+   memset(newstring, 0, strlen(line)*sizeof(char));
+
+  i=0;
   while (line[i]!='\0')
   {
 

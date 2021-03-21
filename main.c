@@ -56,6 +56,8 @@ int main(int argc, char * argv[]) {
     printf("ERROR cant alocate memory\n");
     exit(0);
   }
+    memset(newfile, 0, strlen(filename)*sizeof(char));
+
   strcpy(newfile,filename);
   strcat(newfile,".as\0");
   
@@ -68,10 +70,11 @@ int main(int argc, char * argv[]) {
 
         if(check_file(newfile)==1){
    firstpass(newfile);/*First Pass*/
-
           if(first_pass_flag==0){
               return 0;
           }
+                      display();
+
             printf("DONExxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n");
 
             secondpass(newfile);/*second Pass*/
@@ -91,7 +94,7 @@ int main(int argc, char * argv[]) {
       }else{
           if(check_file(filename)==1){
    firstpass(argv[i]);/*First Pass*/
-
+    
           if(first_pass_flag==0){
               return 0;
           }
@@ -103,9 +106,9 @@ int main(int argc, char * argv[]) {
            }
          
 
-  append_datatable_tofile("ps.ob");        
   append_entry_tofile("ps.ent");
   append_extern_tofile("ps.ext");
+     append_datatable_tofile("ps.ob");        
 
         }
       }

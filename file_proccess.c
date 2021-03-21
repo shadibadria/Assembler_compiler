@@ -64,7 +64,7 @@ void append_entry_tofile(char * filename) {
         }
     }
     }
-
+fclose(file_pointer);
 }
 /*create and add extern labels to file*/
 void append_extern_tofile(char * filename) {
@@ -83,6 +83,7 @@ void append_extern_tofile(char * filename) {
       fputs("\n", file_pointer);
     }
   }
+  fclose(file_pointer);
 
 }
 void append_datatable_tofile(char *filename){

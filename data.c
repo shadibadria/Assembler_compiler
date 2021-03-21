@@ -205,15 +205,17 @@ int find_adressing_method(char * string, int label_flag, char * command) {
 
   int i = 0;
   char temp[80];
-  char * tempstring;
+  char * tempstring=NULL;
   int dest, source;
   char last_bits[5] = "0000\n";
   int j = 0, k = 0, commaflag = 0, number_temp = 0;
-  tempstring = (char * ) malloc(strlen(string) * sizeof(char));
+  tempstring = (char * ) malloc((strlen(string)+2) * sizeof(char));
   if (tempstring == NULL) {
     printf("*** ERROR Something Went Wrong no memory ***\n");
     exit(0);
   }
+    memset(tempstring, 0, (strlen(string)+2)*sizeof(char));
+
   strcpy(tempstring, string);
   tempstring[strlen(tempstring)] = '\0';
   if (label_flag == 1) {
@@ -292,6 +294,7 @@ int find_adressing_method(char * string, int label_flag, char * command) {
   } else {/*there is coma*/
     temp[j - 1] = '\0';
     j = 0;
+   
     if (check_for_reg(temp, 0) == 1) {
 
       last_bits[k++] = '1';
@@ -345,6 +348,9 @@ int find_adressing_method(char * string, int label_flag, char * command) {
   last_bits[5] = '\0';
 
   free(tempstring);
+   if(temp!=NULL){
+      
+    
 /*create last bits*/
   number_temp = strtol(last_bits, NULL, 2);
   temp[0] = last_bits[0];
@@ -354,8 +360,8 @@ int find_adressing_method(char * string, int label_flag, char * command) {
   temp[0] = last_bits[2];
   temp[1] = last_bits[3];
   temp[2] = '\0';
-  printf("temp:%s\n",temp);
   dest = strtol(temp, NULL, 2);
+}
   sprintf(arr[index_of_datatable].adress_method, "%X", number_temp);
   index_of_datatable++;
   check_command_corrections(source, dest, command);
@@ -467,6 +473,7 @@ int check_line(char * line) {
   char temp[80];
   int comma_flag = 0;
 
+    printf("line:%s\n",line);
   if (strcmp("stop", line) == 0) {
 
     return 1;
@@ -488,6 +495,7 @@ int check_line(char * line) {
       printf("xother_IC:%d\n", IC);
       sprintf(arr[index_of_datatable].Adress, "%04d", IC);
       if (strcmp(find_label(temp), "?") == 0) {
+        printf("temp");
         sprintf(arr[index_of_datatable].label_name, "%s", temp);
         sprintf(arr[index_of_datatable].opcode, "%s", "?");
 

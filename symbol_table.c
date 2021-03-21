@@ -23,6 +23,9 @@ int init_array() {
     printf("ERROR: something went wrong while trying to use malloc at symboltable.c\n");
     return 0;
   }
+  array[0].amount=0;
+    memset(array, 0, capacity_table*sizeof(struct data));
+
   return 1;
 }
 
@@ -58,12 +61,12 @@ void insert(int key, int value, char * symbol, char * attribute) {
   
   capacity_table++;
   array=(struct data*)realloc(array,capacity_table* sizeof(struct data));
-    
+      array[index].amount=0;
+
   if(array==NULL){
     printf("ERROR: using realloc at symbol_table.c\n");
     exit(0);
   }
-
 
   if (array[index].amount == 0) {
     /*  key not present, insert it  */
@@ -72,24 +75,30 @@ void insert(int key, int value, char * symbol, char * attribute) {
     array[index].amount = 1;
       /*insert value */
       if(value==0){
-              array[index].value = (char * ) malloc(2 * sizeof(char));
+              array[index].value = (char * ) malloc(4 * sizeof(char));
+        memset(array[index].value, 0, 4*sizeof(char));
 
       }else{
-      array[index].value = (char * ) malloc( (floor(log10(abs(value)))) * sizeof(char));
+      array[index].value = (char * ) malloc(((floor(log10(abs(value))))+5) * sizeof(char));
+        memset(array[index].value, 0, ((floor(log10(abs(value))))+5) * sizeof(char));
 
       }
   if (array[index].value == NULL) {
     printf("Something Went Wrong no memory at  symbol_table.c\n");
     exit(1);
   }  
+
    sprintf(array[index].value,"%04d",value);
+      printf("xvalue:%s\n",array[index].value);
 
     /*insert symbol*/
-   array[index].symbol = (char * ) malloc(strlen(symbol) * sizeof(char));
+   array[index].symbol = (char * ) malloc((strlen(symbol)+1) * sizeof(char));
   if (array[index].symbol == NULL) {
     printf("Something Went Wrong no memory\n");
     exit(1);
   }  
+          memset(array[index].symbol, 0, (strlen(symbol)+1) * sizeof(char));
+
     if(symbol[strlen(symbol)-1]==':'){
             symbol[strlen(symbol)-1]='\0';
 
@@ -98,19 +107,20 @@ void insert(int key, int value, char * symbol, char * attribute) {
 
     }
       strcpy(array[index].symbol, symbol);
+    printf("LABEL:%s\n",array[index].symbol);
 
     /*insert attribute */
-  array[index].attribute = (char * ) malloc((2+strlen(attribute)) * sizeof(char));
+  array[index].attribute = (char * ) malloc((strlen(attribute)+3) * sizeof(char));
   if (array[index].attribute == NULL) {
     printf("Something Went Wrong no memory\n");
     exit(1);
   }  
+
     strcpy(array[index].attribute, attribute);
-   
     size_table++;
   } else if (array[index].key_value == key) {
     /*  updating already existing key  */
-   
+
     array[index].amount += 1;
   } else {
     /*  key cannot be insert as the index is already containing some other key  */
