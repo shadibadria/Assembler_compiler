@@ -11,7 +11,8 @@ this file is is header file that responsible for declre the function and the dat
 
 #define SIZEOFCODE 5
 #define SIZEOFADRESS 5
-#define MAX_Data 100
+#define MAX_Data 4095
+#define TAG_SIZE 2
 /*
 struct of the data image
 @val adress - has the adress of the program IC
@@ -25,7 +26,7 @@ typedef struct data_image {
   char Adress[SIZEOFADRESS];
   char opcode[SIZEOFCODE];
   char funct[SIZEOFCODE];
-  char TAG[2];
+  char TAG[TAG_SIZE];
   char adress_method[SIZEOFCODE];
   char label_name[SIZEOFCODE];
 }

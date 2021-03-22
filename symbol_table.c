@@ -79,6 +79,7 @@ void insert(int key, int value, char * symbol, char * attribute) {
     /*  key not present, insert it  */
     array[index].key_value = key;
     array[index].amount = 1;
+    printf("VALUE:%d\n",value);
     /*insert value */
     if (value == 0) {
       array[index].value = (char * ) malloc(5 * sizeof(char));
@@ -93,6 +94,7 @@ void insert(int key, int value, char * symbol, char * attribute) {
     }
     sprintf(array[index].value, "%04d", value);
     /*insert symbol*/
+    printf("STRLEN:%s\n",symbol);
     array[index].symbol = (char * ) malloc((strlen(symbol) + 1) * sizeof(char));
     if (array[index].symbol == NULL) {
       printf("Something Went Wrong no memory\n");
@@ -105,7 +107,7 @@ void insert(int key, int value, char * symbol, char * attribute) {
       symbol[strlen(symbol)] = '\0';
     }
     strcpy(array[index].symbol, symbol);
-    printf("LABEL:%s\n", array[index].symbol);
+    
     /*insert attribute */
     array[index].attribute = (char * ) malloc((strlen(attribute) + 3) * sizeof(char));
     if (array[index].attribute == NULL) {
@@ -157,11 +159,15 @@ function  checkforduplicate  check for duplicate at the symbol table
 */
 int checkforduplicate(char * symbol) {
   int i;
+
   for (i = 0; i < size_table; i++) {
+
     if (strcmp(array[i].symbol, symbol) == 0) {
+      
       return 0;
     }
   }
+
   return 1;
 }
 /*

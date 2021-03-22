@@ -1,15 +1,149 @@
-==13834== Memcheck, a memory error detector
-==13834== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==13834== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==13834== Command: ./assembler test
-==13834== Parent PID: 13201
-==13834== 
-==13834== 
-==13834== HEAP SUMMARY:
-==13834==     in use at exit: 0 bytes in 0 blocks
-==13834==   total heap usage: 363 allocs, 363 frees, 207,420 bytes allocated
-==13834== 
-==13834== All heap blocks were freed -- no leaks are possible
-==13834== 
-==13834== For lists of detected and suppressed errors, rerun with: -s
-==13834== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==30729== Memcheck, a memory error detector
+==30729== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==30729== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==30729== Command: ./assembler b
+==30729== Parent PID: 14751
+==30729== 
+==30729== 
+==30729== HEAP SUMMARY:
+==30729==     in use at exit: 1,339 bytes in 78 blocks
+==30729==   total heap usage: 603 allocs, 525 frees, 27,860 bytes allocated
+==30729== 
+==30729== 5 bytes in 1 blocks are still reachable in loss record 1 of 15
+==30729==    at 0x483880B: malloc (vg_replace_malloc.c:309)
+==30729==    by 0x406517: insert (symbol_table.c:85)
+==30729==    by 0x401C84: check_if_extern (firstpass.c:192)
+==30729==    by 0x401811: parse_line (firstpass.c:97)
+==30729==    by 0x401757: assemble_parsing (firstpass.c:73)
+==30729==    by 0x40168B: firstpass (firstpass.c:49)
+==30729==    by 0x40148D: main (main.c:67)
+==30729== 
+==30729== 5 bytes in 1 blocks are definitely lost in loss record 2 of 15
+==30729==    at 0x483880B: malloc (vg_replace_malloc.c:309)
+==30729==    by 0x4013AE: main (main.c:54)
+==30729== 
+==30729== 6 bytes in 1 blocks are still reachable in loss record 3 of 15
+==30729==    at 0x483880B: malloc (vg_replace_malloc.c:309)
+==30729==    by 0x4066DC: insert (symbol_table.c:98)
+==30729==    by 0x401C84: check_if_extern (firstpass.c:192)
+==30729==    by 0x401811: parse_line (firstpass.c:97)
+==30729==    by 0x401757: assemble_parsing (firstpass.c:73)
+==30729==    by 0x40168B: firstpass (firstpass.c:49)
+==30729==    by 0x40148D: main (main.c:67)
+==30729== 
+==30729== 11 bytes in 1 blocks are still reachable in loss record 4 of 15
+==30729==    at 0x483880B: malloc (vg_replace_malloc.c:309)
+==30729==    by 0x4067EA: insert (symbol_table.c:112)
+==30729==    by 0x401C84: check_if_extern (firstpass.c:192)
+==30729==    by 0x401811: parse_line (firstpass.c:97)
+==30729==    by 0x401757: assemble_parsing (firstpass.c:73)
+==30729==    by 0x40168B: firstpass (firstpass.c:49)
+==30729==    by 0x40148D: main (main.c:67)
+==30729== 
+==30729== 11 bytes in 3 blocks are still reachable in loss record 5 of 15
+==30729==    at 0x483880B: malloc (vg_replace_malloc.c:309)
+==30729==    by 0x4066DC: insert (symbol_table.c:98)
+==30729==    by 0x4025FF: check_if_label (firstpass.c:403)
+==30729==    by 0x401857: parse_line (firstpass.c:106)
+==30729==    by 0x401757: assemble_parsing (firstpass.c:73)
+==30729==    by 0x40168B: firstpass (firstpass.c:49)
+==30729==    by 0x40148D: main (main.c:67)
+==30729== 
+==30729== 21 bytes in 3 blocks are still reachable in loss record 6 of 15
+==30729==    at 0x483880B: malloc (vg_replace_malloc.c:309)
+==30729==    by 0x4065BB: insert (symbol_table.c:88)
+==30729==    by 0x4025FF: check_if_label (firstpass.c:403)
+==30729==    by 0x401857: parse_line (firstpass.c:106)
+==30729==    by 0x401757: assemble_parsing (firstpass.c:73)
+==30729==    by 0x40168B: firstpass (firstpass.c:49)
+==30729==    by 0x40148D: main (main.c:67)
+==30729== 
+==30729== 21 bytes in 3 blocks are still reachable in loss record 7 of 15
+==30729==    at 0x483880B: malloc (vg_replace_malloc.c:309)
+==30729==    by 0x4067EA: insert (symbol_table.c:112)
+==30729==    by 0x4025FF: check_if_label (firstpass.c:403)
+==30729==    by 0x401857: parse_line (firstpass.c:106)
+==30729==    by 0x401757: assemble_parsing (firstpass.c:73)
+==30729==    by 0x40168B: firstpass (firstpass.c:49)
+==30729==    by 0x40148D: main (main.c:67)
+==30729== 
+==30729== 36 bytes in 8 blocks are still reachable in loss record 8 of 15
+==30729==    at 0x483880B: malloc (vg_replace_malloc.c:309)
+==30729==    by 0x4066DC: insert (symbol_table.c:98)
+==30729==    by 0x402626: check_if_label (firstpass.c:405)
+==30729==    by 0x401857: parse_line (firstpass.c:106)
+==30729==    by 0x401757: assemble_parsing (firstpass.c:73)
+==30729==    by 0x40168B: firstpass (firstpass.c:49)
+==30729==    by 0x40148D: main (main.c:67)
+==30729== 
+==30729== 45 bytes in 1 blocks are definitely lost in loss record 9 of 15
+==30729==    at 0x483880B: malloc (vg_replace_malloc.c:309)
+==30729==    by 0x402313: check_if_label (firstpass.c:329)
+==30729==    by 0x401857: parse_line (firstpass.c:106)
+==30729==    by 0x401757: assemble_parsing (firstpass.c:73)
+==30729==    by 0x40168B: firstpass (firstpass.c:49)
+==30729==    by 0x40148D: main (main.c:67)
+==30729== 
+==30729== 52 bytes in 13 blocks are still reachable in loss record 10 of 15
+==30729==    at 0x483880B: malloc (vg_replace_malloc.c:309)
+==30729==    by 0x4066DC: insert (symbol_table.c:98)
+==30729==    by 0x4025C2: check_if_label (firstpass.c:400)
+==30729==    by 0x401857: parse_line (firstpass.c:106)
+==30729==    by 0x401757: assemble_parsing (firstpass.c:73)
+==30729==    by 0x40168B: firstpass (firstpass.c:49)
+==30729==    by 0x40148D: main (main.c:67)
+==30729== 
+==30729== 56 bytes in 8 blocks are still reachable in loss record 11 of 15
+==30729==    at 0x483880B: malloc (vg_replace_malloc.c:309)
+==30729==    by 0x4065BB: insert (symbol_table.c:88)
+==30729==    by 0x402626: check_if_label (firstpass.c:405)
+==30729==    by 0x401857: parse_line (firstpass.c:106)
+==30729==    by 0x401757: assemble_parsing (firstpass.c:73)
+==30729==    by 0x40168B: firstpass (firstpass.c:49)
+==30729==    by 0x40148D: main (main.c:67)
+==30729== 
+==30729== 56 bytes in 8 blocks are still reachable in loss record 12 of 15
+==30729==    at 0x483880B: malloc (vg_replace_malloc.c:309)
+==30729==    by 0x4067EA: insert (symbol_table.c:112)
+==30729==    by 0x402626: check_if_label (firstpass.c:405)
+==30729==    by 0x401857: parse_line (firstpass.c:106)
+==30729==    by 0x401757: assemble_parsing (firstpass.c:73)
+==30729==    by 0x40168B: firstpass (firstpass.c:49)
+==30729==    by 0x40148D: main (main.c:67)
+==30729== 
+==30729== 91 bytes in 13 blocks are still reachable in loss record 13 of 15
+==30729==    at 0x483880B: malloc (vg_replace_malloc.c:309)
+==30729==    by 0x4065BB: insert (symbol_table.c:88)
+==30729==    by 0x4025C2: check_if_label (firstpass.c:400)
+==30729==    by 0x401857: parse_line (firstpass.c:106)
+==30729==    by 0x401757: assemble_parsing (firstpass.c:73)
+==30729==    by 0x40168B: firstpass (firstpass.c:49)
+==30729==    by 0x40148D: main (main.c:67)
+==30729== 
+==30729== 91 bytes in 13 blocks are still reachable in loss record 14 of 15
+==30729==    at 0x483880B: malloc (vg_replace_malloc.c:309)
+==30729==    by 0x4067EA: insert (symbol_table.c:112)
+==30729==    by 0x4025C2: check_if_label (firstpass.c:400)
+==30729==    by 0x401857: parse_line (firstpass.c:106)
+==30729==    by 0x401757: assemble_parsing (firstpass.c:73)
+==30729==    by 0x40168B: firstpass (firstpass.c:49)
+==30729==    by 0x40148D: main (main.c:67)
+==30729== 
+==30729== 832 bytes in 1 blocks are still reachable in loss record 15 of 15
+==30729==    at 0x483AD19: realloc (vg_replace_malloc.c:836)
+==30729==    by 0x406449: insert (symbol_table.c:72)
+==30729==    by 0x402626: check_if_label (firstpass.c:405)
+==30729==    by 0x401857: parse_line (firstpass.c:106)
+==30729==    by 0x401757: assemble_parsing (firstpass.c:73)
+==30729==    by 0x40168B: firstpass (firstpass.c:49)
+==30729==    by 0x40148D: main (main.c:67)
+==30729== 
+==30729== LEAK SUMMARY:
+==30729==    definitely lost: 50 bytes in 2 blocks
+==30729==    indirectly lost: 0 bytes in 0 blocks
+==30729==      possibly lost: 0 bytes in 0 blocks
+==30729==    still reachable: 1,289 bytes in 76 blocks
+==30729==         suppressed: 0 bytes in 0 blocks
+==30729== 
+==30729== For lists of detected and suppressed errors, rerun with: -s
+==30729== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)

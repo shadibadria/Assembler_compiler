@@ -35,9 +35,10 @@ int firstpass(char * filename) {
     printf("*** ERROR: Cant open file name :%s ***\n", filename);
     exit(0);
   }
+     
   while (fgets(buffer, bufferLength, filePointer)) {
     if (strlen(buffer) > MAX_LINE) {
-      printf("*** ERROR File is to big must contain max 4095 \n ***");
+      printf("*** ERROR File is to big must contain max %d \n ***",bufferLength);
       exit(0);
     } else {
       if (IC > bufferLength) {
@@ -48,11 +49,7 @@ int firstpass(char * filename) {
     assemble_parsing(buffer); /*send the line to parsing */
   } /*while ends*/
   fclose(filePointer);
-  if (command_exist_flag == 0) {
-    printf("*** ERROR at line %d undefined instruction name *** \n", program_line);
-    first_pass_flag = 0;
-    return 1;
-  }
+  
   return 0;
 }
 
@@ -70,9 +67,14 @@ int assemble_parsing(char * line) {
   printf("\n****************************\n");
   printf("COMMAND:%s\n", line);
   label_flag = 0;
-  check_line_arguments(line); /*check if arguments for error*/
-  command_exist_flag = 0;
+   command_exist_flag = 0;
+
+ check_line_arguments(line); /*check if arguments for error*/
   parse_line(line); /*send line to proccess it */
+  if (command_exist_flag == 0) {
+    printf("*** ERROR at line %d undefined instruction name *** \n", program_line);
+    first_pass_flag = 0;
+  } 
   program_line++; /*count line*/
   return 1;
 }
@@ -168,11 +170,14 @@ int check_if_extern(char * line, int test) {
   if (line[i] != '.' || line[i + 1] != 'e' || line[i + 2] != 'x' || line[i + 3] != 't' || line[i + 4] != 'e' || line[i + 5] != 'r' || line[i + 6] != 'n' || (line[i + 7] != ' ' && line[i + 7] != '\t')) {
     return 0;
   }
+    command_exist_flag = 1;
+
   if (test == 1) {
     /*if we just want to know its extern*/
     return 1;
+
   }
-  command_exist_flag = 1;
+
   i = i + 7;
   line = remove_spaces_from_index(line, i);
   i = 0;
@@ -205,6 +210,7 @@ int check_if_entry(char * line, int test) {
     return 0;
   }
   command_exist_flag = 1; /*the line is instruction is available*/
+
   i = i + 6;
   line = remove_spaces_from_index(line, i);
   i = 0;
@@ -220,7 +226,6 @@ int check_if_entry(char * line, int test) {
     if (line[i] != ' ' && line[i] != '\t' && line[i] != '\n' && isalpha(line[i])) {
       printf("*** ERROR at line %d  entry must be 1 parameter ***\n", program_line);
       first_pass_flag = 0;
-      return 0;
       break;
     }
     i++;
@@ -326,6 +331,7 @@ int check_if_label(char * line, int test) {
     printf("*** ERROR Something Went Wrong no memory ***\n");
     exit(0);
   }
+
   memset(temp, 0, (strlen(line)+2) * sizeof(char));
   /*search for end of the label char ':' */
   while (line[i] != '\n' && line[i] != '\0') {
@@ -342,6 +348,7 @@ int check_if_label(char * line, int test) {
         }
         j++;
       }
+
       if (isdigit(temp[0])) {
         /*check if label start with letters*/
         printf("*** ERROR at line: %d: label must start with letters *** \n", program_line);
@@ -352,36 +359,50 @@ int check_if_label(char * line, int test) {
         first_pass_flag = 0;
         return 0;
       }
+
       while (temp[j] != ':') {
         j++;
       }
+
       if (test == 1) {
         /*if only testing if its label*/
         free(temp);
         return 1;
       }
       remove_space_tabs(temp);
-      if (temp[j - 1] == ':') {
+
+      if (temp[j] == ':') {
         /*remove the ':' if exsist*/
-        temp[j - 1] = '\0';
+        temp[j] = '\0';
+
+      }else{
+        if(temp[j-1]==':'){
+          temp[j-1]='\0';
+        }
       }
-      if (checkforduplicate(remove_space_tabs(temp)) == 0) {
+      if (checkforduplicate(temp) == 0) {
+
         /*check for duplicate of the label*/
-        printf("*** ERROR at line %d \"%s\" has already exsisted ***\n", program_line, temp);
+        printf("*** ERROR at line %d label \"%s\" has already exsisted ***\n", program_line, temp);
         first_pass_flag = 0;
+       
       }
+
       if (temp[i] == ',') {
         free(temp);
         return 0;
-      }
+      } 
+
+
       /*insert label with info*/
       if (check_if_its_data(line, 1) == 1) {
-        insert(DC++, IC, remove_space_tabs(temp), "data");
+
+        insert(DC++, IC, temp, "data");
       } else
       if (check_if_its_string(line, 1) == 1) {
-        insert(DC++, IC, remove_space_tabs(temp), "data");
+        insert(DC++, IC, (temp), "data");
       } else {
-        insert(DC++, IC, remove_space_tabs(temp), "code");
+        insert(DC++, IC, (temp), "code");
       }
       free(temp);
       return 1;
@@ -404,10 +425,12 @@ int check_if_its_data(char * line, int test) {
   while (line[i] != '\n' && line[i] != '\0') {
     if (line[i] == '.') {
       if (line[i + 1] == 'd' && line[i + 2] == 'a' && line[i + 3] == 't' && line[i + 4] == 'a') {
+          command_exist_flag = 1; /*the line is instruction is available*/
+
         if (test == 0) {
           /*if its not testing only*/
           printf("data\n");
-          command_exist_flag = 1;
+
           data_parsing(line, i + 4); /*parse the data to numbers*/
           return 1;
         }
@@ -428,25 +451,27 @@ int data_parsing(char * line, int i) {
   char * p = line;
   int val, comma_counter = 0, number_counter = 0, number_flag = 0;
   p += i;
+
   line[strlen(line)] = '\0';
   /*check data format if correct */
-  while ( * p) {
-    if ( * p == ',') {
-      if (number_flag == 0) {
-        printf("*** ERROR at line %d to many comma's inserted missing numbers ***\n", program_line);
-        first_pass_flag = 0;
-      }
-      number_flag = 0;
-      comma_counter++;
-    } else {
-      if (isdigit( * p) || (( * p == '-' || * p == '+') && isdigit( * (p + 1)))) {
-        number_flag = 1;
-      }
-    }
-    p++;
-  }
-  p = line;
-  p += i;
+   while ( * p) {	
+    if ( * p == ',') {	
+      if (number_flag == 0) {	
+        printf("*** ERROR at line %d to many comma's inserted missing numbers ***\n", program_line);	
+        first_pass_flag = 0;	
+      }	
+      number_flag = 0;	
+      comma_counter++;	
+    } else {	
+      if (isdigit( * p) || (( * p == '-' || * p == '+') && isdigit( * (p + 1)))) {	
+        number_flag = 1;	
+      }	
+    }	
+    p++;	
+  }	
+  p = line;	
+  p += i+1;
+
   /*parse line and insert data*/
   while ( * p) {
     if (isdigit( * p) || (( * p == '-' || * p == '+') && isdigit( * (p + 1)))) {
@@ -471,6 +496,12 @@ int data_parsing(char * line, int i) {
       index_of_datatable++;
       IC++;
     } else {
+        if(*p!=' '&&*p!='\t'&&*p!=','){
+      printf("*** ERROR at line %d invalid characters %c ***\n",program_line,*p);
+              first_pass_flag = 0;
+              break;
+    
+        }
       p++;
     }
   }
@@ -532,7 +563,7 @@ int string_parsing(char * line, int index) {
     if (line[j] != ' ' && line[j] != '\t') {
       printf("*** ERROR at line %d invalid characters ***\n", program_line);
       first_pass_flag = 0;
-      break;
+        break;
     }
     j++;
   }
@@ -604,6 +635,7 @@ int check_if_command(char * command, char * line, int label_flag) {
     return 0;
   } else {
     command_exist_flag = 1;
+
   }
   return 1;
 }
@@ -672,11 +704,9 @@ int check_line_arguments(char * line) {
     }
     i++;
   }
-  if (temp_string == NULL) {
-    free(temp_string);
-    return 0;
-  }
+  
   arguments_counter = count_word(temp_string); /*count arguments*/
+  printf("argument:%d\n",arguments_counter);
   free(temp_string);
   return arguments_counter;
 }

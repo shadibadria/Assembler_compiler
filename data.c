@@ -168,11 +168,10 @@ function check_command - check if the command is correct
 */
 int check_command(char * command, char * line, int argument_counter, int label_flag) {
   int i = 0;
-  int coma_flag = 0;
   if (command[strlen(command) - 1] == ',') {
     /*check for comma*/
     command[strlen(command) - 1] = '\0';
-    coma_flag = 1;
+
   }
   i = strlen(command);
   while (line[i] == ' ' || line[i] == '\t') {
@@ -183,12 +182,19 @@ int check_command(char * command, char * line, int argument_counter, int label_f
   for (i = 0; i < COMMANDS_AMOUNT; i++) {
     /*check the arguments if correct*/
     if (strcmp(mycommands[i].command_name, command) == 0) {
-      if (mycommands[i].allowed_operand != argument_counter) {
-        if (coma_flag == 1) {
-          printf("***ERROR at line %d to many comma's ***\n", program_line);
+
+      if (mycommands[i].allowed_operand > argument_counter) {
+        
+          printf("***ERROR at line %d missing operand ***\n", program_line);
           first_pass_flag = 0;
-        }
+      }else{
+              if (mycommands[i].allowed_operand < argument_counter) {
+                printf("***ERROR at line %d to many operands ***\n", program_line);
+               first_pass_flag = 0;
+              }
+
       }
+
       sprintf(arr[index_of_datatable].Adress, "%04d", IC); /*insert to data table*/
       IC++;
       code_opcode_parsing(mycommands[i].opcode, mycommands[i].funct);
@@ -408,6 +414,7 @@ int check_command_corrections(int source, int dest, char * command) {
   }
   return 1;
 }
+
 /*
 function code_opcode_parsing  create hex value for command bits and insert them
 @param command_code - command opcode bits 
@@ -443,8 +450,16 @@ function check_if_number - check if the string/line we got is number
 */
 int check_if_number(char * string) {
   int i = 0;
-  int number_temp=0;
+  int number_temp=0,isnumberflag=0;
   while (string[i] != '\0') {
+    if(string[i]=='#'){
+        isnumberflag=1;
+        break;
+      }
+       i++;
+    }
+      if(isnumberflag==1){
+          while (string[i] != '\0') {
     if ((string[i] == '#' && isdigit(string[i + 1]) != 0) || (string[i] == '#' && string[i + 1] == '-' && isdigit(string[i + 2]) != 0)) {
       sprintf(arr[index_of_datatable].Adress, "%04d", IC);
       memmove(string, string + 1, strlen(string));
@@ -462,9 +477,18 @@ int check_if_number(char * string) {
       index_of_datatable++;
       IC++;
       return 1;
+    }else{
+      printf("*** ERROR at line %d invalid characters *** \n ",program_line);
+      first_pass_flag=0;
+      break;
     }
-    i++;
-  }
+            i++;
+          }
+
+      }
+
+    
+  
   return 0;
 }
 /*
@@ -507,6 +531,10 @@ int check_line(char * line) {
   if (comma_flag == 0) {
     /*if line does not have comma*/
     line[strlen(line)] = '\0';
+    if(isdigit(line[0])!=0){
+      printf("*** ERROR at line %d invalid operand***\n",program_line);
+      first_pass_flag=0;
+    }
     if (check_if_number(line) == 1) return 1;
     if (check_for_reg(line, 1)) return 1;
     sprintf(arr[index_of_datatable].Adress, "%04d", IC);
@@ -529,8 +557,10 @@ int check_line(char * line) {
   temp[j] = '\0';
   if (check_if_number(temp) == 1) /*check if its number*/
     return 1;
-  if (check_for_reg(temp, 1) == 1) /*check if its register*/
-    return 1;
+  if (check_for_reg(temp, 1) == 1){
+  return 1;
+  } /*check if its register*/
+  
   sprintf(arr[index_of_datatable].Adress, "%04d", IC);
   if (strcmp(find_label(temp), "?") == 0) {
     sprintf(arr[index_of_datatable].label_name, "%s", temp);

@@ -9,7 +9,11 @@ header file have declration of function for data.c and struct of command
 #define COMMAND_NAME_MAX_SIZE 5
 #define COMMANDS_AMOUNT 16
 #define REGISTERS_COUNT 8
-
+#define FUNCT_SIZE      5
+#define OPCODE_SIZE      5
+#define SOURCE_SIZE      8
+#define DEST_SIZE      8
+#define BIT_MAX       13
 /*
 struct of the commands
 @val command_name - has the name of the command
@@ -21,20 +25,20 @@ struct of the commands
 */
 typedef struct command {
   char command_name[COMMAND_NAME_MAX_SIZE];
-  char funct[5];
-  char opcode[5];
+  char funct[FUNCT_SIZE];
+  char opcode[OPCODE_SIZE];
   int allowed_operand;
-  char source_operands[8];
-  char dest_operands[8];
+  char source_operands[SOURCE_SIZE];
+  char dest_operands[DEST_SIZE];
 }
 command;
+char command_code[BIT_MAX];
+const char * reg[REGISTERS_COUNT];
 
 void init_commands();
 int check_command(char * command, char * line, int argument_counter, int label_flag);
 int check_line(char * line);
-const char * reg[REGISTERS_COUNT];
 void init_registers();
-char command_code[13];
 int code_opcode_parsing(char * command_code, char * command_func);
 int find_adressing_method(char * string, int label_flag, char * command);
 int check_command_corrections(int source, int dest, char * command);
