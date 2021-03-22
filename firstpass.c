@@ -18,7 +18,7 @@ int DC = 0;
 int count = 0;
 int program_line = 1; /*to count program lines*/
 FILE * filePointer=NULL;
-char buffer[bufferLength];
+char buffer[bufferLength]={0};
 int extern index_of_datatable;
 int label_flag = 0;
 int arguments_counter = 0;
@@ -321,12 +321,12 @@ function check_if_label - check if line is label and insert it
 int check_if_label(char * line, int test) {
   int i = 0, j = 0;
   char * temp;
-  temp = (char * ) malloc((strlen(line) + 1) * sizeof(char));
+  temp = (char * ) malloc((strlen(line) + 2) * sizeof(char));
   if (temp == NULL) {
     printf("*** ERROR Something Went Wrong no memory ***\n");
     exit(0);
   }
-  memset(temp, 0, strlen(line) * sizeof(char));
+  memset(temp, 0, (strlen(line)+2) * sizeof(char));
   /*search for end of the label char ':' */
   while (line[i] != '\n' && line[i] != '\0') {
     temp[j++] = line[i];

@@ -207,8 +207,8 @@ int check_command(char * command, char * line, int argument_counter, int label_f
 */
 int find_adressing_method(char * string, int label_flag, char * command) {
   int i = 0;
-  char temp[80];
-  char * tempstring = NULL;
+  char word[80]={0};
+  char *tempstring = NULL;
   int dest=0, source=0;
   char last_bits[5] = "0000\n";
   int j = 0, k = 0, commaflag = 0, number_temp = 0;
@@ -217,7 +217,6 @@ int find_adressing_method(char * string, int label_flag, char * command) {
     printf("*** ERROR Something Went Wrong no memory ***\n");
     exit(0);
   }
-
   memset(tempstring, 0, (strlen(string) + 2) * sizeof(char));
 
   strcpy(tempstring, string);
@@ -248,7 +247,7 @@ int find_adressing_method(char * string, int label_flag, char * command) {
   tempstring[strlen(tempstring)] = '\0';
   while (tempstring[i] != '\0') {
     /*find comma*/
-    temp[j++] = tempstring[i];
+    word[j++] = tempstring[i];
     if (tempstring[i] == ',') {
       commaflag = 1;
 
@@ -295,19 +294,19 @@ int find_adressing_method(char * string, int label_flag, char * command) {
     }
   } else {
     /* comma present*/
-    temp[j - 1] = '\0';
+    word[j - 1] = '\0';
     j = 0;
-    if (check_for_reg(temp, 0) == 1) {
+    if (check_for_reg(word, 0) == 1) {
       /*if string register*/
       last_bits[k++] = '1';
       last_bits[k++] = '1';
     } else
-    if (temp[0] == '#') {
+    if (word[0] == '#') {
       /*if string number*/
       last_bits[k++] = '0';
       last_bits[k++] = '0';
     } else
-    if (temp[0] == '%') {
+    if (word[0] == '%') {
       /*if string adress*/
       last_bits[k++] = '1';
       last_bits[k++] = '0';
@@ -319,23 +318,23 @@ int find_adressing_method(char * string, int label_flag, char * command) {
     j = 0;
     while (tempstring[i] != '\0') {
       /*cpy string to temp*/
-      temp[j++] = tempstring[i];
+      word[j++] = tempstring[i];
       i++;
     }
-    temp[j] = '\0';
-    remove_space_tabs(temp);
-    if (check_for_reg(temp, 0) == 1) {
+    word[j] = '\0';
+    remove_space_tabs(word);
+    if (check_for_reg(word, 0) == 1) {
       /*second argument if register*/
       last_bits[k++] = '1';
       last_bits[k++] = '1';
     } else
-    if (temp[0] == '#') {
+    if (word[0] == '#') {
       /*second argument if number*/
       last_bits[k++] = '0';
       last_bits[k++] = '0';
       last_bits[5] = '\0';
     } else
-    if (temp[0] == '%') {
+    if (word[0] == '%') {
       /*second argument if adress*/
       last_bits[k++] = '1';
       last_bits[k++] = '0';
@@ -349,16 +348,16 @@ int find_adressing_method(char * string, int label_flag, char * command) {
   free(tempstring); /*free temp string*/
 
   /*create last 4 bits*/
-  if (temp != NULL) {
+  if (word != NULL) {
     number_temp = strtol(last_bits, NULL, 2);
-    temp[0] = last_bits[0];
-    temp[1] = last_bits[1];
-    temp[3] = '\0';
-    source = strtol(temp, NULL, 2);
-    temp[0] = last_bits[2];
-    temp[1] = last_bits[3];
-    temp[2] = '\0';
-    dest = strtol(temp, NULL, 2);
+    word[0] = last_bits[0];
+    word[1] = last_bits[1];
+    word[3] = '\0';
+    source = strtol(word, NULL, 2);
+    word[0] = last_bits[2];
+    word[1] = last_bits[3];
+    word[2] = '\0';
+    dest = strtol(word, NULL, 2);
   }
   sprintf(arr[index_of_datatable].adress_method, "%X", number_temp); /*insert bits*/
   index_of_datatable++;

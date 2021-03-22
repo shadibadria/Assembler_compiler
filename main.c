@@ -94,10 +94,11 @@ int main(int argc, char * argv[]) {
         append_extern_tofile("ps.ext");
         append_datatable_tofile("ps.ob");
       }
+        fclose(fp);
+
     }
   } /*end loop*/
   display();
   free_symbol_table_memory(); /*free the symbol table*/
-  fclose(fp);
   return 0;
 }

@@ -47,7 +47,7 @@ void insert_entry(char * symbol) {
 
   for (i = 0; i < size_table; i++) {
     if (strcmp(array[i].symbol, symbol) == 0) {
-      array[i].attribute = (char * ) realloc(array[i].attribute, 7);
+      array[i].attribute = (char * ) realloc(array[i].attribute, 11);
       if (array[i].attribute == NULL) {
         printf("Something Went Wrong no memory\n");
         exit(1);
@@ -81,11 +81,11 @@ void insert(int key, int value, char * symbol, char * attribute) {
     array[index].amount = 1;
     /*insert value */
     if (value == 0) {
-      array[index].value = (char * ) malloc(4 * sizeof(char));
-      memset(array[index].value, 0, 4 * sizeof(char));
+      array[index].value = (char * ) malloc(5 * sizeof(char));
+      memset(array[index].value, 0, 5 * sizeof(char));
     } else {
-      array[index].value = (char * ) malloc(((floor(log10(abs(value)))) + 6) * sizeof(char));
-      memset(array[index].value, 0, ((floor(log10(abs(value)))) + 6) * sizeof(char));
+      array[index].value = (char * ) malloc(((floor(log10(abs(value)))) + 5) * sizeof(char));
+      memset(array[index].value, 0, ((floor(log10(abs(value)))) + 5) * sizeof(char));
     }
     if (array[index].value == NULL) {
       printf("Something Went Wrong no memory at  symbol_table.c\n");
