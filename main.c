@@ -90,9 +90,10 @@ int main(int argc, char * argv[]) {
         if (second_pass_flag == 0) {
           return 1;
         }
-        append_entry_tofile("ps.ent");
+     append_datatable_tofile("ps.ob");
+       append_entry_tofile("ps.ent");
         append_extern_tofile("ps.ext");
-        append_datatable_tofile("ps.ob");
+        
       }
         fclose(fp);
 

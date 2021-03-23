@@ -196,6 +196,7 @@ int check_command(char * command, char * line, int argument_counter, int label_f
       }
 
       sprintf(arr[index_of_datatable].Adress, "%04d", IC); /*insert to data table*/
+
       IC++;
       code_opcode_parsing(mycommands[i].opcode, mycommands[i].funct);
       find_adressing_method(line, label_flag, command);
@@ -462,6 +463,7 @@ int check_if_number(char * string) {
           while (string[i] != '\0') {
     if ((string[i] == '#' && isdigit(string[i + 1]) != 0) || (string[i] == '#' && string[i + 1] == '-' && isdigit(string[i + 2]) != 0)) {
       sprintf(arr[index_of_datatable].Adress, "%04d", IC);
+
       memmove(string, string + 1, strlen(string));
       sprintf(arr[index_of_datatable].TAG, "%c", 'A');
       number_temp = strtol(string, NULL, 10);
@@ -518,6 +520,8 @@ int check_line(char * line) {
         break;
       }
       sprintf(arr[index_of_datatable].Adress, "%04d", IC);
+                        printf("hereIC:%d\n",IC);
+        printf("TEMPIS:%s\n",find_label(temp));
       if (strcmp(find_label(temp), "?") == 0) {
         sprintf(arr[index_of_datatable].label_name, "%s", temp);
         sprintf(arr[index_of_datatable].opcode, "%s", "?");

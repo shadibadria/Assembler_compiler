@@ -146,12 +146,14 @@ function find_label find label at the symbol table
 char * find_label(char * label) {
   int i;
   for (i = 0; i < size_table; i++) {
-    if (strcmp(array[i].symbol, label) == -1) {
-      return "found";
+    printf("array[i].symbol=%s , label=%s = %d\n",array[i].symbol,label,strcmp(array[i].symbol,label));
+    if (strcmp(array[i].symbol, label) !=0) {
+      return "?";
     }
   }
-  return "?";
+  return "found";
 }
+
 /*
 function  checkforduplicate  check for duplicate at the symbol table 
 @param symbol 
