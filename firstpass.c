@@ -114,7 +114,7 @@ int parse_line(char * line) {
     } else {
       temp[j] = '\0';
       if (j != 0) {
-        check_if_command(temp, line, label_flag); /*check if word is command*/
+        check_if_command(temp, line, label_flag,0); /*check if word is command*/
         /*check if line is data or string and check comma (',') correction*/
         if (check_if_its_data(line, 0) != 1 && check_if_its_string(line, 0) != 1) {
           check_comma(line);
@@ -133,7 +133,7 @@ int parse_line(char * line) {
     temp[j] = '\0';
     if (strlen(temp)) {
       if (check_if_its_data(temp, 0) != 1 || check_if_its_string(temp, 0))
-        if (check_if_command(temp, line, label_flag) == 0)
+        if (check_if_command(temp, line, label_flag,0) == 0)
           check_line(temp);
     }
   }
@@ -164,14 +164,23 @@ function check_if_extern - check if line is extern label
 */
 int check_if_extern(char * line, int test) {
   int i = 0;
-
+  
   remove_spaces_from_index(line, 0);
+
+    
+  
+  while(line[i] !='\0'){
+      if(line[i]=='.'){
+        break;
+      }
+    i++;
+  }
+  
   /*check if its .extern */
   if (line[i] != '.' || line[i + 1] != 'e' || line[i + 2] != 'x' || line[i + 3] != 't' || line[i + 4] != 'e' || line[i + 5] != 'r' || line[i + 6] != 'n' || (line[i + 7] != ' ' && line[i + 7] != '\t')) {
     return 0;
   }
     command_exist_flag = 1;
-
   if (test == 1) {
     /*if we just want to know its extern*/
     return 1;
@@ -185,7 +194,7 @@ int check_if_extern(char * line, int test) {
   line[strlen(line)] = '\0';
   remove_space_tabs(line);
   if (checkforduplicate(line) == 0) {
-    printf("*** ERROR at line %d the Label %s is already in use *** \n", program_line, line);
+    printf("*** ERROR at line %d extern label %s is not found on symbol table ***\n", program_line, line); /*second pass error*/
     return 0;
   }
   /*insert external label*/
@@ -205,6 +214,13 @@ int check_if_entry(char * line, int test) {
   line[strlen(line)] = '\n';
   line = remove_spaces_from_index(line, i);
 
+  
+  while(line[i] !='\0'){
+      if(line[i]=='.'){
+        break;
+      }
+    i++;
+  }
   /*check if its .entry */
   if (line[i] != '.' || line[i + 1] != 'e' || line[i + 2] != 'n' || line[i + 3] != 't' || line[i + 4] != 'r' || line[i + 5] != 'y' || (line[i + 6] != ' ' && line[i + 6] != '\t')) {
     return 0;
@@ -241,7 +257,7 @@ int check_if_entry(char * line, int test) {
   if (checkforduplicate(line) == 0) {
     insert_entry(line);
   } else {
-    printf("*** ERROR at line %d entry label %s is  not found on symbol table \n", program_line, line); /*second pass error*/
+    printf("*** ERROR at line %d entry label %s is not found on symbol table ***\n", program_line, line); /*second pass error*/
     first_pass_flag = 0;
     return 0;
   }
@@ -367,7 +383,9 @@ int check_if_label(char * line, int test) {
       if (test == 1) {
         /*if only testing if its label*/
         free(temp);
-        return 1;
+                
+
+        return 5;
       }
       remove_space_tabs(temp);
 
@@ -379,6 +397,16 @@ int check_if_label(char * line, int test) {
         if(temp[j-1]==':'){
           temp[j-1]='\0';
         }
+      }
+      if(check_for_reg(temp,0)==1){
+      printf("*** ERROR at line %d invalid  label \"%s\"  ***\n", program_line, temp);
+              first_pass_flag = 0;
+            return 0;
+      }
+       if(check_if_command(temp,line,0,1)==1){
+      printf("*** ERROR at line %d invalid  label \"%s\"  ***\n", program_line, temp);
+              first_pass_flag = 0;
+            return 0;
       }
       if (checkforduplicate(temp) == 0) {
 
@@ -421,6 +449,7 @@ function check_if_its_data - check if line is .data
 int check_if_its_data(char * line, int test) {
 
   int i = 0;
+ 
   /*check if its data*/
   while (line[i] != '\n' && line[i] != '\0') {
     if (line[i] == '.') {
@@ -624,14 +653,23 @@ function check_if_command  - check if line is command
 @param label_flag - if 1 there is label else no label
 @return int
 */
-int check_if_command(char * command, char * line, int label_flag) {
+int check_if_command(char * command, char * line, int label_flag,int test) {
 
   if (label_flag == 1) {
     /*if there is label*/
     remove_label(command);
   }
+
+  if(test==1){
+  if (check_command(command, line, arguments_counter, label_flag,0) == 1) {
+return 1;
+  }else{
+    return 0;
+  }
+  }
+  
   /*check command*/
-  if (check_command(command, line, arguments_counter, label_flag) == 0) {
+  if (check_command(command, line, arguments_counter, label_flag,0) == 0) {
     return 0;
   } else {
     command_exist_flag = 1;

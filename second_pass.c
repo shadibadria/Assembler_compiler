@@ -116,16 +116,19 @@ void fill_table() {
           strcpy(arr[i].TAG, "A");
           break;
         }
-        printf("arr=%s\n", arr[i].label_name);
         if (strcmp(arr[i].label_name, array[j].symbol) == 0) {
           number_temp = strtol(array[j].value, NULL, 10);
           sprintf(arr[i].opcode, "%03X", number_temp);
+           
+
           if (strcmp(array[j].attribute, "external") == 0) {
             /*if external*/
             strcpy(arr[i].TAG, "E");
             break;
           } else {
+            
             if (strstr(array[j].attribute, "entry")) {
+             
               strcpy(arr[i].TAG, "R");
               break;
             } else {

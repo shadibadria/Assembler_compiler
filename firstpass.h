@@ -28,7 +28,7 @@ int check_if_its_data(char * line, int test);
 int check_if_its_string(char * line, int test);
 int data_parsing(char * line, int i);
 int string_parsing(char * line, int index);
-int check_if_command(char * command, char * line, int label_flag);
+int check_if_command(char * command, char * line, int label_flag,int test);
 void check_comma(char * line);
 int check_line_arguments(char * line);
 int count_word(char * s);

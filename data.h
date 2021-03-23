@@ -36,7 +36,7 @@ char command_code[BIT_MAX];
 const char * reg[REGISTERS_COUNT];
 
 void init_commands();
-int check_command(char * command, char * line, int argument_counter, int label_flag);
+int check_command(char * command, char * line, int argument_counter, int label_flag,int test);
 int check_line(char * line);
 void init_registers();
 int code_opcode_parsing(char * command_code, char * command_func);

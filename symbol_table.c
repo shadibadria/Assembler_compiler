@@ -163,9 +163,13 @@ int checkforduplicate(char * symbol) {
   int i;
 
   for (i = 0; i < size_table; i++) {
+   
 
     if (strcmp(array[i].symbol, symbol) == 0) {
-      
+
+          if(strcmp(array[i].attribute,"external")==0){
+            return 1;
+          }
       return 0;
     }
   }

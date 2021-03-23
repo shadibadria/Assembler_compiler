@@ -145,9 +145,9 @@ void init_commands() {
   strcpy(mycommands[i].command_name, "rts\0");
   strcpy(mycommands[i].opcode, "1110\0");
   strcpy(mycommands[i].funct, "0000\0");
-  mycommands[i].allowed_operand = 1;
+  mycommands[i].allowed_operand = 0;
   strcpy(mycommands[i].source_operands, "0\0");
-  strcpy(mycommands[i].dest_operands, "1,2\0");
+  strcpy(mycommands[i].dest_operands, "0\0");
   i++;
 
   strcpy(mycommands[i].command_name, "stop\0");
@@ -164,9 +164,10 @@ function check_command - check if the command is correct
 @param line    - its the full line we get
 @param argument_counter  - its the count of arguments for command 
 @param label_flag     - flag for checking if the line is label 
+@param test       -  only for testing if string is
 @return  1-success 0-Error
 */
-int check_command(char * command, char * line, int argument_counter, int label_flag) {
+int check_command(char * command, char * line, int argument_counter, int label_flag,int test) {
   int i = 0;
   if (command[strlen(command) - 1] == ',') {
     /*check for comma*/
@@ -182,7 +183,9 @@ int check_command(char * command, char * line, int argument_counter, int label_f
   for (i = 0; i < COMMANDS_AMOUNT; i++) {
     /*check the arguments if correct*/
     if (strcmp(mycommands[i].command_name, command) == 0) {
-
+          if(test==1){
+            return 1;
+          }
       if (mycommands[i].allowed_operand > argument_counter) {
         
           printf("***ERROR at line %d missing operand ***\n", program_line);
@@ -286,8 +289,8 @@ int find_adressing_method(char * string, int label_flag, char * command) {
       last_bits[k++] = '1';
       last_bits[k++] = '0';
     } else
-    if (strstr(command, "stop") != NULL) {
-      /*if the command stop*/
+    if (strstr(command, "stop")!=NULL||strstr(command, "rts") != NULL) {
+      /*if the command stop/rts*/
       last_bits[k++] = '0';
       last_bits[k++] = '0';
       last_bits[k++] = '0';
@@ -385,9 +388,13 @@ int check_command_corrections(int source, int dest, char * command) {
   for (i = 0; i < COMMANDS_AMOUNT; i++) {
     /*loop commands*/
     if (strcmp(mycommands[i].command_name, command) == 0) {
+        printf("COMMAND:%s\n",command);
       /*check if the command dest is the same as the params we got*/
       while (mycommands[i].dest_operands[j] != '\0') {
+                          printf("xxxxxxxxxxCOMMAND:%d\n",dest);
+
         if ((mycommands[i].dest_operands[j] - '0') == dest) {
+
           /*check dest*/
           dest_flag = 1;
         }
@@ -505,6 +512,10 @@ int check_line(char * line) {
 
   if (strcmp("stop", line) == 0) {
     /*if line is stop word return */
+    return 1;
+  }
+   if (strcmp("rts", line) == 0) {
+    /*if line is rts word return */
     return 1;
   }
   while (line[i] != '\n' && line[i] != '\0') {
