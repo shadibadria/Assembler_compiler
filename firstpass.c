@@ -37,15 +37,12 @@ int firstpass(char * filename) {
   }
      
   while (fgets(buffer, bufferLength, filePointer)) {
-    if (strlen(buffer) > MAX_LINE) {
-      printf("*** ERROR File is to big must contain max %d \n ***",bufferLength);
-      exit(0);
-    } else {
+    
       if (IC > bufferLength) {
-        printf("*** ERROR at line %d line is  to long, max length is  %d *** \n", bufferLength, program_line);
+      printf("*** ERROR File is to big must contain max %d ***\n ***",bufferLength);
         exit(0);
       }
-    }
+    
     assemble_parsing(buffer); /*send the line to parsing */
   } /*while ends*/
   fclose(filePointer);
@@ -59,6 +56,13 @@ function assemble_parsing - (controller)get line from file and  send it to parsi
 @return int
 */
 int assemble_parsing(char * line) {
+   if (strlen(line) > MAX_LINE) {
+              printf("*** ERROR at line %d line is  to long, max length is  %d *** \n", program_line, MAX_LINE);
+              program_line++;
+              first_pass_flag=0;
+              return 1;
+                
+    }
   remove_spaces_from_index(line, 0);
   if (line[0] == '\n' || line[0] == '\0' || line[0] == ';') {
     /*if line is empty / if has comment */
@@ -117,7 +121,9 @@ int parse_line(char * line) {
         check_if_command(temp, line, label_flag,0); /*check if word is command*/
         /*check if line is data or string and check comma (',') correction*/
         if (check_if_its_data(line, 0) != 1 && check_if_its_string(line, 0) != 1) {
-          check_comma(line);
+          if(check_comma(line)==0){
+            return 0;
+          }
         } else {
           return 0;
         }
@@ -144,7 +150,7 @@ function check_comma - check if line has comma's and count it
 @parm line - 1 line of assembler file
 @return void
 */
-void check_comma(char * line) {
+int check_comma(char * line) {
   int i = 0, counter = 0;
   while (line[i] != '\0') {
     if (line[i] == ',')
@@ -154,7 +160,10 @@ void check_comma(char * line) {
   if (counter > 1) {
     printf("*** ERROR at line %d to many comma's ***\n", program_line);
     first_pass_flag = 0;
+    return 0;
+    
   }
+  return 1;
 }
 /*
 function check_if_extern - check if line is extern label
@@ -486,6 +495,7 @@ int data_parsing(char * line, int i) {
       if (number_flag == 0) {	
         printf("*** ERROR at line %d to many comma's inserted missing numbers ***\n", program_line);	
         first_pass_flag = 0;	
+        break;
       }	
       number_flag = 0;	
       comma_counter++;	
