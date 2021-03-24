@@ -188,11 +188,11 @@ int check_command(char * command, char * line, int argument_counter, int label_f
           }
       if (mycommands[i].allowed_operand > argument_counter) {
         
-          printf("***ERROR at line %d missing operand ***\n", program_line);
+          printf("*** ERROR at line %d missing operand ***\n", program_line);
           first_pass_flag = 0;
       }else{
               if (mycommands[i].allowed_operand < argument_counter) {
-                printf("***ERROR at line %d to many operands ***\n", program_line);
+                printf("*** ERROR at line %d to many operands ***\n", program_line);
                first_pass_flag = 0;
               }
 
@@ -388,11 +388,8 @@ int check_command_corrections(int source, int dest, char * command) {
   for (i = 0; i < COMMANDS_AMOUNT; i++) {
     /*loop commands*/
     if (strcmp(mycommands[i].command_name, command) == 0) {
-        printf("COMMAND:%s\n",command);
       /*check if the command dest is the same as the params we got*/
       while (mycommands[i].dest_operands[j] != '\0') {
-                          printf("xxxxxxxxxxCOMMAND:%d\n",dest);
-
         if ((mycommands[i].dest_operands[j] - '0') == dest) {
 
           /*check dest*/
@@ -410,11 +407,11 @@ int check_command_corrections(int source, int dest, char * command) {
         j++;
       }
       if (!source_flag) {
-        printf("*** ERRORs at line %d source operand addressing error ***\n", program_line);
+        printf("*** ERROR at line %d source operand addressing error ***\n", program_line);
         first_pass_flag = 0;
       }
       if (!dest_flag) {
-        printf("*** ERRORs at line %d destination operand addressing error ***\n", program_line);
+        printf("*** ERROR at line %d destination operand addressing error ***\n", program_line);
         first_pass_flag = 0;
       }
       return 1;
@@ -439,7 +436,6 @@ int code_opcode_parsing(char * command_opcode, char * command_func) {
     number_temp = strtol(command_func, NULL, 2);
     sprintf(arr[index_of_datatable].funct, "%02X", number_temp);
     sprintf(arr[index_of_datatable].TAG, "%c", 'A');
-    printf("%s\n", command_func);
     index_of_datatable++;
     return 0;
   }
@@ -475,7 +471,7 @@ int check_if_number(char * string) {
       sprintf(arr[index_of_datatable].TAG, "%c", 'A');
       number_temp = strtol(string, NULL, 10);
       if (number_temp > MAX_DATA || number_temp < MIN_DATA) {
-        printf("*** ERROR at line %d  number must be between %d to %d ***\n", program_line, MIN_DATA, MAX_DATA);
+        printf("*** ERROR at line %d  number must be between %d to %d *** \n", program_line, MIN_DATA, MAX_DATA);
         first_pass_flag = 0;
       }
       sprintf(arr[index_of_datatable].opcode, "%03X", number_temp);
@@ -487,7 +483,7 @@ int check_if_number(char * string) {
       IC++;
       return 1;
     }else{
-      printf("*** ERROR at line %d invalid characters *** \n ",program_line);
+      printf("*** ERROR at line %d invalid characters *** \n",program_line);
       first_pass_flag=0;
       break;
     }
@@ -531,8 +527,7 @@ int check_line(char * line) {
         break;
       }
       sprintf(arr[index_of_datatable].Adress, "%04d", IC);
-                        printf("hereIC:%d\n",IC);
-        printf("TEMPIS:%s\n",find_label(temp));
+
       if (strcmp(find_label(temp), "?") == 0) {
         sprintf(arr[index_of_datatable].label_name, "%s", temp);
         sprintf(arr[index_of_datatable].opcode, "%s", "?");
@@ -547,11 +542,19 @@ int check_line(char * line) {
     /*if line does not have comma*/
     line[strlen(line)] = '\0';
     if(isdigit(line[0])!=0){
-      printf("*** ERROR at line %d invalid operand***\n",program_line);
+      printf("*** ERROR at line %d invalid operand ***\n",program_line);
       first_pass_flag=0;
     }
+      
     if (check_if_number(line) == 1) return 1;
     if (check_for_reg(line, 1)) return 1;
+    if(line[0]=='%'){
+            if(isdigit(line[1])){
+              printf("*** ERROR at line %d invlid label ***\n",program_line);
+              first_pass_flag =0;
+            }
+    }
+   
     sprintf(arr[index_of_datatable].Adress, "%04d", IC);
     if (strcmp(find_label(line), "?") == 0) {
       sprintf(arr[index_of_datatable].label_name, "%s", line);
@@ -563,7 +566,7 @@ int check_line(char * line) {
   }
   i++;
   temp[0] = '\0';
-  j = 0;
+  j=0;
   while (line[i] != '\0') {
     /*copy to newstring*/
     temp[j++] = line[i];

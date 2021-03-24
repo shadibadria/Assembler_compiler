@@ -79,7 +79,6 @@ void insert(int key, int value, char * symbol, char * attribute) {
     /*  key not present, insert it  */
     array[index].key_value = key;
     array[index].amount = 1;
-    printf("VALUE:%d\n",value);
     /*insert value */
     if (value == 0) {
       array[index].value = (char * ) malloc(5 * sizeof(char));
@@ -94,7 +93,6 @@ void insert(int key, int value, char * symbol, char * attribute) {
     }
     sprintf(array[index].value, "%04d", value);
     /*insert symbol*/
-    printf("STRLEN:%s\n",symbol);
     array[index].symbol = (char * ) malloc((strlen(symbol) + 1) * sizeof(char));
     if (array[index].symbol == NULL) {
       printf("Something Went Wrong no memory\n");
@@ -146,7 +144,6 @@ function find_label find label at the symbol table
 char * find_label(char * label) {
   int i;
   for (i = 0; i < size_table; i++) {
-    printf("array[i].symbol=%s , label=%s = %d\n",array[i].symbol,label,strcmp(array[i].symbol,label));
     if (strcmp(array[i].symbol, label) !=0) {
       return "?";
     }

@@ -32,7 +32,7 @@ function firstpass - open file for reading line by line and sending it to parse
 int firstpass(char * filename) {
   filePointer = fopen(filename, "r");
   if (filePointer == NULL) {
-    printf("*** ERROR: Cant open file name :%s ***\n", filename);
+    printf("*** ERROR: Cant open file name :%s *** \n", filename);
     exit(0);
   }
      
@@ -42,7 +42,7 @@ int firstpass(char * filename) {
       exit(0);
     } else {
       if (IC > bufferLength) {
-        printf("*** ERROR at line %d line is  to long, max length is  %d \n ***", bufferLength, program_line);
+        printf("*** ERROR at line %d line is  to long, max length is  %d *** \n", bufferLength, program_line);
         exit(0);
       }
     }
@@ -64,8 +64,8 @@ int assemble_parsing(char * line) {
     /*if line is empty / if has comment */
     return 0;
   }
-  printf("\n****************************\n");
-  printf("COMMAND:%s\n", line);
+ /* printf("\n****************************\n");
+  printf("COMMAND:%s\n", line);*/
   label_flag = 0;
    command_exist_flag = 0;
 
@@ -194,7 +194,7 @@ int check_if_extern(char * line, int test) {
   line[strlen(line)] = '\0';
   remove_space_tabs(line);
   if (checkforduplicate(line) == 0) {
-    printf("*** ERROR at line %d extern label %s is not found on symbol table ***\n", program_line, line); /*second pass error*/
+    printf("*** ERROR at line %d local label cannot be declared as external ***\n", program_line); /*second pass error*/
     return 0;
   }
   /*insert external label*/
@@ -257,7 +257,7 @@ int check_if_entry(char * line, int test) {
   if (checkforduplicate(line) == 0) {
     insert_entry(line);
   } else {
-    printf("*** ERROR at line %d entry label %s is not found on symbol table ***\n", program_line, line); /*second pass error*/
+    printf("*** Second Pass ERROR  entry label %s is not found on symbol table ***\n", line); /*second pass error*/
     first_pass_flag = 0;
     return 0;
   }
@@ -358,7 +358,7 @@ int check_if_label(char * line, int test) {
       while (temp[j] != ':') {
         if (temp[j] == ' ' || temp[j] == '\t') {
           /*check if label has spaces/tabs in it*/
-          printf("*** ERROR at line: %d: Label has space/tab in it ***\n", program_line);
+          printf("*** ERROR at line %d Label has space/tab in it ***\n", program_line);
           first_pass_flag = 0;
           break;
         }
@@ -367,11 +367,11 @@ int check_if_label(char * line, int test) {
 
       if (isdigit(temp[0])) {
         /*check if label start with letters*/
-        printf("*** ERROR at line: %d: label must start with letters *** \n", program_line);
+        printf("*** ERROR at line %d label must start with letters ***\n", program_line);
         first_pass_flag = 0;
       }
       if (strlen(temp) > MAX_LABEL) {
-        printf("\n*** ERROR at line %d: label is to long must be 31 char ***\n", program_line);
+        printf("*** ERROR at line %d label is to long must be 31 char ***\n", program_line);
         first_pass_flag = 0;
         return 0;
       }
@@ -458,8 +458,6 @@ int check_if_its_data(char * line, int test) {
 
         if (test == 0) {
           /*if its not testing only*/
-          printf("data\n");
-
           data_parsing(line, i + 4); /*parse the data to numbers*/
           return 1;
         }
@@ -507,11 +505,11 @@ int data_parsing(char * line, int i) {
       number_counter++;
       val = strtol(p, & p, 10);
       if (val > MAX_DATA) {
-        printf("*** ERROR at line %d data value is bigger than %d *** \n", program_line, MAX_DATA);
+        printf("*** ERROR at line %d data value is bigger than %d ***\n", program_line, MAX_DATA);
         first_pass_flag = 0;
       }
       if (val < MIN_DATA) {
-        printf("*** ERROR at line %d data value is smaller than %d *** \n", program_line, MIN_DATA);
+        printf("*** ERROR at line %d data value is smaller than %d ***\n", program_line, MIN_DATA);
         first_pass_flag = 0;
       }
       /*insert data values */
@@ -526,7 +524,7 @@ int data_parsing(char * line, int i) {
       IC++;
     } else {
         if(*p!=' '&&*p!='\t'&&*p!=','){
-      printf("*** ERROR at line %d invalid characters %c ***\n",program_line,*p);
+      printf("*** ERROR at line %d invalid character '%c' *** \n",program_line,*p);
               first_pass_flag = 0;
               break;
     
@@ -744,7 +742,7 @@ int check_line_arguments(char * line) {
   }
   
   arguments_counter = count_word(temp_string); /*count arguments*/
-  printf("argument:%d\n",arguments_counter);
+
   free(temp_string);
   return arguments_counter;
 }
@@ -798,7 +796,7 @@ void remove_label(char * line) {
   if (label_flag == 1) {
     newstring = (char * ) malloc((strlen(line) + 1) * sizeof(char));
     if (newstring == NULL) {
-      printf(" *** ERROR memory problem *** \n");
+      printf("*** ERROR memory problem *** \n");
       exit(0);
     }
     memset(newstring, 0, strlen(line) * sizeof(char));

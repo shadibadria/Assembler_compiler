@@ -68,6 +68,7 @@ int main(int argc, char * argv[]) {
         if (first_pass_flag == 0) {
           return 1;
         }
+
         secondpass(newfile); /*second Pass*/
         if (second_pass_flag == 0) {
           return 1;

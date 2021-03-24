@@ -20,6 +20,8 @@ its porpuse is to rewrite  all the unknown labels and data to the data table
 
 #include"data_image.h"
 
+#include"file_proccess.h"
+
 FILE * filePointer;
 char buffer[bufferLength];
 int extern size_table;
@@ -149,9 +151,10 @@ function check_for_label_error - check if there is error in labels
 */
 void check_for_label_error() {
   int i = 0;
+
   for (i = 0; i < 100; i++) {
     if (strcmp(arr[i].opcode, "?") == 0) {
-      printf("ERROR LABEL %s is not found in symbol table \n", arr[i].label_name);
+      printf("*** Second Pass ERROR label %s is not found in symbol table *** \n", arr[i].label_name);
       second_pass_flag = 0;
       break;
     }
