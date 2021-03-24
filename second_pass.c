@@ -52,7 +52,7 @@ function secondpass_pasrsing - takes lline and parse it to write the missing lab
 @return int
 */
 int secondpass_pasrsing(char * line) {
-  char temp[80];
+  char temp[MAX_LINE];
   int i = 0, j = 0;
   if (line[0] == '\n' || line[0] == '\0') {
     return 0;
@@ -88,15 +88,15 @@ function fill_table -  fill the data table where is labels are missing
 */
 void fill_table() {
   int i = 0, j, number_temp, k = 0, flag = 0, current_adress = 0;
-  char tempstring[15];
-  for (i = 0; i < 100; i++) {
-    if (strcmp(arr[i].opcode, "?") == 0) {
+  char tempstring[MAX_LINE];
+  for (i = 0; i < MAX_Data_TABLE; i++) {
+    if (strcmp(data_table[i].opcode, "?") == 0) {
       /*if unknown value at symbol table*/
       for (j = 0; j < size_table; j++) {
         flag = 0;
-        if (arr[i].label_name[0] == '%') {
+        if (data_table[i].label_name[0] == '%') {
           /*if value is adress*/
-          memmove(tempstring, arr[i].label_name + 1, strlen(arr[i].label_name));
+          memmove(tempstring, data_table[i].label_name + 1, strlen(data_table[i].label_name));
           k = 0;
           while (k < strlen(tempstring)) {
             if (isdigit(tempstring[k])) {
@@ -107,34 +107,34 @@ void fill_table() {
           }
           flag = 1;
         }
-        if (flag == 1 && strcmp(array[j].symbol, tempstring) == 0) {
+        if (flag == 1 && strcmp(symbol_table[j].symbol, tempstring) == 0) {
           /*if symbol is the same add it*/
-          number_temp = strtol(array[j].value, NULL, 10);
-          current_adress = strtol(arr[i].Adress, NULL, 10);
-          sprintf(arr[i].opcode, "%03X", number_temp - current_adress);
+          number_temp = strtol(symbol_table[j].value, NULL, 10);
+          current_adress = strtol(data_table[i].Adress, NULL, 10);
+          sprintf(data_table[i].opcode, "%03X", number_temp - current_adress);
           if (number_temp - current_adress < 0) {
-            memmove(arr[i].opcode, arr[i].opcode + 5, strlen(arr[i].opcode));
+            memmove(data_table[i].opcode, data_table[i].opcode + 5, strlen(data_table[i].opcode));
           }
-          strcpy(arr[i].TAG, "A");
+          strcpy(data_table[i].TAG, "A");
           break;
         }
-        if (strcmp(arr[i].label_name, array[j].symbol) == 0) {
-          number_temp = strtol(array[j].value, NULL, 10);
-          sprintf(arr[i].opcode, "%03X", number_temp);
+        if (strcmp(data_table[i].label_name, symbol_table[j].symbol) == 0) {
+          number_temp = strtol(symbol_table[j].value, NULL, 10);
+          sprintf(data_table[i].opcode, "%03X", number_temp);
            
 
-          if (strcmp(array[j].attribute, "external") == 0) {
+          if (strcmp(symbol_table[j].attribute, "external") == 0) {
             /*if external*/
-            strcpy(arr[i].TAG, "E");
+            strcpy(data_table[i].TAG, "E");
             break;
           } else {
             
-            if (strstr(array[j].attribute, "entry")) {
+            if (strstr(symbol_table[j].attribute, "entry")) {
              
-              strcpy(arr[i].TAG, "R");
+              strcpy(data_table[i].TAG, "R");
               break;
             } else {
-              strcpy(arr[i].TAG, "R");
+              strcpy(data_table[i].TAG, "R");
             }
           }
 
@@ -152,9 +152,9 @@ function check_for_label_error - check if there is error in labels
 void check_for_label_error() {
   int i = 0;
 
-  for (i = 0; i < 100; i++) {
-    if (strcmp(arr[i].opcode, "?") == 0) {
-      printf("*** Second Pass ERROR label %s is not found in symbol table *** \n", arr[i].label_name);
+  for (i = 0; i < MAX_Data_TABLE; i++) {
+    if (strcmp(data_table[i].opcode, "?") == 0) {
+      printf("*** Second Pass ERROR label %s is not found in symbol table *** \n", data_table[i].label_name);
       second_pass_flag = 0;
       break;
     }

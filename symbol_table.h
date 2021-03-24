@@ -26,7 +26,7 @@ struct data {
   char * attribute;
 };
 
-struct data * array;
+struct data * symbol_table;
 
 int hashcode(int key);
 int init_array();

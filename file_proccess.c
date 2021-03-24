@@ -41,12 +41,12 @@ void append_entry_tofile(char * filename) {
     printf("error creating file %s \n", filename);
     exit(0);
   }
-  if (array[i].attribute != NULL) {
+  if (symbol_table[i].attribute != NULL) {
     for (i = 0; i < size_table; i++) {
-      if (strstr(array[i].attribute, "entry") != NULL) {
-        fputs(array[i].symbol, file_pointer);
+      if (strstr(symbol_table[i].attribute, "entry") != NULL) {
+        fputs(symbol_table[i].symbol, file_pointer);
         fputs("      ", file_pointer);
-        fputs(array[i].value, file_pointer);
+        fputs(symbol_table[i].value, file_pointer);
         fputs("\n", file_pointer);
       }
     }
@@ -65,11 +65,11 @@ void append_extern_tofile(char * filename) {
     printf("error creating file %s \n", filename);
     exit(0);
   }
-  for (i = 0; i < MAX_Data; i++) {
-    if (strstr(arr[i].TAG, "E") != NULL) {
-      fputs(arr[i].label_name, file_pointer);
+  for (i = 0; i < MAX_Data_TABLE; i++) {
+    if (strstr(data_table[i].TAG, "E") != NULL) {
+      fputs(data_table[i].label_name, file_pointer);
       fputs("          ", file_pointer);
-      fputs(arr[i].Adress, file_pointer);
+      fputs(data_table[i].Adress, file_pointer);
       fputs("\n", file_pointer);
     }
   }
@@ -83,8 +83,8 @@ function append_datatable_tofile - create and add all datatable to file(.ob)
 void append_datatable_tofile(char * filename) {
   int i = 0;
   for (i = 0; i < 100; i++) {
-    if (strlen(arr[i].Adress) >= 1) {
-      append_command_to_file("ps.ob", arr[i]);
+    if (strlen(data_table[i].Adress) >= 1) {
+      append_command_to_file("ps.ob", data_table[i]);
     }
   }
 }

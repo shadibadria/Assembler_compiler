@@ -14,6 +14,7 @@ header file have declration of function for data.c and struct of command
 #define SOURCE_SIZE      8
 #define DEST_SIZE      8
 #define BIT_MAX       13
+
 /*
 struct of the commands
 @val command_name - has the name of the command

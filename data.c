@@ -198,7 +198,7 @@ int check_command(char * command, char * line, int argument_counter, int label_f
 
       }
 
-      sprintf(arr[index_of_datatable].Adress, "%04d", IC); /*insert to data table*/
+      sprintf(data_table[index_of_datatable].Adress, "%04d", IC); /*insert to data table*/
 
       IC++;
       code_opcode_parsing(mycommands[i].opcode, mycommands[i].funct);
@@ -217,7 +217,7 @@ int check_command(char * command, char * line, int argument_counter, int label_f
 */
 int find_adressing_method(char * string, int label_flag, char * command) {
   int i = 0;
-  char word[80]={0};
+  char word[MAX_LINE]={0};
   char *tempstring = NULL;
   int dest=0, source=0;
   char last_bits[5] = "0000\n";
@@ -369,7 +369,7 @@ int find_adressing_method(char * string, int label_flag, char * command) {
     word[2] = '\0';
     dest = strtol(word, NULL, 2);
   }
-  sprintf(arr[index_of_datatable].adress_method, "%X", number_temp); /*insert bits*/
+  sprintf(data_table[index_of_datatable].adress_method, "%X", number_temp); /*insert bits*/
   index_of_datatable++;
   check_command_corrections(source, dest, command); /*check if argument is correct*/
   return 1;
@@ -432,18 +432,18 @@ int code_opcode_parsing(char * command_opcode, char * command_func) {
 
   if (strcmp(command_opcode, "1111") == 0) {
     number_temp = strtol(command_opcode, NULL, 2);
-    sprintf(arr[index_of_datatable].opcode, "%01X", number_temp);
+    sprintf(data_table[index_of_datatable].opcode, "%01X", number_temp);
     number_temp = strtol(command_func, NULL, 2);
-    sprintf(arr[index_of_datatable].funct, "%02X", number_temp);
-    sprintf(arr[index_of_datatable].TAG, "%c", 'A');
+    sprintf(data_table[index_of_datatable].funct, "%02X", number_temp);
+    sprintf(data_table[index_of_datatable].TAG, "%c", 'A');
     index_of_datatable++;
     return 0;
   }
   number_temp = strtol(command_opcode, NULL, 2);
-  sprintf(arr[index_of_datatable].opcode, "%X", number_temp);
+  sprintf(data_table[index_of_datatable].opcode, "%X", number_temp);
   number_temp = strtol(command_func, NULL, 2);
-  sprintf(arr[index_of_datatable].funct, "%X", number_temp);
-  sprintf(arr[index_of_datatable].TAG, "%c", 'A');
+  sprintf(data_table[index_of_datatable].funct, "%X", number_temp);
+  sprintf(data_table[index_of_datatable].TAG, "%c", 'A');
   return 0;
 }
 
@@ -465,19 +465,19 @@ int check_if_number(char * string) {
       if(isnumberflag==1){
           while (string[i] != '\0') {
     if ((string[i] == '#' && isdigit(string[i + 1]) != 0) || (string[i] == '#' && string[i + 1] == '-' && isdigit(string[i + 2]) != 0)) {
-      sprintf(arr[index_of_datatable].Adress, "%04d", IC);
+      sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
 
       memmove(string, string + 1, strlen(string));
-      sprintf(arr[index_of_datatable].TAG, "%c", 'A');
+      sprintf(data_table[index_of_datatable].TAG, "%c", 'A');
       number_temp = strtol(string, NULL, 10);
       if (number_temp > MAX_DATA || number_temp < MIN_DATA) {
-        printf("*** ERROR at line %d  number must be between %d to %d *** \n", program_line, MIN_DATA, MAX_DATA);
+        printf("*** ERROR at line %d  number must be between %d to %d *** \n", program_line, MIN_DATA, MAX_Data_TABLE);
         first_pass_flag = 0;
       }
-      sprintf(arr[index_of_datatable].opcode, "%03X", number_temp);
+      sprintf(data_table[index_of_datatable].opcode, "%03X", number_temp);
       if (number_temp < 0) {
-        arr[index_of_datatable].opcode[0] = '\0';
-        arr[index_of_datatable].funct[4] = '\0';
+        data_table[index_of_datatable].opcode[0] = '\0';
+        data_table[index_of_datatable].funct[4] = '\0';
       }
       index_of_datatable++;
       IC++;
@@ -503,7 +503,7 @@ function check_line - check command if register / label / number
 */
 int check_line(char * line) {
   int i = 0, j = 0;
-  char temp[80];
+  char temp[MAX_LINE];
   int comma_flag = 0;
 
   if (strcmp("stop", line) == 0) {
@@ -526,11 +526,11 @@ int check_line(char * line) {
       if (check_for_reg(temp, 1) == 1) {
         break;
       }
-      sprintf(arr[index_of_datatable].Adress, "%04d", IC);
+      sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
 
       if (strcmp(find_label(temp), "?") == 0) {
-        sprintf(arr[index_of_datatable].label_name, "%s", temp);
-        sprintf(arr[index_of_datatable].opcode, "%s", "?");
+        sprintf(data_table[index_of_datatable].label_name, "%s", temp);
+        sprintf(data_table[index_of_datatable].opcode, "%s", "?");
       }
       index_of_datatable++;
       IC++;
@@ -555,10 +555,10 @@ int check_line(char * line) {
             }
     }
    
-    sprintf(arr[index_of_datatable].Adress, "%04d", IC);
+    sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
     if (strcmp(find_label(line), "?") == 0) {
-      sprintf(arr[index_of_datatable].label_name, "%s", line);
-      sprintf(arr[index_of_datatable].opcode, "%s", "?");
+      sprintf(data_table[index_of_datatable].label_name, "%s", line);
+      sprintf(data_table[index_of_datatable].opcode, "%s", "?");
     }
     index_of_datatable++;
     IC++;
@@ -579,10 +579,10 @@ int check_line(char * line) {
   return 1;
   } /*check if its register*/
   
-  sprintf(arr[index_of_datatable].Adress, "%04d", IC);
+  sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
   if (strcmp(find_label(temp), "?") == 0) {
-    sprintf(arr[index_of_datatable].label_name, "%s", temp);
-    sprintf(arr[index_of_datatable].opcode, "%s", "?");
+    sprintf(data_table[index_of_datatable].label_name, "%s", temp);
+    sprintf(data_table[index_of_datatable].opcode, "%s", "?");
   }
   index_of_datatable++;
   IC++;
@@ -596,7 +596,7 @@ function check_for_reg - check if the line/string is register value
 */
 int check_for_reg(char * string, int add_to_table_flag) {
   int i = 0;
-  char register_maker[13] = {
+  char register_maker[BIT_MAX] = {
     "000000000000\n"
   };
   int number_temp = 0;
@@ -606,18 +606,18 @@ int check_for_reg(char * string, int add_to_table_flag) {
       register_maker[11 - i] = '1';
       /*insert values of the register*/
       if (add_to_table_flag == 1) {
-        sprintf(arr[index_of_datatable].Adress, "%04d", IC);
+        sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
         IC++;
-        strncpy(arr[index_of_datatable].opcode, register_maker, 4);
-        number_temp = strtol(arr[index_of_datatable].opcode, NULL, 2);
-        sprintf(arr[index_of_datatable].opcode, "%X", number_temp);
-        strncpy(arr[index_of_datatable].funct, register_maker + 4, 4);
-        number_temp = strtol(arr[index_of_datatable].funct, NULL, 2);
-        sprintf(arr[index_of_datatable].funct, "%X", number_temp);
-        strncpy(arr[index_of_datatable].adress_method, register_maker + 8, 12);
-        number_temp = strtol(arr[index_of_datatable].adress_method, NULL, 2);
-        sprintf(arr[index_of_datatable].adress_method, "%X", number_temp);
-        sprintf(arr[index_of_datatable].TAG, "%c", 'A');
+        strncpy(data_table[index_of_datatable].opcode, register_maker, 4);
+        number_temp = strtol(data_table[index_of_datatable].opcode, NULL, 2);
+        sprintf(data_table[index_of_datatable].opcode, "%X", number_temp);
+        strncpy(data_table[index_of_datatable].funct, register_maker + 4, 4);
+        number_temp = strtol(data_table[index_of_datatable].funct, NULL, 2);
+        sprintf(data_table[index_of_datatable].funct, "%X", number_temp);
+        strncpy(data_table[index_of_datatable].adress_method, register_maker + 8, 12);
+        number_temp = strtol(data_table[index_of_datatable].adress_method, NULL, 2);
+        sprintf(data_table[index_of_datatable].adress_method, "%X", number_temp);
+        sprintf(data_table[index_of_datatable].TAG, "%c", 'A');
         index_of_datatable++;
         return 1;
       }

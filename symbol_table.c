@@ -26,13 +26,13 @@ function init_array -  init hash table array using malloc
 @return int
 */
 int init_array() {
-  array = (struct data * ) malloc(capacity_table * sizeof(struct data));
-  if (array == NULL) {
+  symbol_table = (struct data * ) malloc(capacity_table * sizeof(struct data));
+  if (symbol_table == NULL) {
     printf("ERROR: something went wrong while trying to use malloc at symboltable.c\n");
     return 0;
   }
-  array[0].amount = 0;
-  memset(array, 0, capacity_table * sizeof(struct data));
+  symbol_table[0].amount = 0;
+  memset(symbol_table, 0, capacity_table * sizeof(struct data));
   return 1;
 }
 
@@ -46,13 +46,13 @@ void insert_entry(char * symbol) {
   int i;
 
   for (i = 0; i < size_table; i++) {
-    if (strcmp(array[i].symbol, symbol) == 0) {
-      array[i].attribute = (char * ) realloc(array[i].attribute, 11);
-      if (array[i].attribute == NULL) {
+    if (strcmp(symbol_table[i].symbol, symbol) == 0) {
+      symbol_table[i].attribute = (char * ) realloc(symbol_table[i].attribute, 11);
+      if (symbol_table[i].attribute == NULL) {
         printf("Something Went Wrong no memory\n");
         exit(1);
       }
-      strcat(array[i].attribute, ",entry");
+      strcat(symbol_table[i].attribute, ",entry");
     }
   }
 }
@@ -69,54 +69,54 @@ void insert(int key, int value, char * symbol, char * attribute) {
   int index = hashcode(key);
 
   capacity_table++;
-  array = (struct data * ) realloc(array, capacity_table * sizeof(struct data));
-  array[index].amount = 0;
-  if (array == NULL) {
+  symbol_table = (struct data * ) realloc(symbol_table, capacity_table * sizeof(struct data));
+  symbol_table[index].amount = 0;
+  if (symbol_table == NULL) {
     printf("ERROR: using realloc at symbol_table.c\n");
     exit(0);
   }
-  if (array[index].amount == 0) {
+  if (symbol_table[index].amount == 0) {
     /*  key not present, insert it  */
-    array[index].key_value = key;
-    array[index].amount = 1;
+    symbol_table[index].key_value = key;
+    symbol_table[index].amount = 1;
     /*insert value */
     if (value == 0) {
-      array[index].value = (char * ) malloc(5 * sizeof(char));
-      memset(array[index].value, 0, 5 * sizeof(char));
+      symbol_table[index].value = (char * ) malloc(5 * sizeof(char));
+      memset(symbol_table[index].value, 0, 5 * sizeof(char));
     } else {
-      array[index].value = (char * ) malloc(((floor(log10(abs(value)))) + 5) * sizeof(char));
-      memset(array[index].value, 0, ((floor(log10(abs(value)))) + 5) * sizeof(char));
+      symbol_table[index].value = (char * ) malloc(((floor(log10(abs(value)))) + 5) * sizeof(char));
+      memset(symbol_table[index].value, 0, ((floor(log10(abs(value)))) + 5) * sizeof(char));
     }
-    if (array[index].value == NULL) {
+    if (symbol_table[index].value == NULL) {
       printf("Something Went Wrong no memory at  symbol_table.c\n");
       exit(1);
     }
-    sprintf(array[index].value, "%04d", value);
+    sprintf(symbol_table[index].value, "%04d", value);
     /*insert symbol*/
-    array[index].symbol = (char * ) malloc((strlen(symbol) + 1) * sizeof(char));
-    if (array[index].symbol == NULL) {
+    symbol_table[index].symbol = (char * ) malloc((strlen(symbol) + 1) * sizeof(char));
+    if (symbol_table[index].symbol == NULL) {
       printf("Something Went Wrong no memory\n");
       exit(1);
     }
-    memset(array[index].symbol, 0, (strlen(symbol) + 1) * sizeof(char));
+    memset(symbol_table[index].symbol, 0, (strlen(symbol) + 1) * sizeof(char));
     if (symbol[strlen(symbol) - 1] == ':') {
       symbol[strlen(symbol) - 1] = '\0';
     } else {
       symbol[strlen(symbol)] = '\0';
     }
-    strcpy(array[index].symbol, symbol);
+    strcpy(symbol_table[index].symbol, symbol);
     
     /*insert attribute */
-    array[index].attribute = (char * ) malloc((strlen(attribute) + 3) * sizeof(char));
-    if (array[index].attribute == NULL) {
+    symbol_table[index].attribute = (char * ) malloc((strlen(attribute) + 3) * sizeof(char));
+    if (symbol_table[index].attribute == NULL) {
       printf("Something Went Wrong no memory\n");
       exit(1);
     }
-    strcpy(array[index].attribute, attribute);
+    strcpy(symbol_table[index].attribute, attribute);
     size_table++;
-  } else if (array[index].key_value == key) {
+  } else if (symbol_table[index].key_value == key) {
     /*  updating already existing key  */
-    array[index].amount += 1;
+    symbol_table[index].amount += 1;
   } else {
     /*  key cannot be insert as the index is already containing some other key  */
     printf("\n ELEMENT CANNOT BE INSERTED \n");
@@ -131,8 +131,8 @@ void insert(int key, int value, char * symbol, char * attribute) {
 void display() {
   int i;
   for (i = 0; i < size_table; i++) {
-    if (array[i].amount == 0) {} else {
-      printf("\n--------------------\nkey= %d \nvalue = %s\nsymbol = %s \nattr= %s\n--------------------\n", array[i].key_value, array[i].value, array[i].symbol, array[i].attribute);
+    if (symbol_table[i].amount == 0) {} else {
+      printf("\n--------------------\nkey= %d \nvalue = %s\nsymbol = %s \nattr= %s\n--------------------\n", symbol_table[i].key_value, symbol_table[i].value, symbol_table[i].symbol, symbol_table[i].attribute);
     }
   }
 }
@@ -144,7 +144,7 @@ function find_label find label at the symbol table
 char * find_label(char * label) {
   int i;
   for (i = 0; i < size_table; i++) {
-    if (strcmp(array[i].symbol, label) !=0) {
+    if (strcmp(symbol_table[i].symbol, label) !=0) {
       return "?";
     }
   }
@@ -162,9 +162,9 @@ int checkforduplicate(char * symbol) {
   for (i = 0; i < size_table; i++) {
    
 
-    if (strcmp(array[i].symbol, symbol) == 0) {
+    if (strcmp(symbol_table[i].symbol, symbol) == 0) {
 
-          if(strcmp(array[i].attribute,"external")==0){
+          if(strcmp(symbol_table[i].attribute,"external")==0){
             return 1;
           }
       return 0;
@@ -189,9 +189,9 @@ function free_symbol_table_memory - free memory of hashtable
 void free_symbol_table_memory() {
   int i = 0;
   for (i = 0; i < size_table; i++) {
-    free(array[i].symbol);
-    free(array[i].value);
-    free(array[i].attribute);
+    free(symbol_table[i].symbol);
+    free(symbol_table[i].value);
+    free(symbol_table[i].attribute);
   }
-  free(array);
+  free(symbol_table);
 }

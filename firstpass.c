@@ -89,7 +89,7 @@ function  parse_line - parse line from assembler file
 */
 int parse_line(char * line) {
   int i = 0, j = 0;
-  char temp[500];
+  char temp[MAX_LINE];
   /*if line is comment*/
   while (line[i] != '\0') {
     if (line[i] == ';') {
@@ -514,8 +514,8 @@ int data_parsing(char * line, int i) {
     if (isdigit( * p) || (( * p == '-' || * p == '+') && isdigit( * (p + 1)))) {
       number_counter++;
       val = strtol(p, & p, 10);
-      if (val > MAX_DATA) {
-        printf("*** ERROR at line %d data value is bigger than %d ***\n", program_line, MAX_DATA);
+      if (val > MAX_Data_TABLE) {
+        printf("*** ERROR at line %d data value is bigger than %d ***\n", program_line, MAX_Data_TABLE);
         first_pass_flag = 0;
       }
       if (val < MIN_DATA) {
@@ -523,12 +523,12 @@ int data_parsing(char * line, int i) {
         first_pass_flag = 0;
       }
       /*insert data values */
-      sprintf(arr[index_of_datatable].Adress, "%04d", IC);
-      sprintf(arr[index_of_datatable].opcode, "%03X", val);
-      sprintf(arr[index_of_datatable].TAG, "%c", 'A');
+      sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
+      sprintf(data_table[index_of_datatable].opcode, "%03X", val);
+      sprintf(data_table[index_of_datatable].TAG, "%c", 'A');
       if (val < 0) {
-        arr[index_of_datatable].opcode[0] = '\0';
-        arr[index_of_datatable].funct[4] = '\0';
+        data_table[index_of_datatable].opcode[0] = '\0';
+        data_table[index_of_datatable].funct[4] = '\0';
       }
       index_of_datatable++;
       IC++;
@@ -607,11 +607,11 @@ int string_parsing(char * line, int index) {
   /*insert string to table by ascii code*/
   while (line[index] != '"' && line[index] != '\n' && line[index] != '\0') {
     string_flag = 1;
-    sprintf(arr[index_of_datatable].Adress, "%04d", IC);
+    sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
     ascii = (int) line[index];
-    sprintf(arr[index_of_datatable].opcode, "%X", 0);
-    sprintf(arr[index_of_datatable].funct, "%X", ascii);
-    sprintf(arr[index_of_datatable].TAG, "%c", 'A');
+    sprintf(data_table[index_of_datatable].opcode, "%X", 0);
+    sprintf(data_table[index_of_datatable].funct, "%X", ascii);
+    sprintf(data_table[index_of_datatable].TAG, "%c", 'A');
     index_of_datatable++;
     IC++;
     index++;
@@ -620,10 +620,10 @@ int string_parsing(char * line, int index) {
     printf("*** ERROR at line %d  string has no values ***\n", program_line);
     first_pass_flag = 0;
   }
-  sprintf(arr[index_of_datatable].Adress, "%04d", IC);
+  sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
   ascii = 0;
-  sprintf(arr[index_of_datatable].opcode, "%03X", ascii);
-  sprintf(arr[index_of_datatable].TAG, "%c", 'A');
+  sprintf(data_table[index_of_datatable].opcode, "%03X", ascii);
+  sprintf(data_table[index_of_datatable].TAG, "%c", 'A');
   index_of_datatable++;
   IC++;
   return 1;

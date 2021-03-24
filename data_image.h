@@ -11,7 +11,7 @@ this file is is header file that responsible for declre the function and the dat
 
 #define SIZEOFCODE 5
 #define SIZEOFADRESS 5
-#define MAX_Data 4095
+#define MAX_Data_TABLE 4095
 #define TAG_SIZE 2
 /*
 struct of the data image
@@ -32,6 +32,6 @@ typedef struct data_image {
 }
 data_image;
 
-data_image arr[MAX_Data];
+data_image data_table[MAX_Data_TABLE];
 void append_command_to_file(char * filename, data_image data);
 void append_register_to_file(char * filename, char * register_number);
