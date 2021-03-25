@@ -26,6 +26,7 @@ int label_flag = 0;
 int arguments_counter = 0;
 int command_exist_flag = 0;
 int first_pass_flag = 1;
+int DC=0;
 /*
 function firstpass - open file for reading line by line and sending it to parse
 @param  filename  file name of the assembler file
@@ -524,6 +525,7 @@ int data_parsing(char * line, int i) {
         first_pass_flag = 0;
       }
       /*insert data values */
+      DC++;
       sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
       sprintf(data_table[index_of_datatable].opcode, "%03X", val);
       sprintf(data_table[index_of_datatable].TAG, "%c", 'A');
@@ -610,6 +612,7 @@ int string_parsing(char * line, int index) {
     string_flag = 1;
     sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
     ascii = (int) line[index];
+    DC++;
     sprintf(data_table[index_of_datatable].opcode, "%X", 0);
     sprintf(data_table[index_of_datatable].funct, "%X", ascii);
     sprintf(data_table[index_of_datatable].TAG, "%c", 'A');
@@ -623,6 +626,7 @@ int string_parsing(char * line, int index) {
   }
   sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
   ascii = 0;
+  DC++;
   sprintf(data_table[index_of_datatable].opcode, "%03X", ascii);
   sprintf(data_table[index_of_datatable].TAG, "%c", 'A');
   index_of_datatable++;

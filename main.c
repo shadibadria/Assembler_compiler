@@ -27,6 +27,8 @@ int main(int argc, char * argv[]) {
   int i = 0;
   int extern first_pass_flag;
   int extern second_pass_flag;
+    int extern DC;
+  int extern IC;
   char * newfile;
   int file_flag = 0;
   char filename[bufferLength];
@@ -69,8 +71,10 @@ int main(int argc, char * argv[]) {
         if (second_pass_flag == 0) {
           return 1;
         }
+     
+
         /*create files*/
-        append_datatable_tofile("ps.ob");
+     append_datatable_tofile("ps.ob",(IC-DC-100),DC);
         append_entry_tofile("ps.ent");
         append_extern_tofile("ps.ext");
         free(newfile);
@@ -87,7 +91,7 @@ int main(int argc, char * argv[]) {
         if (second_pass_flag == 0) {
           return 1;
         }
-     append_datatable_tofile("ps.ob");
+     append_datatable_tofile("ps.ob",(IC-DC-100),DC);
        append_entry_tofile("ps.ent");
         append_extern_tofile("ps.ext");
         

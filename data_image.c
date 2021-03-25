@@ -19,12 +19,33 @@ append the data table to file name *.ob
 @param data  -  struct of data image
 @return void 
 */
+
+void append_size_to_file(char * filename, int instruct_size,int data_size){
+  char number[5];
+   file_pointer = fopen(filename, "a");
+  if (file_pointer == NULL) {
+    printf("error creating file %s \n", filename);
+    exit(0);
+  }
+    fputs("      ", file_pointer);
+
+  sprintf(number,"%d",instruct_size);
+  fputs(number, file_pointer);
+  fputs("   ", file_pointer);
+    sprintf(number,"%d",data_size);
+  fputs(number, file_pointer);
+  fputs("\n", file_pointer);
+    fclose(file_pointer);
+
+}
 void append_command_to_file(char * filename, data_image data) {
   file_pointer = fopen(filename, "a");
   if (file_pointer == NULL) {
     printf("error creating file %s \n", filename);
     exit(0);
   }
+  
+
   fputs(data.Adress, file_pointer);
   fputs("      ", file_pointer);
   fputs(data.opcode, file_pointer);

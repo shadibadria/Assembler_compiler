@@ -31,3 +31,4 @@ data_image;
 data_image data_table[MAX_Data_TABLE];
 void append_command_to_file(char * filename, data_image data);
 void append_register_to_file(char * filename, char * register_number);
+void append_size_to_file(char *filename ,int instruct_size,int data_size);

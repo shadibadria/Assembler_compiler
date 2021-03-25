@@ -84,8 +84,9 @@ function append_datatable_tofile - create and add all datatable to file(.ob)
 @param file_name  - the file name we want to create
 @return void
 */
-void append_datatable_tofile(char * filename) {
+void append_datatable_tofile(char * filename,int instruct_size,int data_size) {
   int i = 0;
+  append_size_to_file("ps.ob",instruct_size,data_size);
   for (i = 0; i < MAX_Data_TABLE; i++) {
     if (strlen(data_table[i].Adress) >= 1) {
       append_command_to_file("ps.ob", data_table[i]);
