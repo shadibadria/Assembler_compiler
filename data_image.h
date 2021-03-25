@@ -1,12 +1,11 @@
 /*
-filename : data_image.h
-this file is is header file that responsible for declre the function and the data image sruct
+* Filename : data_image.h
+* This file is is header file that responsible for declare the functions and the data image struct
+* Author : Shadi Badria <shadibadria@gmail.com>
 */
 
 #include<stdio.h>
-
 #include<stdlib.h>
-
 #include<string.h>
 
 #define SIZEOFCODE 5

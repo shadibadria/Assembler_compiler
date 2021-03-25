@@ -1,12 +1,11 @@
 /*
-filename : data.c
-this file has the all the fucntion of parsing the data /string 
+* File Name : data.c
+* This file has the all the fucntion of parsing the data /string 
+* Author : Shadi Badria <shadibadria@gmail.com>
 */
 
 #include"data.h"
-
 #include"data_image.h"
-
 #include"symbol_table.h"
 
 int extern IC;
@@ -16,148 +15,46 @@ int extern first_pass_flag;
 command mycommands[COMMANDS_AMOUNT];
 
 /*
-function init_commands - it init the commands of the program 
+function init_commands - database for the commands for the program
 @param none
 @return void
 */
 void init_commands() {
-  int i = 0;
-  /*setting up commands*/
-  strcpy(mycommands[i].command_name, "mov\0");
-  strcpy(mycommands[i].opcode, "0000\0");
-  strcpy(mycommands[i].funct, "0000\0");
-  mycommands[i].allowed_operand = 2;
-  strcpy(mycommands[i].source_operands, "0,1,3\0");
-  strcpy(mycommands[i].dest_operands, "1,3\0");
-
-  i++;
-  strcpy(mycommands[i].command_name, "cmp\0");
-  strcpy(mycommands[i].opcode, "0001\0");
-  strcpy(mycommands[i].funct, "0000\0");
-  mycommands[i].allowed_operand = 2;
-  strcpy(mycommands[i].source_operands, "0,1,3\0");
-  strcpy(mycommands[i].dest_operands, "0,1,3\0");
-
-  i++;
-  strcpy(mycommands[i].command_name, "add\0");
-  strcpy(mycommands[i].opcode, "0010\0");
-  strcpy(mycommands[i].funct, "1010\0");
-  mycommands[i].allowed_operand = 2;
-  strcpy(mycommands[i].source_operands, "0,1,3\0");
-  strcpy(mycommands[i].dest_operands, "1,3\0");
-
-  i++;
-  strcpy(mycommands[i].command_name, "sub\0");
-  strcpy(mycommands[i].opcode, "0010\0");
-  strcpy(mycommands[i].funct, "1011\0");
-  mycommands[i].allowed_operand = 2;
-  strcpy(mycommands[i].source_operands, "0,1,3\0");
-  strcpy(mycommands[i].dest_operands, "1,3\0");
-
-  i++;
-  strcpy(mycommands[i].command_name, "lea\0");
-  strcpy(mycommands[i].opcode, "0100\0");
-  strcpy(mycommands[i].funct, "0000\0");
-  mycommands[i].allowed_operand = 2;
-  strcpy(mycommands[i].source_operands, "1\0");
-  strcpy(mycommands[i].dest_operands, "1,3\0");
-
-  i++;
-
-  strcpy(mycommands[i].command_name, "clr\0");
-  strcpy(mycommands[i].opcode, "0101\0");
-  strcpy(mycommands[i].funct, "1010\0");
-  mycommands[i].allowed_operand = 1;
-  strcpy(mycommands[i].source_operands, "0\0");
-  strcpy(mycommands[i].dest_operands, "1,3\0");
-  i++;
-
-  strcpy(mycommands[i].command_name, "not\0");
-  strcpy(mycommands[i].opcode, "0101\0");
-  strcpy(mycommands[i].funct, "1011\0");
-  mycommands[i].allowed_operand = 1;
-  strcpy(mycommands[i].source_operands, "0\0");
-  strcpy(mycommands[i].dest_operands, "1,3\0");
-
-  i++;
-
-  strcpy(mycommands[i].command_name, "inc\0");
-  strcpy(mycommands[i].opcode, "0101\0");
-  strcpy(mycommands[i].funct, "1100\0");
-  mycommands[i].allowed_operand = 1;
-  strcpy(mycommands[i].source_operands, "0\0");
-  strcpy(mycommands[i].dest_operands, "1,3\0");
-  i++;
-
-  strcpy(mycommands[i].command_name, "dec\0");
-  strcpy(mycommands[i].opcode, "0101\0");
-  strcpy(mycommands[i].funct, "1101\0");
-  mycommands[i].allowed_operand = 1;
-  strcpy(mycommands[i].source_operands, "0\0");
-  strcpy(mycommands[i].dest_operands, "1,3\0");
-
-  i++;
-
-  strcpy(mycommands[i].command_name, "jmp\0");
-  strcpy(mycommands[i].opcode, "1001\0");
-  strcpy(mycommands[i].funct, "1010\0");
-  mycommands[i].allowed_operand = 1;
-  strcpy(mycommands[i].source_operands, "0\0");
-  strcpy(mycommands[i].dest_operands, "1,2\0");
-
-  i++;
-
-  strcpy(mycommands[i].command_name, "bne\0");
-  strcpy(mycommands[i].opcode, "1001\0");
-  strcpy(mycommands[i].funct, "1011\0");
-  mycommands[i].allowed_operand = 1;
-  strcpy(mycommands[i].source_operands, "0\0");
-  strcpy(mycommands[i].dest_operands, "1,2\0");
-  i++;
-
-  strcpy(mycommands[i].command_name, "jsr\0");
-  strcpy(mycommands[i].opcode, "1001\0");
-  strcpy(mycommands[i].funct, "1100\0");
-  mycommands[i].allowed_operand = 1;
-  strcpy(mycommands[i].source_operands, "0\0");
-  strcpy(mycommands[i].dest_operands, "1,2\0");
-
-  i++;
-
-  strcpy(mycommands[i].command_name, "red\0");
-  strcpy(mycommands[i].opcode, "1100\0");
-  strcpy(mycommands[i].funct, "0000\0");
-  mycommands[i].allowed_operand = 1;
-  strcpy(mycommands[i].source_operands, "0\0");
-  strcpy(mycommands[i].dest_operands, "1,3\0");
-
-  i++;
-
-  strcpy(mycommands[i].command_name, "prn\0");
-  strcpy(mycommands[i].opcode, "1101\0");
-  strcpy(mycommands[i].funct, "0000\0");
-  mycommands[i].allowed_operand = 1;
-  strcpy(mycommands[i].source_operands, "0\0");
-  strcpy(mycommands[i].dest_operands, "0,1,3\0");
-
-  i++;
-
-  strcpy(mycommands[i].command_name, "rts\0");
-  strcpy(mycommands[i].opcode, "1110\0");
-  strcpy(mycommands[i].funct, "0000\0");
-  mycommands[i].allowed_operand = 0;
-  strcpy(mycommands[i].source_operands, "0\0");
-  strcpy(mycommands[i].dest_operands, "0\0");
-  i++;
-
-  strcpy(mycommands[i].command_name, "stop\0");
-  strcpy(mycommands[i].opcode, "1111\0");
-  strcpy(mycommands[i].funct, "0000\0");
-  mycommands[i].allowed_operand = 0;
-  strcpy(mycommands[i].source_operands, "0\0");
-  strcpy(mycommands[i].dest_operands, "0\0");
+  command_init("mov\0","0000\0","0000\0",2,"0,1,3,\0","1,3\0",0);
+  command_init("cmp\0","0001\0","0000\0",2,"0,1,3,\0","0,1,3\0",1);
+  command_init("add\0","0010\0","1010\0",2,"0,1,3,\0","1,3\0",2);
+  command_init("sub\0","0010\0","1011\0",2,"0,1,3,\0","1,3\0",3);
+  command_init("lea\0","0100\0","0000\0",2,"1\0","1,3\0",4);
+  command_init("clr\0","0101\0","1010\0",1,"0\0","1,3\0",5);
+  command_init("not\0","0101\0","1011\0",1,"0\0","1,3\0",6);
+  command_init("inc\0","0101\0","1100\0",1,"0\0","1,3\0",7);
+  command_init("dec\0","0101\0","1101\0",1,"0\0","1,3\0",8);
+  command_init("jmp\0","1001\0","1010\0",1,"0\0","1,2\0",9);
+  command_init("bne\0","1001\0","1011\0",1,"0\0","1,2\0",10);
+  command_init("jsr\0","1001\0","1100\0",1,"0\0","1,2\0",11);
+  command_init("red\0","1100\0","0000\0",1,"0\0","1,3\0",12);
+  command_init("prn\0","1101\0","0000\0",1,"0\0","0,1,3\0",13);
+  command_init("rts\0","1110\0","0000\0",0,"0\0","0\0",14);
+  command_init("stop\0","1111\0","0000\0",0,"0\0","0\0",15);
 }
-
+/*
+function command_init - this function take argument of the command and add it to the command_table
+@param command_name  - command name 
+@param command_opcode - the opcode of the command
+@param command_funct - the funct of the command
+@param allowed_operand_number - the allowed operand numbers of the commands 
+@param source_operand -  the source operand numbers allowed 
+@param dest_operand - the destination operand numbers allowed 
+@param index - the index of command (for inserting commands one by one)
+*/
+void command_init(char *command_name,char *command_opcode, char *command_funct, unsigned int allowed_operand_number ,char *source_operand,char *dest_operand,unsigned int index){
+  strcpy(mycommands[index].command_name, command_name);
+  strcpy(mycommands[index].opcode, command_opcode);
+  strcpy(mycommands[index].funct,command_funct);
+  mycommands[index].allowed_operand = allowed_operand_number;
+  strcpy(mycommands[index].source_operands, source_operand);
+  strcpy(mycommands[index].dest_operands, dest_operand);
+}
 /*
 function check_command - check if the command is correct 
 @param command - its the command we want to check

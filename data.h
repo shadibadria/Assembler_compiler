@@ -28,7 +28,7 @@ typedef struct command {
   char command_name[COMMAND_NAME_MAX_SIZE];
   char funct[FUNCT_SIZE];
   char opcode[OPCODE_SIZE];
-  int allowed_operand;
+  unsigned int allowed_operand;
   char source_operands[SOURCE_SIZE];
   char dest_operands[DEST_SIZE];
 }
@@ -45,3 +45,4 @@ int find_adressing_method(char * string, int label_flag, char * command);
 int check_command_corrections(int source, int dest, char * command);
 int check_for_reg(char * string, int add_to_table_flag);
 int check_if_number(char * string);
+void command_init(char *command_name,char *command_opcode, char *command_funct, unsigned int allowed_operand_number ,char *source_operand,char *dest_operand,unsigned int index);

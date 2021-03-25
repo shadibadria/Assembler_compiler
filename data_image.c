@@ -1,6 +1,7 @@
 /*
-filename: data_image
-this file has all function of data types (string / data )
+* File name: data_image.c
+* This file has all function of data types (string / data )
+* Author : Shadi Badria <shadibadria@gmail.com>
 */
 
 #include"data_image.h"
@@ -9,7 +10,7 @@ FILE * file_pointer;
 int index_of_datatable = 0;
 
 /*
-append the data table to file name .ob
+append the data table to file name *.ob
 @param filename - name of the file 
 @param data  -  struct of data image
 @return void 
