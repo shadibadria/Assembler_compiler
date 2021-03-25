@@ -13,7 +13,7 @@
 #include "data_image.h"
 
 FILE * file_pointer;
-int extern size_table;
+int extern symbol_table_size;
 
 /*
 function check_file - check if file has .as argument
@@ -46,7 +46,7 @@ void append_entry_tofile(char * filename) {
     exit(0);
   }
   if (symbol_table[i].attribute != NULL) {
-    for (i = 0; i < size_table; i++) {
+    for (i = 0; i < symbol_table_size; i++) {
       if (strstr(symbol_table[i].attribute, "entry") != NULL) {
         fputs(symbol_table[i].symbol, file_pointer);
         fputs("      ", file_pointer);

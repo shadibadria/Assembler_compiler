@@ -17,7 +17,7 @@
 
 FILE * filePointer;
 char buffer[bufferLength];
-int extern size_table;
+int extern symbol_table_size;
 int second_pass_flag = 1;
 /*
 function secondpass -  it take the file name and start to read it line by line
@@ -85,7 +85,7 @@ void fill_table() {
   for (i = 0; i < MAX_Data_TABLE; i++) {
     if (strcmp(data_table[i].opcode, "?") == 0) {
       /*if unknown value at symbol table*/
-      for (j = 0; j < size_table; j++) {
+      for (j = 0; j < symbol_table_size; j++) {
         flag = 0;
         if (data_table[i].label_name[0] == '%') {
           /*if value is adress*/

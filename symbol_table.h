@@ -24,7 +24,7 @@ struct data {
 struct data * symbol_table;
 int hashcode(int key);
 int init_array();
-void insert(int key, int value, char * symbol, char * attribute);
+void insert( int value, char * symbol, char * attribute);
 void append_entry_tofile(char * filename);
 void display();
 int size_of_hashtable();

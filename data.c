@@ -96,9 +96,7 @@ int check_command(char * command, char * line, int argument_counter, int label_f
                 printf("*** ERROR at line %d to many operands ***\n", program_line);
                first_pass_flag = 0;
               }
-
       }
-
       sprintf(data_table[index_of_datatable].Adress, "%04d", IC); /*insert to data table*/
 
       IC++;

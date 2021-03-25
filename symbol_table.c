@@ -12,7 +12,7 @@
 
 
 int capacity_table = 1;
-int size_table = 0;
+int symbol_table_size = 0;
 
 /*
 function hashcode - create randome code
@@ -48,7 +48,7 @@ at the symbol table
 void insert_entry(char * symbol) {
   int i;
 
-  for (i = 0; i < size_table; i++) {
+  for (i = 0; i < symbol_table_size; i++) {
     if (strcmp(symbol_table[i].symbol, symbol) == 0) {
       symbol_table[i].attribute = (char * ) realloc(symbol_table[i].attribute, 11);
       if (symbol_table[i].attribute == NULL) {
@@ -68,8 +68,8 @@ void insert_entry(char * symbol) {
  @param attribute - type ( extern , entry ...)
  @return void
  */
-void insert(int key, int value, char * symbol, char * attribute) {
-  int index = hashcode(key);
+void insert( int value, char * symbol, char * attribute) {
+  int index = hashcode(symbol_table_size);
 
   capacity_table++;
   symbol_table = (struct data * ) realloc(symbol_table, capacity_table * sizeof(struct data));
@@ -80,7 +80,7 @@ void insert(int key, int value, char * symbol, char * attribute) {
   }
   if (symbol_table[index].amount == 0) {
     /*  key not present, insert it  */
-    symbol_table[index].key_value = key;
+    symbol_table[index].key_value = symbol_table_size;
     symbol_table[index].amount = 1;
     /*insert value */
     if (value == 0) {
@@ -116,8 +116,8 @@ void insert(int key, int value, char * symbol, char * attribute) {
       exit(1);
     }
     strcpy(symbol_table[index].attribute, attribute);
-    size_table++;
-  } else if (symbol_table[index].key_value == key) {
+    symbol_table_size++;
+  } else if (symbol_table[index].key_value == symbol_table_size) {
     /*  updating already existing key  */
     symbol_table[index].amount += 1;
   } else {
@@ -133,7 +133,7 @@ void insert(int key, int value, char * symbol, char * attribute) {
 */
 void display() {
   int i;
-  for (i = 0; i < size_table; i++) {
+  for (i = 0; i < symbol_table_size; i++) {
     if (symbol_table[i].amount == 0) {} else {
       printf("\n--------------------\nkey= %d \nvalue = %s\nsymbol = %s \nattr= %s\n--------------------\n", symbol_table[i].key_value, symbol_table[i].value, symbol_table[i].symbol, symbol_table[i].attribute);
     }
@@ -146,7 +146,7 @@ function find_label find label at the symbol table
 */
 char * find_label(char * label) {
   int i;
-  for (i = 0; i < size_table; i++) {
+  for (i = 0; i < symbol_table_size; i++) {
     if (strcmp(symbol_table[i].symbol, label) !=0) {
       return "?";
     }
@@ -162,7 +162,7 @@ function  checkforduplicate  check for duplicate at the symbol table
 int checkforduplicate(char * symbol) {
   int i;
 
-  for (i = 0; i < size_table; i++) {
+  for (i = 0; i < symbol_table_size; i++) {
     if (strcmp(symbol_table[i].symbol, symbol) == 0) {
           if(strcmp(symbol_table[i].attribute,"external")==0){
             return 1;
@@ -178,7 +178,7 @@ function size_of_hashtable - size hashtable
 @return int
 */
 int size_of_hashtable() {
-  return size_table;
+  return symbol_table_size;
 }
 /*
 function free_symbol_table_memory - free memory of hashtable
@@ -187,7 +187,7 @@ function free_symbol_table_memory - free memory of hashtable
 */
 void free_symbol_table_memory() {
   int i = 0;
-  for (i = 0; i < size_table; i++) {
+  for (i = 0; i < symbol_table_size; i++) {
     free(symbol_table[i].symbol);
     free(symbol_table[i].value);
     free(symbol_table[i].attribute);

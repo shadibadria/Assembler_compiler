@@ -16,7 +16,7 @@
 
 
 int IC = 100;
-int DC = 0;
+int extern symbol_table_size;
 int count = 0;
 int program_line = 1; /*to count program lines*/
 FILE * filePointer=NULL;
@@ -209,7 +209,8 @@ int check_if_extern(char * line, int test) {
     return 0;
   }
   /*insert external label*/
-  insert(DC++, 0, line, "external");
+  insert( 0, line, "external");
+  
   return 1;
 }
 
@@ -432,16 +433,14 @@ int check_if_label(char * line, int test) {
         return 0;
       } 
 
-
       /*insert label with info*/
       if (check_if_its_data(line, 1) == 1) {
-
-        insert(DC++, IC, temp, "data");
+        insert( IC, temp, "data");
       } else
       if (check_if_its_string(line, 1) == 1) {
-        insert(DC++, IC, (temp), "data");
+        insert( IC, (temp), "data");
       } else {
-        insert(DC++, IC, (temp), "code");
+        insert( IC, (temp), "code");
       }
       free(temp);
       return 1;
