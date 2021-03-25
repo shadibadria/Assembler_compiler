@@ -33,6 +33,16 @@ function firstpass - open file for reading line by line and sending it to parse
 @return  int
 */
 int firstpass(char * filename) {
+  IC = 100;
+ count = 0;
+ program_line = 1; 
+ filePointer=NULL;
+ label_flag = 0;
+ arguments_counter = 0;
+ command_exist_flag = 0;
+ first_pass_flag = 1;
+ DC=0;
+ init_data_table();
   filePointer = fopen(filename, "r");
   if (filePointer == NULL) {
     printf("*** ERROR: Cant open file name :%s *** \n", filename);

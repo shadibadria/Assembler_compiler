@@ -27,14 +27,12 @@ int main(int argc, char * argv[]) {
   int i = 0;
   int extern first_pass_flag;
   int extern second_pass_flag;
-    int extern DC;
-  int extern IC;
+
   char * newfile;
   int file_flag = 0;
-  char filename[bufferLength];
 
   /*init the data */
-  init_array();
+  init_symbol_table();
   init_registers();
   init_command_database();
 
@@ -45,20 +43,21 @@ int main(int argc, char * argv[]) {
   }
   /*loop files */
   for (i = 1; i < argc; i++) {
-    if ((fp = fopen(argv[i], "r")) == NULL) {
-      /*if file not found*/
-      strcpy(filename, argv[i]);
-      file_flag = 1;
-      newfile = (char * ) malloc((strlen(filename) + 4) * sizeof(char));
+     newfile = (char * ) malloc((strlen(argv[i]) + 5) * sizeof(char));
       if (newfile == NULL) {
         printf("ERROR cant alocate memory\n");
         exit(0);
       }
-      memset(newfile, 0, (strlen(filename) + 4) * sizeof(char));
-      strcpy(newfile, filename);
+      memset(newfile, 0, (strlen(argv[i]) + 5) * sizeof(char));
+   strcpy(newfile, argv[i]);
+
+    if ((fp = fopen(argv[i], "r")) == NULL) {
+      /*if file not found*/
+      file_flag = 1;
       strcat(newfile, ".as\0");
     }
-    strcpy(filename, argv[i]);
+          printf("file:%s\n",newfile);
+
     if (file_flag == 1) {
       /*if file does not habe .as ending*/
       if (check_file(newfile) == 1) {
@@ -73,33 +72,31 @@ int main(int argc, char * argv[]) {
         }
      
 
-        /*create files*/
-     append_datatable_tofile("ps.ob",(IC-DC-100),DC);
-        append_entry_tofile("ps.ent");
-        append_extern_tofile("ps.ext");
-        free(newfile);
+        create_files(newfile);
       }
 
     } else {
       /*file has .as ending*/
-      if (check_file(filename) == 1) {
-        firstpass(argv[i]); /*First Pass*/
+      if (check_file(newfile) == 1) {
+        firstpass(newfile); /*First Pass*/
         if (first_pass_flag == 0) {
           return 1;
         }
-        secondpass(argv[i]); /*second Pass*/
+        secondpass(newfile); /*second Pass*/
         if (second_pass_flag == 0) {
           return 1;
         }
-     append_datatable_tofile("ps.ob",(IC-DC-100),DC);
-       append_entry_tofile("ps.ent");
-        append_extern_tofile("ps.ext");
+            create_files(newfile);
+
         
       }
         fclose(fp);
 
     }
+      free_symbol_table_memory(); /*free the symbol table*/
+        free(newfile);
+         init_data_table();
+
   } /*end loop*/
-  free_symbol_table_memory(); /*free the symbol table*/
   return 0;
 }

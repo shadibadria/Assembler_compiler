@@ -1,20 +1,25 @@
 /*
-* File Name : file_proccess.c
-* This file provide all the functions for file creating /writing/creating files.
-* Author : Shadi Badria <shadibadria@gmail.com>
-*/
+ * File Name : file_proccess.c
+ * This file provide all the functions for file creating /writing/creating files.
+ * Author : Shadi Badria <shadibadria@gmail.com>
+ */
 
 #include<stdio.h>
+
 #include<string.h>
+
 #include<stdlib.h>
 
 #include "file_proccess.h"
+
 #include "symbol_table.h"
+
 #include "data_image.h"
 
 FILE * file_pointer;
 int extern symbol_table_size;
-
+int extern DC;
+int extern IC;
 /*
 function check_file - check if file has .as argument
 @param file_name  - the file name we want to check
@@ -84,12 +89,30 @@ function append_datatable_tofile - create and add all datatable to file(.ob)
 @param file_name  - the file name we want to create
 @return void
 */
-void append_datatable_tofile(char * filename,int instruct_size,int data_size) {
+void append_datatable_tofile(char * filename, int instruct_size, int data_size) {
   int i = 0;
-  append_size_to_file("ps.ob",instruct_size,data_size);
+  append_size_to_file(filename, instruct_size, data_size);
   for (i = 0; i < MAX_Data_TABLE; i++) {
     if (strlen(data_table[i].Adress) >= 1) {
-      append_command_to_file("ps.ob", data_table[i]);
+      append_command_to_file(filename, data_table[i]);
     }
   }
+}
+/*
+function create_files - it create the output files of the program (.ob , .ext , .ent)
+@param file name - the file name we want
+@return void
+*/
+void create_files(char * filename) {
+
+  filename[strlen(filename) - 3] = '\0';
+  strcat(filename, ".ob");
+  append_datatable_tofile(filename, (IC - DC - 100), DC);
+  printf("OB :%s\n", filename);
+  filename[strlen(filename) - 3] = '\0';
+  strcat(filename, ".ext");
+  append_extern_tofile(filename);
+  filename[strlen(filename) - 3] = '\0';
+  strcat(filename, "ent");
+  append_entry_tofile(filename);
 }

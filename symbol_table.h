@@ -23,7 +23,7 @@ struct data {
 
 struct data * symbol_table;
 int hashcode(int key);
-int init_array();
+int init_symbol_table();
 void insert( int value, char * symbol, char * attribute);
 void append_entry_tofile(char * filename);
 void display();
