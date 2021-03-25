@@ -1,17 +1,14 @@
 /*
-* Filename : data_image.h
-* This file is is header file that responsible for declare the functions and the data image struct
+* File name : data_image.h
+* Header for data_image table access.
 * Author : Shadi Badria <shadibadria@gmail.com>
 */
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-
-#define SIZEOFCODE 5
-#define SIZEOFADRESS 5
+#define SIZEOFCODE     5
+#define SIZEOFADRESS   5
 #define MAX_Data_TABLE 4095
-#define TAG_SIZE 2
+#define TAG_SIZE       2
+
 /*
 struct of the data image
 @val adress - has the adress of the program IC

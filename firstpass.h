@@ -1,20 +1,14 @@
 /*
-filename : firstpass.h
-this header file has all the function declration for firstpass.c
+* Filename : firstpass.h
+* Header for first pass functions, firstpass.c access .
+* Author : Shadi Badria <shadibadria@gmail.com>
 */
-#include<stdio.h>
-
-#include<string.h>
-
-#include<ctype.h>
-
-#include<stdlib.h>
 
 #define bufferLength 4095
-#define MAX_LINE 80
-#define MAX_LABEL 31
-#define MAX_DATA 2047
-#define MIN_DATA - 2048
+#define MAX_LINE     80
+#define MAX_LABEL    31
+#define MAX_DATA     2047
+#define MIN_DATA     -2048
 
 int firstpass(char * filename);
 int assemble_parsing(char * line);
@@ -34,3 +28,4 @@ int check_line_arguments(char * line);
 int count_word(char * s);
 void remove_label(char * line);
 int check_for_char(char * string);
+int check_line(char * line);

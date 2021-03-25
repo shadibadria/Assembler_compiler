@@ -1,19 +1,17 @@
 /*
-filename : data.h
-header file have declration of function for data.c and struct of command
+* Filename : data.h
+* Header for command table and data parsing access .
+* Author : Shadi Badria <shadibadria@gmail.com>
 */
-#include<string.h>
-#include<stdio.h>
-#include<ctype.h>
-#include"firstpass.h"
+
 #define COMMAND_NAME_MAX_SIZE 5
-#define COMMANDS_AMOUNT 16
-#define REGISTERS_COUNT 8
-#define FUNCT_SIZE      5
-#define OPCODE_SIZE      5
-#define SOURCE_SIZE      8
-#define DEST_SIZE      8
-#define BIT_MAX       13
+#define COMMANDS_AMOUNT       16
+#define REGISTERS_COUNT       8
+#define FUNCT_SIZE            5
+#define OPCODE_SIZE           5
+#define SOURCE_SIZE           8
+#define DEST_SIZE             8
+#define BIT_MAX               13
 
 /*
 struct of the commands
@@ -36,9 +34,8 @@ command;
 char command_code[BIT_MAX];
 const char * reg[REGISTERS_COUNT];
 
-void init_commands();
+void init_command_database();
 int check_command(char * command, char * line, int argument_counter, int label_flag,int test);
-int check_line(char * line);
 void init_registers();
 int code_opcode_parsing(char * command_code, char * command_func);
 int find_adressing_method(char * string, int label_flag, char * command);

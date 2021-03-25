@@ -1,12 +1,15 @@
 /*
-file name : symbol_table.c
-explain: this file has all the symbol table function
-symbol table uses HASH TABLE 
+* File Name : symbol_table.c
+* This file provide all the  functions for symbol table .
+* Author : Shadi Badria <shadibadria@gmail.com>
 */
+#include <math.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
 
 #include"symbol_table.h"
 
-#include "math.h"
 
 int capacity_table = 1;
 int size_table = 0;
@@ -124,7 +127,7 @@ void insert(int key, int value, char * symbol, char * attribute) {
 }
 
 /*
- function  display - to display all the elements of a hash table(testing only)
+ function  display - to display all the elements of a hash table( use it for testing only)
  @param none
  @return void
 */
@@ -160,17 +163,13 @@ int checkforduplicate(char * symbol) {
   int i;
 
   for (i = 0; i < size_table; i++) {
-   
-
     if (strcmp(symbol_table[i].symbol, symbol) == 0) {
-
           if(strcmp(symbol_table[i].attribute,"external")==0){
             return 1;
           }
       return 0;
     }
   }
-
   return 1;
 }
 /*

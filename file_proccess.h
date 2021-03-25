@@ -1,11 +1,8 @@
 /*
-filename : file_proccess.h
-this header has declration for file_process.c functions
+* Filename : file_proccess.h
+* Header for file open and checking, file_proccess.c access .
+* Author : Shadi Badria <shadibadria@gmail.com>
 */
-
-#include<stdio.h>
-
-#include<string.h>
 
 int check_file(char * file_name);
 void append_entry_tofile(char * filename);

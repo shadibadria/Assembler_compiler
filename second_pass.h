@@ -1,8 +1,10 @@
 /*
-filename : second_pass.h
-this header file has declrations of the second_pass.c file
+* File name : second_pass.h
+* Header for second pass functions, second_pass.c access .
+* Author : Shadi Badria <shadibadria@gmail.com>
 */
-#define bufferLength 4095
+
+
 int secondpass_pasrsing(char * line);
 int secondpass(char * filename);
 int check_for_label(char * line);

@@ -1,14 +1,9 @@
 /*
-filename : symbol_table.h
-explain: header file that has declrations of symbol_table.c
-it has hash struct
+* File name : symbol_table.h
+* Header for symbol table , symbol_table.c access .
+* Author : Shadi Badria <shadibadria@gmail.com>
 */
 
-#include<stdio.h>
-
-#include<stdlib.h>
-
-#include<string.h>
 
 /*
 struct of the symbol data image
@@ -19,15 +14,14 @@ struct of the symbol data image
 @val attribute  - has data type
 */
 struct data {
-  int key_value;
-  int amount;
+  int    key_value;
+  int    amount;
   char * value;
   char * symbol;
   char * attribute;
 };
 
 struct data * symbol_table;
-
 int hashcode(int key);
 int init_array();
 void insert(int key, int value, char * symbol, char * attribute);

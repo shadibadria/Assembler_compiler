@@ -1,15 +1,17 @@
 /*
-filename: firstpass.c
-first iteration of the assembly program
-its porpuse is to add all the labels and data to the symbol table 
-and to the datatable
+* File Name : firstpass.c
+* This file provide all the parsing functions of first pass .
+* Author : Shadi Badria <shadibadria@gmail.com>
 */
+
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+#include<stdlib.h>
+
 #include"firstpass.h"
-
 #include"data.h"
-
 #include "symbol_table.h"
-
 #include"data_image.h"
 
 
@@ -828,4 +830,96 @@ void remove_label(char * line) {
     }
     free(newstring);
   }
+}
+/*
+function check_line - check command if register / label / number
+@param line - one line of file 
+@return 1- error , 0- success
+*/
+int check_line(char * line) {
+  int i = 0, j = 0;
+  char temp[MAX_LINE];
+  int comma_flag = 0;
+
+  if (strcmp("stop", line) == 0) {
+    /*if line is stop word return */
+    return 1;
+  }
+   if (strcmp("rts", line) == 0) {
+    /*if line is rts word return */
+    return 1;
+  }
+  while (line[i] != '\n' && line[i] != '\0') {
+    /*check if number is register or number*/
+    temp[j++] = line[i];
+    if (line[i] == ',') {
+      comma_flag = 1;
+      temp[j - 1] = '\0';
+      if (check_if_number(temp) == 1) {
+        break;
+      }
+      if (check_for_reg(temp, 1) == 1) {
+        break;
+      }
+      sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
+
+      if (strcmp(find_label(temp), "?") == 0) {
+        sprintf(data_table[index_of_datatable].label_name, "%s", temp);
+        sprintf(data_table[index_of_datatable].opcode, "%s", "?");
+      }
+      index_of_datatable++;
+      IC++;
+      break;
+    }
+    i++;
+  } /*end while*/
+  if (comma_flag == 0) {
+    /*if line does not have comma*/
+    line[strlen(line)] = '\0';
+    if(isdigit(line[0])!=0){
+      printf("*** ERROR at line %d invalid operand ***\n",program_line);
+      first_pass_flag=0;
+    }
+      
+    if (check_if_number(line) == 1) return 1;
+    if (check_for_reg(line, 1)) return 1;
+    if(line[0]=='%'){
+            if(isdigit(line[1])){
+              printf("*** ERROR at line %d invlid label ***\n",program_line);
+              first_pass_flag =0;
+            }
+    }
+   
+    sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
+    if (strcmp(find_label(line), "?") == 0) {
+      sprintf(data_table[index_of_datatable].label_name, "%s", line);
+      sprintf(data_table[index_of_datatable].opcode, "%s", "?");
+    }
+    index_of_datatable++;
+    IC++;
+    return 0;
+  }
+  i++;
+  temp[0] = '\0';
+  j=0;
+  while (line[i] != '\0') {
+    /*copy to newstring*/
+    temp[j++] = line[i];
+    i++;
+  }
+  temp[j] = '\0';
+  if (check_if_number(temp) == 1) /*check if its number*/
+    return 1;
+  if (check_for_reg(temp, 1) == 1){
+  return 1;
+  } /*check if its register*/
+  
+  sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
+  if (strcmp(find_label(temp), "?") == 0) {
+    sprintf(data_table[index_of_datatable].label_name, "%s", temp);
+    sprintf(data_table[index_of_datatable].opcode, "%s", "?");
+  }
+  index_of_datatable++;
+  IC++;
+  return 0;
 }

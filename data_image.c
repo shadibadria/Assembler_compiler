@@ -1,8 +1,12 @@
 /*
 * File name: data_image.c
-* This file has all function of data types (string / data )
+* This file provide all the functions of the commands initializing .
 * Author : Shadi Badria <shadibadria@gmail.com>
 */
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
 
 #include"data_image.h"
 

@@ -1,12 +1,17 @@
 /*
 * File Name : data.c
-* This file has the all the fucntion of parsing the data /string 
+* This file provide all the functions of the commands and register initializing and parsing.
 * Author : Shadi Badria <shadibadria@gmail.com>
 */
+#include<string.h>
+#include<stdio.h>
+#include<ctype.h>
+#include<stdlib.h>
 
 #include"data.h"
 #include"data_image.h"
 #include"symbol_table.h"
+#include"firstpass.h"
 
 int extern IC;
 int extern index_of_datatable;
@@ -15,11 +20,11 @@ int extern first_pass_flag;
 command mycommands[COMMANDS_AMOUNT];
 
 /*
-function init_commands - database for the commands for the program
+function init_command_database - database for the commands for the program 
 @param none
 @return void
 */
-void init_commands() {
+void init_command_database() {
   command_init("mov\0","0000\0","0000\0",2,"0,1,3,\0","1,3\0",0);
   command_init("cmp\0","0001\0","0000\0",2,"0,1,3,\0","0,1,3\0",1);
   command_init("add\0","0010\0","1010\0",2,"0,1,3,\0","1,3\0",2);
@@ -69,7 +74,6 @@ int check_command(char * command, char * line, int argument_counter, int label_f
   if (command[strlen(command) - 1] == ',') {
     /*check for comma*/
     command[strlen(command) - 1] = '\0';
-
   }
   i = strlen(command);
   while (line[i] == ' ' || line[i] == '\t') {
@@ -390,101 +394,9 @@ int check_if_number(char * string) {
       }
 
     
-  
   return 0;
 }
-/*
-function check_line - check command if register / label / number
-@param line - one line of file 
-@return 1- error , 0- success
-*/
-int check_line(char * line) {
-  int i = 0, j = 0;
-  char temp[MAX_LINE];
-  int comma_flag = 0;
 
-  if (strcmp("stop", line) == 0) {
-    /*if line is stop word return */
-    return 1;
-  }
-   if (strcmp("rts", line) == 0) {
-    /*if line is rts word return */
-    return 1;
-  }
-  while (line[i] != '\n' && line[i] != '\0') {
-    /*check if number is register or number*/
-    temp[j++] = line[i];
-    if (line[i] == ',') {
-      comma_flag = 1;
-      temp[j - 1] = '\0';
-      if (check_if_number(temp) == 1) {
-        break;
-      }
-      if (check_for_reg(temp, 1) == 1) {
-        break;
-      }
-      sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
-
-      if (strcmp(find_label(temp), "?") == 0) {
-        sprintf(data_table[index_of_datatable].label_name, "%s", temp);
-        sprintf(data_table[index_of_datatable].opcode, "%s", "?");
-      }
-      index_of_datatable++;
-      IC++;
-      break;
-    }
-    i++;
-  } /*end while*/
-  if (comma_flag == 0) {
-    /*if line does not have comma*/
-    line[strlen(line)] = '\0';
-    if(isdigit(line[0])!=0){
-      printf("*** ERROR at line %d invalid operand ***\n",program_line);
-      first_pass_flag=0;
-    }
-      
-    if (check_if_number(line) == 1) return 1;
-    if (check_for_reg(line, 1)) return 1;
-    if(line[0]=='%'){
-            if(isdigit(line[1])){
-              printf("*** ERROR at line %d invlid label ***\n",program_line);
-              first_pass_flag =0;
-            }
-    }
-   
-    sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
-    if (strcmp(find_label(line), "?") == 0) {
-      sprintf(data_table[index_of_datatable].label_name, "%s", line);
-      sprintf(data_table[index_of_datatable].opcode, "%s", "?");
-    }
-    index_of_datatable++;
-    IC++;
-    return 0;
-  }
-  i++;
-  temp[0] = '\0';
-  j=0;
-  while (line[i] != '\0') {
-    /*copy to newstring*/
-    temp[j++] = line[i];
-    i++;
-  }
-  temp[j] = '\0';
-  if (check_if_number(temp) == 1) /*check if its number*/
-    return 1;
-  if (check_for_reg(temp, 1) == 1){
-  return 1;
-  } /*check if its register*/
-  
-  sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
-  if (strcmp(find_label(temp), "?") == 0) {
-    sprintf(data_table[index_of_datatable].label_name, "%s", temp);
-    sprintf(data_table[index_of_datatable].opcode, "%s", "?");
-  }
-  index_of_datatable++;
-  IC++;
-  return 0;
-}
 /*
 function check_for_reg - check if the line/string is register value
 @param string - 1 line of file

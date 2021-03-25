@@ -1,25 +1,18 @@
 /*
-filename: second_pass.c
-
-second iteration of the assembly program
-its porpuse is to rewrite  all the unknown labels and data to the data table 
-
-
+* File Name : second_pass.c
+* This file provide all the parsing functions of second pass .
+* Author : Shadi Badria <shadibadria@gmail.com>
 */
-#include "second_pass.h"
 
 #include<stdio.h>
-
+#include<ctype.h>
 #include<string.h>
-
 #include<stdlib.h>
 
 #include"firstpass.h"
-
+#include "second_pass.h"
 #include "symbol_table.h"
-
 #include"data_image.h"
-
 #include"file_proccess.h"
 
 FILE * filePointer;

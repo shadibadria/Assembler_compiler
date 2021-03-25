@@ -1,11 +1,15 @@
 /*
-filename: file_proccess.c 
-this file has all function of file creating /writing/creating files 
+* File Name : file_proccess.c
+* This file provide all the functions for file creating /writing/creating files.
+* Author : Shadi Badria <shadibadria@gmail.com>
 */
+
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+
 #include "file_proccess.h"
-
 #include "symbol_table.h"
-
 #include "data_image.h"
 
 FILE * file_pointer;
@@ -82,7 +86,7 @@ function append_datatable_tofile - create and add all datatable to file(.ob)
 */
 void append_datatable_tofile(char * filename) {
   int i = 0;
-  for (i = 0; i < 100; i++) {
+  for (i = 0; i < MAX_Data_TABLE; i++) {
     if (strlen(data_table[i].Adress) >= 1) {
       append_command_to_file("ps.ob", data_table[i]);
     }

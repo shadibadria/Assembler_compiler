@@ -1,22 +1,18 @@
 /*
-filename: main.c
-this file has main function the role of it is to control the program
+* File Name : main.c
+* This file is the controler for all the program  .
+* Author : Shadi Badria <shadibadria@gmail.com>
 */
 
 #include<stdio.h>
-
 #include<string.h>
+#include<stdlib.h>
 
 #include"firstpass.h"
-
 #include"second_pass.h"
-
 #include"file_proccess.h"
-
 #include"symbol_table.h"
-
 #include"data.h"
-
 #include"data_image.h"
 
 /*
@@ -38,7 +34,7 @@ int main(int argc, char * argv[]) {
   /*init the data */
   init_array();
   init_registers();
-  init_commands();
+  init_command_database();
 
   /*check arguments counter */
   if (argc <= 1) {
@@ -100,7 +96,6 @@ int main(int argc, char * argv[]) {
 
     }
   } /*end loop*/
-  display();
   free_symbol_table_memory(); /*free the symbol table*/
   return 0;
 }
