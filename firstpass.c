@@ -489,7 +489,7 @@ int data_parsing(char * line, int i) {
     if (isdigit( * p) || (( * p == '-' || * p == '+') && isdigit( * (p + 1)))) {
       number_counter++;
       val = strtol(p, & p, 10);
-      if (val > MAX_Data_TABLE) {
+      if (val > MAX_DATA) {
         printf("*** ERROR at line %d data value is bigger than %d ***\n", program_line, MAX_Data_TABLE);
         first_pass_flag = 0;
       }
@@ -498,6 +498,7 @@ int data_parsing(char * line, int i) {
         first_pass_flag = 0;
       }
       /*insert data values */
+     
       DC++;
       sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
       sprintf(data_table[index_of_datatable].opcode, "%03X", val);
