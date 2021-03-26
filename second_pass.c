@@ -1,8 +1,8 @@
 /*
-* File Name : second_pass.c
-* This file provide all the parsing functions of second pass .
-* Author : Shadi Badria <shadibadria@gmail.com>
-*/
+ * File Name : second_pass.c
+ * This file provide all the parsing functions of second pass .
+ * Author : Shadi Badria <shadibadria@gmail.com>
+ */
 
 #include<stdio.h>
 #include<ctype.h>
@@ -17,9 +17,10 @@
 
 FILE * filePointer;
 char buffer[bufferLength];
-int extern symbol_table_size;
 int second_pass_flag = 1;
 int extern index_of_datatable;
+int extern symbol_table_size;
+
 /*
 function secondpass -  it take the file name and start to read it line by line
 and send it to parsing
@@ -27,7 +28,7 @@ and send it to parsing
 @return int
 */
 int secondpass(char * filename) {
-  second_pass_flag=1;
+  second_pass_flag = 1;
   filePointer = fopen(filename, "r");
   if (filePointer == NULL) {
     printf("***ERROR cant open file named %s ***\n", filename);
@@ -107,39 +108,31 @@ void fill_table() {
           number_temp = strtol(symbol_table[j].value, NULL, 10);
           current_adress = strtol(data_table[i].Adress, NULL, 10);
           sprintf(data_table[i].opcode, "%03X", number_temp - current_adress);
-
           if (number_temp - current_adress < 0) {
             memmove(data_table[i].opcode, data_table[i].opcode + 5, strlen(data_table[i].opcode));
           }
           strcpy(data_table[i].TAG, "A");
           break;
         }
-
         if (strcmp(data_table[i].label_name, symbol_table[j].symbol) == 0) {
           number_temp = strtol(symbol_table[j].value, NULL, 10);
           sprintf(data_table[i].opcode, "%03X", number_temp);
-                     sprintf(data_table[i].funct, "%s", "\0");
-
-
+          sprintf(data_table[i].funct, "%s", "\0");
           if (strcmp(symbol_table[j].attribute, "external") == 0) {
             /*if external*/
             strcpy(data_table[i].TAG, "E");
             break;
           } else {
-            
             if (strstr(symbol_table[j].attribute, "entry")) {
-             
               strcpy(data_table[i].TAG, "R");
               break;
             } else {
               strcpy(data_table[i].TAG, "R");
             }
           }
-
         }
       }
     }
-
   }
 }
 /*
@@ -149,7 +142,6 @@ function check_for_label_error - check if there is error in labels
 */
 void check_for_label_error() {
   int i = 0;
-
   for (i = 0; i < index_of_datatable; i++) {
     if (strcmp(data_table[i].opcode, "?") == 0) {
       printf("*** Second Pass ERROR label %s is not found in symbol table *** \n", data_table[i].label_name);

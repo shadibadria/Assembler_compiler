@@ -1,8 +1,8 @@
 /*
-* File Name : symbol_table.c
-* This file provide all the  functions for symbol table .
-* Author : Shadi Badria <shadibadria@gmail.com>
-*/
+ * File Name : symbol_table.c
+ * This file provide all the  functions for symbol table .
+ * Author : Shadi Badria <shadibadria@gmail.com>
+ */
 #include <math.h>
 #include<stdio.h>
 #include<stdlib.h>
@@ -24,23 +24,22 @@ int hashcode(int key) {
 }
 
 /*
-function init_array -  init hash table array using malloc 
+function init_symbol_table -  init hash table array using malloc 
 @param none
 @return int
 */
 int init_symbol_table() {
   capacity_table = 1;
- symbol_table_size = 0;
+  symbol_table_size = 0;
   symbol_table = (struct data * ) malloc(capacity_table * sizeof(struct data));
   if (symbol_table == NULL) {
-    printf("ERROR: something went wrong while trying to use malloc at symboltable.c\n");
-    return 0;
+    printf("ERROR: something went wrong while trying to use malloc at symboltable.c ***\n");
+    exit(1);
   }
   symbol_table[0].amount = 0;
   memset(symbol_table, 0, capacity_table * sizeof(struct data));
   return 1;
 }
-
 /*
 function insert_entry - insert entry labels after second pass to the labels 
 at the symbol table
@@ -49,13 +48,12 @@ at the symbol table
 */
 void insert_entry(char * symbol) {
   int i;
-
   for (i = 0; i < symbol_table_size; i++) {
     if (strcmp(symbol_table[i].symbol, symbol) == 0) {
       symbol_table[i].attribute = (char * ) realloc(symbol_table[i].attribute, 11);
       if (symbol_table[i].attribute == NULL) {
-        printf("Something Went Wrong no memory\n");
-        exit(1);
+        printf("ERROR: something went wrong while trying to use realloc at symboltable.c ***\n");
+    exit(1);
       }
       strcat(symbol_table[i].attribute, ",entry");
     }
@@ -70,15 +68,14 @@ void insert_entry(char * symbol) {
  @param attribute - type ( extern , entry ...)
  @return void
  */
-void insert( int value, char * symbol, char * attribute) {
+void insert(int value, char * symbol, char * attribute) {
   int index = hashcode(symbol_table_size);
-
   capacity_table++;
   symbol_table = (struct data * ) realloc(symbol_table, capacity_table * sizeof(struct data));
   symbol_table[index].amount = 0;
   if (symbol_table == NULL) {
-    printf("ERROR: using realloc at symbol_table.c\n");
-    exit(0);
+      printf("ERROR: something went wrong while trying to use realloc at symboltable.c ***\n");
+    exit(1);
   }
   if (symbol_table[index].amount == 0) {
     /*  key not present, insert it  */
@@ -93,14 +90,14 @@ void insert( int value, char * symbol, char * attribute) {
       memset(symbol_table[index].value, 0, ((floor(log10(abs(value)))) + 5) * sizeof(char));
     }
     if (symbol_table[index].value == NULL) {
-      printf("Something Went Wrong no memory at  symbol_table.c\n");
-      exit(1);
+       printf("ERROR: something went wrong while trying to use malloc at symboltable.c ***\n");
+       exit(1);
     }
     sprintf(symbol_table[index].value, "%04d", value);
     /*insert symbol*/
     symbol_table[index].symbol = (char * ) malloc((strlen(symbol) + 1) * sizeof(char));
     if (symbol_table[index].symbol == NULL) {
-      printf("Something Went Wrong no memory\n");
+      printf("ERROR: something went wrong while trying to use malloc at symboltable.c ***\n");
       exit(1);
     }
     memset(symbol_table[index].symbol, 0, (strlen(symbol) + 1) * sizeof(char));
@@ -110,26 +107,22 @@ void insert( int value, char * symbol, char * attribute) {
       symbol[strlen(symbol)] = '\0';
     }
     strcpy(symbol_table[index].symbol, symbol);
-    
     /*insert attribute */
     symbol_table[index].attribute = (char * ) malloc((strlen(attribute) + 3) * sizeof(char));
     if (symbol_table[index].attribute == NULL) {
-      printf("Something Went Wrong no memory\n");
-      exit(1);
+       printf("ERROR: something went wrong while trying to use malloc at symboltable.c ***\n");
+       exit(1);
     }
     strcpy(symbol_table[index].attribute, attribute);
     symbol_table_size++;
   } else if (symbol_table[index].key_value == symbol_table_size) {
     /*  updating already existing key  */
     symbol_table[index].amount += 1;
-  } else {
-    /*  key cannot be insert as the index is already containing some other key  */
-    printf("\n ELEMENT CANNOT BE INSERTED \n");
-  }
+  } 
 }
 
 /*
- function  display - to display all the elements of a hash table( use it for testing only)
+ function  display - to display all the elements of a hash table( use it for debug only)
  @param none
  @return void
 */
@@ -149,7 +142,7 @@ function find_label find label at the symbol table
 char * find_label(char * label) {
   int i;
   for (i = 0; i < symbol_table_size; i++) {
-    if (strcmp(symbol_table[i].symbol, label) !=0) {
+    if (strcmp(symbol_table[i].symbol, label) != 0) {
       return "?";
     }
   }
@@ -163,12 +156,11 @@ function  checkforduplicate  check for duplicate at the symbol table
 */
 int checkforduplicate(char * symbol) {
   int i;
-
   for (i = 0; i < symbol_table_size; i++) {
     if (strcmp(symbol_table[i].symbol, symbol) == 0) {
-          if(strcmp(symbol_table[i].attribute,"external")==0){
-            return 1;
-          }
+      if (strcmp(symbol_table[i].attribute, "external") == 0) {
+        return 1;
+      }
       return 0;
     }
   }
@@ -195,6 +187,6 @@ void free_symbol_table_memory() {
     free(symbol_table[i].attribute);
   }
   free(symbol_table);
-   capacity_table = 1;
-symbol_table_size = 0;
+  capacity_table = 1;
+  symbol_table_size = 0;
 }

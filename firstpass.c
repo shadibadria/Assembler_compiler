@@ -1,8 +1,8 @@
 /*
-* File Name : firstpass.c
-* This file provide all the parsing functions of first pass .
-* Author : Shadi Badria <shadibadria@gmail.com>
-*/
+ * File Name : firstpass.c
+ * This file provide all the parsing functions of first pass .
+ * Author : Shadi Badria <shadibadria@gmail.com>
+ */
 
 #include<stdio.h>
 #include<string.h>
@@ -19,14 +19,14 @@ int IC = 100;
 int extern symbol_table_size;
 int count = 0;
 int program_line = 1; /*to count program lines*/
-FILE * filePointer=NULL;
-char buffer[bufferLength]={0};
+FILE * filePointer = NULL;
+char buffer[bufferLength] = {0};
 int extern index_of_datatable;
 int label_flag = 0;
 int arguments_counter = 0;
 int command_exist_flag = 0;
 int first_pass_flag = 1;
-int DC=0;
+int DC = 0;
 /*
 function firstpass - open file for reading line by line and sending it to parse
 @param  filename  file name of the assembler file
@@ -34,31 +34,27 @@ function firstpass - open file for reading line by line and sending it to parse
 */
 int firstpass(char * filename) {
   IC = 100;
- count = 0;
- program_line = 1; 
- filePointer=NULL;
- label_flag = 0;
- arguments_counter = 0;
- command_exist_flag = 0;
- first_pass_flag = 1;
- DC=0;
+  count = 0;
+  program_line = 1;
+  filePointer = NULL;
+  label_flag = 0;
+  arguments_counter = 0;
+  command_exist_flag = 0;
+  first_pass_flag = 1;
+  DC = 0;
   filePointer = fopen(filename, "r");
   if (filePointer == NULL) {
     printf("*** ERROR: Cant open file name :%s *** \n", filename);
     exit(0);
   }
-     
   while (fgets(buffer, bufferLength, filePointer)) {
-    
-      if (IC > bufferLength) {
-      printf("*** ERROR File is to big must contain max %d ***\n ***",bufferLength);
-        exit(0);
-      }
-    
+    if (IC > bufferLength) {
+      printf("*** ERROR File is to big must contain max %d ***\n ***", bufferLength);
+      exit(0);
+    }
     assemble_parsing(buffer); /*send the line to parsing */
   } /*while ends*/
   fclose(filePointer);
-  
   return 0;
 }
 
@@ -68,29 +64,27 @@ function assemble_parsing - (controller)get line from file and  send it to parsi
 @return int
 */
 int assemble_parsing(char * line) {
-   if (strlen(line) > MAX_LINE) {
-              printf("*** ERROR at line %d line is  to long, max length is  %d *** \n", program_line, MAX_LINE);
-              program_line++;
-              first_pass_flag=0;
-              return 1;
-                
-    }
+  if (strlen(line) > MAX_LINE) {
+    printf("*** ERROR at line %d line is  to long, max length is  %d *** \n", program_line, MAX_LINE);
+    program_line++;
+    first_pass_flag = 0;
+    return 1;
+  }
   remove_spaces_from_index(line, 0);
   if (line[0] == '\n' || line[0] == '\0' || line[0] == ';') {
     /*if line is empty / if has comment */
     return 0;
   }
- /* printf("\n****************************\n");
-  printf("COMMAND:%s\n", line);*/
+  /* printf("\n****************************\n");
+   printf("COMMAND:%s\n", line);*/
   label_flag = 0;
-   command_exist_flag = 0;
-
- check_line_arguments(line); /*check if arguments for error*/
+  command_exist_flag = 0;
+  check_line_arguments(line); /*check if arguments for error*/
   parse_line(line); /*send line to proccess it */
   if (command_exist_flag == 0) {
     printf("*** ERROR at line %d undefined instruction name *** \n", program_line);
     first_pass_flag = 0;
-  } 
+  }
   program_line++; /*count line*/
   return 1;
 }
@@ -118,7 +112,6 @@ int parse_line(char * line) {
     /*if line is entry insert it*/
     return 0;
   }
-
   if (check_if_label(line, 0) == 1) {
     /*if line is label insert it*/
     label_flag = 1;
@@ -130,10 +123,10 @@ int parse_line(char * line) {
     } else {
       temp[j] = '\0';
       if (j != 0) {
-        check_if_command(temp, line, label_flag,0); /*check if word is command*/
+        check_if_command(temp, line, label_flag, 0); /*check if word is command*/
         /*check if line is data or string and check comma (',') correction*/
         if (check_if_its_data(line, 0) != 1 && check_if_its_string(line, 0) != 1) {
-          if(check_comma(line)==0){
+          if (check_comma(line) == 0) {
             return 0;
           }
         } else {
@@ -145,13 +138,12 @@ int parse_line(char * line) {
     }
     i++;
   } /*end while*/
-
   /*check if its end of line and then check the word if its string/data/command*/
   if (line[i] == '\n' || line[i] == '\0') {
     temp[j] = '\0';
     if (strlen(temp)) {
       if (check_if_its_data(temp, 0) != 1 || check_if_its_string(temp, 0))
-        if (check_if_command(temp, line, label_flag,0) == 0)
+        if (check_if_command(temp, line, label_flag, 0) == 0)
           check_line(temp);
     }
   }
@@ -173,7 +165,6 @@ int check_comma(char * line) {
     printf("*** ERROR at line %d to many comma's ***\n", program_line);
     first_pass_flag = 0;
     return 0;
-    
   }
   return 1;
 }
@@ -185,29 +176,22 @@ function check_if_extern - check if line is extern label
 */
 int check_if_extern(char * line, int test) {
   int i = 0;
-  
   remove_spaces_from_index(line, 0);
-
-    
-  
-  while(line[i] !='\0'){
-      if(line[i]=='.'){
-        break;
-      }
+  while (line[i] != '\0') {
+    if (line[i] == '.') {
+      break;
+    }
     i++;
   }
-  
   /*check if its .extern */
   if (line[i] != '.' || line[i + 1] != 'e' || line[i + 2] != 'x' || line[i + 3] != 't' || line[i + 4] != 'e' || line[i + 5] != 'r' || line[i + 6] != 'n' || (line[i + 7] != ' ' && line[i + 7] != '\t')) {
     return 0;
   }
-    command_exist_flag = 1;
+  command_exist_flag = 1;
   if (test == 1) {
     /*if we just want to know its extern*/
     return 1;
-
   }
-
   i = i + 7;
   line = remove_spaces_from_index(line, i);
   i = 0;
@@ -219,8 +203,7 @@ int check_if_extern(char * line, int test) {
     return 0;
   }
   /*insert external label*/
-  insert( 0, line, "external");
-  
+  insert(0, line, "external");
   return 1;
 }
 
@@ -232,15 +215,12 @@ function check_if_entry - check if line is entry label
 */
 int check_if_entry(char * line, int test) {
   int i = 0;
-
   line[strlen(line)] = '\n';
   line = remove_spaces_from_index(line, i);
-
-  
-  while(line[i] !='\0'){
-      if(line[i]=='.'){
-        break;
-      }
+  while (line[i] != '\0') {
+    if (line[i] == '.') {
+      break;
+    }
     i++;
   }
   /*check if its .entry */
@@ -248,7 +228,6 @@ int check_if_entry(char * line, int test) {
     return 0;
   }
   command_exist_flag = 1; /*the line is instruction is available*/
-
   i = i + 6;
   line = remove_spaces_from_index(line, i);
   i = 0;
@@ -369,8 +348,7 @@ int check_if_label(char * line, int test) {
     printf("*** ERROR Something Went Wrong no memory ***\n");
     exit(0);
   }
-
-  memset(temp, 0, (strlen(line)+2) * sizeof(char));
+  memset(temp, 0, (strlen(line) + 2) * sizeof(char));
   /*search for end of the label char ':' */
   while (line[i] != '\n' && line[i] != '\0') {
     temp[j++] = line[i];
@@ -386,7 +364,6 @@ int check_if_label(char * line, int test) {
         }
         j++;
       }
-
       if (isdigit(temp[0])) {
         /*check if label start with letters*/
         printf("*** ERROR at line %d label must start with letters ***\n", program_line);
@@ -397,60 +374,51 @@ int check_if_label(char * line, int test) {
         first_pass_flag = 0;
         return 0;
       }
-
       while (temp[j] != ':') {
         j++;
       }
-
       if (test == 1) {
         /*if only testing if its label*/
         free(temp);
-                
 
         return 5;
       }
       remove_space_tabs(temp);
-
       if (temp[j] == ':') {
         /*remove the ':' if exsist*/
         temp[j] = '\0';
-
-      }else{
-        if(temp[j-1]==':'){
-          temp[j-1]='\0';
+      } else {
+        if (temp[j - 1] == ':') {
+          temp[j - 1] = '\0';
         }
       }
-      if(check_for_reg(temp,0)==1){
-      printf("*** ERROR at line %d invalid  label \"%s\"  ***\n", program_line, temp);
-              first_pass_flag = 0;
-            return 0;
+      if (check_for_reg(temp, 0) == 1) {
+        printf("*** ERROR at line %d invalid  label \"%s\"  ***\n", program_line, temp);
+        first_pass_flag = 0;
+        return 0;
       }
-       if(check_if_command(temp,line,0,1)==1){
-      printf("*** ERROR at line %d invalid  label \"%s\"  ***\n", program_line, temp);
-              first_pass_flag = 0;
-            return 0;
+      if (check_if_command(temp, line, 0, 1) == 1) {
+        printf("*** ERROR at line %d invalid  label \"%s\"  ***\n", program_line, temp);
+        first_pass_flag = 0;
+        return 0;
       }
       if (checkforduplicate(temp) == 0) {
-
         /*check for duplicate of the label*/
         printf("*** ERROR at line %d label \"%s\" has already exsisted ***\n", program_line, temp);
         first_pass_flag = 0;
-       
       }
-
       if (temp[i] == ',') {
         free(temp);
         return 0;
-      } 
-
+      }
       /*insert label with info*/
       if (check_if_its_data(line, 1) == 1) {
-        insert( IC, temp, "data");
+        insert(IC, temp, "data");
       } else
       if (check_if_its_string(line, 1) == 1) {
-        insert( IC, (temp), "data");
+        insert(IC, (temp), "data");
       } else {
-        insert( IC, (temp), "code");
+        insert(IC, (temp), "code");
       }
       free(temp);
       return 1;
@@ -469,13 +437,11 @@ function check_if_its_data - check if line is .data
 int check_if_its_data(char * line, int test) {
 
   int i = 0;
- 
   /*check if its data*/
   while (line[i] != '\n' && line[i] != '\0') {
     if (line[i] == '.') {
       if (line[i + 1] == 'd' && line[i + 2] == 'a' && line[i + 3] == 't' && line[i + 4] == 'a') {
-          command_exist_flag = 1; /*the line is instruction is available*/
-
+        command_exist_flag = 1; /*the line is instruction is available*/
         if (test == 0) {
           /*if its not testing only*/
           data_parsing(line, i + 4); /*parse the data to numbers*/
@@ -498,28 +464,26 @@ int data_parsing(char * line, int i) {
   char * p = line;
   int val, comma_counter = 0, number_counter = 0, number_flag = 0;
   p += i;
-
   line[strlen(line)] = '\0';
   /*check data format if correct */
-   while ( * p) {	
-    if ( * p == ',') {	
-      if (number_flag == 0) {	
-        printf("*** ERROR at line %d to many comma's inserted missing numbers ***\n", program_line);	
-        first_pass_flag = 0;	
+  while ( * p) {
+    if ( * p == ',') {
+      if (number_flag == 0) {
+        printf("*** ERROR at line %d to many comma's inserted missing numbers ***\n", program_line);
+        first_pass_flag = 0;
         break;
-      }	
-      number_flag = 0;	
-      comma_counter++;	
-    } else {	
-      if (isdigit( * p) || (( * p == '-' || * p == '+') && isdigit( * (p + 1)))) {	
-        number_flag = 1;	
-      }	
-    }	
-    p++;	
-  }	
-  p = line;	
-  p += i+1;
-
+      }
+      number_flag = 0;
+      comma_counter++;
+    } else {
+      if (isdigit( * p) || (( * p == '-' || * p == '+') && isdigit( * (p + 1)))) {
+        number_flag = 1;
+      }
+    }
+    p++;
+  }
+  p = line;
+  p += i + 1;
   /*parse line and insert data*/
   while ( * p) {
     if (isdigit( * p) || (( * p == '-' || * p == '+') && isdigit( * (p + 1)))) {
@@ -537,7 +501,6 @@ int data_parsing(char * line, int i) {
       DC++;
       sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
       sprintf(data_table[index_of_datatable].opcode, "%03X", val);
-
       sprintf(data_table[index_of_datatable].TAG, "%c", 'A');
       if (val < 0) {
         data_table[index_of_datatable].opcode[0] = '\0';
@@ -546,12 +509,11 @@ int data_parsing(char * line, int i) {
       index_of_datatable++;
       IC++;
     } else {
-        if(*p!=' '&&*p!='\t'&&*p!=','){
-      printf("*** ERROR at line %d invalid character '%c' *** \n",program_line,*p);
-              first_pass_flag = 0;
-              break;
-    
-        }
+      if ( * p != ' ' && * p != '\t' && * p != ',') {
+        printf("*** ERROR at line %d invalid character '%c' *** \n", program_line, * p);
+        first_pass_flag = 0;
+        break;
+      }
       p++;
     }
   }
@@ -581,7 +543,6 @@ function string_parsing -  get data from .string data array
 int string_parsing(char * line, int index) {
   int ascii = 0, string_flag = 0, j = 0;
   int string_starting_flag = 0;
-
   while (line[index] != '\n' && line[index] != '\0') {
     /*check formate of string*/
     if (line[index] == '"') {
@@ -613,7 +574,7 @@ int string_parsing(char * line, int index) {
     if (line[j] != ' ' && line[j] != '\t') {
       printf("*** ERROR at line %d invalid characters ***\n", program_line);
       first_pass_flag = 0;
-        break;
+      break;
     }
     j++;
   }
@@ -626,7 +587,6 @@ int string_parsing(char * line, int index) {
     sprintf(data_table[index_of_datatable].opcode, "%X", 0);
     sprintf(data_table[index_of_datatable].funct, "%X", ascii);
     sprintf(data_table[index_of_datatable].TAG, "%c", 'A');
-
     index_of_datatable++;
     IC++;
     index++;
@@ -639,7 +599,6 @@ int string_parsing(char * line, int index) {
   ascii = 0;
   DC++;
   sprintf(data_table[index_of_datatable].opcode, "%03X", ascii);
-
   sprintf(data_table[index_of_datatable].TAG, "%c", 'A');
   index_of_datatable++;
   IC++;
@@ -653,7 +612,6 @@ function check_if_its_string - check if line is .string
 */
 int check_if_its_string(char * line, int test) {
   int i = 0;
-
   while (line[i] != '\n' && line[i] != '\0') {
     if (line[i] == '.') {
       /*check if string*/
@@ -678,27 +636,23 @@ function check_if_command  - check if line is command
 @param label_flag - if 1 there is label else no label
 @return int
 */
-int check_if_command(char * command, char * line, int label_flag,int test) {
-
+int check_if_command(char * command, char * line, int label_flag, int test) {
   if (label_flag == 1) {
     /*if there is label*/
     remove_label(command);
   }
-
-  if(test==1){
-  if (check_command(command, line, arguments_counter, label_flag,0) == 1) {
-return 1;
-  }else{
-    return 0;
+  if (test == 1) {
+    if (check_command(command, line, arguments_counter, label_flag, 0) == 1) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
-  }
-  
   /*check command*/
-  if (check_command(command, line, arguments_counter, label_flag,0) == 0) {
+  if (check_command(command, line, arguments_counter, label_flag, 0) == 0) {
     return 0;
   } else {
     command_exist_flag = 1;
-
   }
   return 1;
 }
@@ -767,9 +721,7 @@ int check_line_arguments(char * line) {
     }
     i++;
   }
-  
   arguments_counter = count_word(temp_string); /*count arguments*/
-
   free(temp_string);
   return arguments_counter;
 }
@@ -837,7 +789,8 @@ void remove_label(char * line) {
     }
     if (flag == 1) {
       i++;
-      while (line[i] != '\0') {/*new string*/
+      while (line[i] != '\0') {
+        /*new string*/
         newstring[j++] = line[i];
         i++;
       }
@@ -855,12 +808,11 @@ int check_line(char * line) {
   int i = 0, j = 0;
   char temp[MAX_LINE];
   int comma_flag = 0;
-
   if (strcmp("stop", line) == 0) {
     /*if line is stop word return */
     return 1;
   }
-   if (strcmp("rts", line) == 0) {
+  if (strcmp("rts", line) == 0) {
     /*if line is rts word return */
     return 1;
   }
@@ -877,7 +829,6 @@ int check_line(char * line) {
         break;
       }
       sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
-
       if (strcmp(find_label(temp), "?") == 0) {
         sprintf(data_table[index_of_datatable].label_name, "%s", temp);
         sprintf(data_table[index_of_datatable].opcode, "%s", "?");
@@ -891,25 +842,22 @@ int check_line(char * line) {
   if (comma_flag == 0) {
     /*if line does not have comma*/
     line[strlen(line)] = '\0';
-    if(isdigit(line[0])!=0){
-      printf("*** ERROR at line %d invalid operand ***\n",program_line);
-      first_pass_flag=0;
+    if (isdigit(line[0]) != 0) {
+      printf("*** ERROR at line %d invalid operand ***\n", program_line);
+      first_pass_flag = 0;
     }
-      
     if (check_if_number(line) == 1) return 1;
     if (check_for_reg(line, 1)) return 1;
-    if(line[0]=='%'){
-            if(isdigit(line[1])){
-              printf("*** ERROR at line %d invlid label ***\n",program_line);
-              first_pass_flag =0;
-            }
+    if (line[0] == '%') {
+      if (isdigit(line[1])) {
+        printf("*** ERROR at line %d invlid label ***\n", program_line);
+        first_pass_flag = 0;
+      }
     }
-   
     sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
     if (strcmp(find_label(line), "?") == 0) {
       sprintf(data_table[index_of_datatable].label_name, "%s", line);
       sprintf(data_table[index_of_datatable].opcode, "%s", "?");
-
     }
     index_of_datatable++;
     IC++;
@@ -917,7 +865,7 @@ int check_line(char * line) {
   }
   i++;
   temp[0] = '\0';
-  j=0;
+  j = 0;
   while (line[i] != '\0') {
     /*copy to newstring*/
     temp[j++] = line[i];
@@ -926,16 +874,14 @@ int check_line(char * line) {
   temp[j] = '\0';
   if (check_if_number(temp) == 1) /*check if its number*/
     return 1;
-  if (check_for_reg(temp, 1) == 1){
-  return 1;
+  if (check_for_reg(temp, 1) == 1) {
+    return 1;
   } /*check if its register*/
-  
+
   sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
   if (strcmp(find_label(temp), "?") == 0) {
     sprintf(data_table[index_of_datatable].label_name, "%s", temp);
     sprintf(data_table[index_of_datatable].opcode, "%s", "?");
-    
-
   }
   index_of_datatable++;
   IC++;

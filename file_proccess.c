@@ -5,15 +5,11 @@
  */
 
 #include<stdio.h>
-
 #include<string.h>
-
 #include<stdlib.h>
 
 #include "file_proccess.h"
-
 #include "symbol_table.h"
-
 #include "data_image.h"
 
 FILE * file_pointer;
@@ -99,7 +95,6 @@ void append_datatable_tofile(char * filename, int instruct_size, int data_size) 
       append_command_to_file(filename, data_table[i]);
     }
   }
-
 }
 /*
 function create_files - it create the output files of the program (.ob , .ext , .ent)
@@ -107,7 +102,6 @@ function create_files - it create the output files of the program (.ob , .ext , 
 @return void
 */
 void create_files(char * filename) {
-
   filename[strlen(filename) - 3] = '\0';
   strcat(filename, ".ob");
   append_datatable_tofile(filename, (IC - DC - 100), DC);

@@ -1,8 +1,8 @@
 /*
-* File Name : data.c
-* This file provide all the functions of the commands and register initializing and parsing.
-* Author : Shadi Badria <shadibadria@gmail.com>
-*/
+ * File Name : data.c
+ * This file provide all the functions of the commands and register initializing and parsing.
+ * Author : Shadi Badria <shadibadria@gmail.com>
+ */
 #include<string.h>
 #include<stdio.h>
 #include<ctype.h>
@@ -25,22 +25,22 @@ function init_command_database - database for the commands for the program
 @return void
 */
 void init_command_database() {
-  command_init("mov\0","0000\0","0000\0",2,"0,1,3,\0","1,3\0",0);
-  command_init("cmp\0","0001\0","0000\0",2,"0,1,3,\0","0,1,3\0",1);
-  command_init("add\0","0010\0","1010\0",2,"0,1,3,\0","1,3\0",2);
-  command_init("sub\0","0010\0","1011\0",2,"0,1,3,\0","1,3\0",3);
-  command_init("lea\0","0100\0","0000\0",2,"1\0","1,3\0",4);
-  command_init("clr\0","0101\0","1010\0",1,"0\0","1,3\0",5);
-  command_init("not\0","0101\0","1011\0",1,"0\0","1,3\0",6);
-  command_init("inc\0","0101\0","1100\0",1,"0\0","1,3\0",7);
-  command_init("dec\0","0101\0","1101\0",1,"0\0","1,3\0",8);
-  command_init("jmp\0","1001\0","1010\0",1,"0\0","1,2\0",9);
-  command_init("bne\0","1001\0","1011\0",1,"0\0","1,2\0",10);
-  command_init("jsr\0","1001\0","1100\0",1,"0\0","1,2\0",11);
-  command_init("red\0","1100\0","0000\0",1,"0\0","1,3\0",12);
-  command_init("prn\0","1101\0","0000\0",1,"0\0","0,1,3\0",13);
-  command_init("rts\0","1110\0","0000\0",0,"0\0","0\0",14);
-  command_init("stop\0","1111\0","0000\0",0,"0\0","0\0",15);
+  command_init("mov\0", "0000\0", "0000\0", 2, "0,1,3,\0", "1,3\0", 0);
+  command_init("cmp\0", "0001\0", "0000\0", 2, "0,1,3,\0", "0,1,3\0", 1);
+  command_init("add\0", "0010\0", "1010\0", 2, "0,1,3,\0", "1,3\0", 2);
+  command_init("sub\0", "0010\0", "1011\0", 2, "0,1,3,\0", "1,3\0", 3);
+  command_init("lea\0", "0100\0", "0000\0", 2, "1\0", "1,3\0", 4);
+  command_init("clr\0", "0101\0", "1010\0", 1, "0\0", "1,3\0", 5);
+  command_init("not\0", "0101\0", "1011\0", 1, "0\0", "1,3\0", 6);
+  command_init("inc\0", "0101\0", "1100\0", 1, "0\0", "1,3\0", 7);
+  command_init("dec\0", "0101\0", "1101\0", 1, "0\0", "1,3\0", 8);
+  command_init("jmp\0", "1001\0", "1010\0", 1, "0\0", "1,2\0", 9);
+  command_init("bne\0", "1001\0", "1011\0", 1, "0\0", "1,2\0", 10);
+  command_init("jsr\0", "1001\0", "1100\0", 1, "0\0", "1,2\0", 11);
+  command_init("red\0", "1100\0", "0000\0", 1, "0\0", "1,3\0", 12);
+  command_init("prn\0", "1101\0", "0000\0", 1, "0\0", "0,1,3\0", 13);
+  command_init("rts\0", "1110\0", "0000\0", 0, "0\0", "0\0", 14);
+  command_init("stop\0", "1111\0", "0000\0", 0, "0\0", "0\0", 15);
 }
 /*
 function command_init - this function take argument of the command and add it to the command_table
@@ -51,11 +51,12 @@ function command_init - this function take argument of the command and add it to
 @param source_operand -  the source operand numbers allowed 
 @param dest_operand - the destination operand numbers allowed 
 @param index - the index of command (for inserting commands one by one)
+@return void
 */
-void command_init(char *command_name,char *command_opcode, char *command_funct, unsigned int allowed_operand_number ,char *source_operand,char *dest_operand,unsigned int index){
+void command_init(char * command_name, char * command_opcode, char * command_funct, unsigned int allowed_operand_number, char * source_operand, char * dest_operand, unsigned int index) {
   strcpy(mycommands[index].command_name, command_name);
   strcpy(mycommands[index].opcode, command_opcode);
-  strcpy(mycommands[index].funct,command_funct);
+  strcpy(mycommands[index].funct, command_funct);
   mycommands[index].allowed_operand = allowed_operand_number;
   strcpy(mycommands[index].source_operands, source_operand);
   strcpy(mycommands[index].dest_operands, dest_operand);
@@ -67,9 +68,9 @@ function check_command - check if the command is correct
 @param argument_counter  - its the count of arguments for command 
 @param label_flag     - flag for checking if the line is label 
 @param test       -  only for testing if string is
-@return  1-success 0-Error
+@return  int
 */
-int check_command(char * command, char * line, int argument_counter, int label_flag,int test) {
+int check_command(char * command, char * line, int argument_counter, int label_flag, int test) {
   int i = 0;
   if (command[strlen(command) - 1] == ',') {
     /*check for comma*/
@@ -84,21 +85,19 @@ int check_command(char * command, char * line, int argument_counter, int label_f
   for (i = 0; i < COMMANDS_AMOUNT; i++) {
     /*check the arguments if correct*/
     if (strcmp(mycommands[i].command_name, command) == 0) {
-          if(test==1){
-            return 1;
-          }
+      if (test == 1) {
+        return 1;
+      }
       if (mycommands[i].allowed_operand > argument_counter) {
-        
-          printf("*** ERROR at line %d missing operand ***\n", program_line);
+        printf("*** ERROR at line %d missing operand ***\n", program_line);
+        first_pass_flag = 0;
+      } else {
+        if (mycommands[i].allowed_operand < argument_counter) {
+          printf("*** ERROR at line %d to many operands ***\n", program_line);
           first_pass_flag = 0;
-      }else{
-              if (mycommands[i].allowed_operand < argument_counter) {
-                printf("*** ERROR at line %d to many operands ***\n", program_line);
-               first_pass_flag = 0;
-              }
+        }
       }
       sprintf(data_table[index_of_datatable].Adress, "%04d", IC); /*insert to data table*/
-
       IC++;
       code_opcode_parsing(mycommands[i].opcode, mycommands[i].funct);
       find_adressing_method(line, label_flag, command);
@@ -112,13 +111,15 @@ int check_command(char * command, char * line, int argument_counter, int label_f
 @param string - has line of the file
 @param label_flag - if the line with label or not
 @param command   - has the command name
-@return 1 -success 0 -Error
+@return int
 */
 int find_adressing_method(char * string, int label_flag, char * command) {
   int i = 0;
-  char word[MAX_LINE]={0};
-  char *tempstring = NULL;
-  int dest=0, source=0;
+  char word[MAX_LINE] = {
+    0
+  };
+  char * tempstring = NULL;
+  int dest = 0, source = 0;
   char last_bits[5] = "0000\n";
   int j = 0, k = 0, commaflag = 0, number_temp = 0;
   tempstring = (char * ) malloc((strlen(string) + 2) * sizeof(char));
@@ -127,7 +128,6 @@ int find_adressing_method(char * string, int label_flag, char * command) {
     exit(0);
   }
   memset(tempstring, 0, (strlen(string) + 2) * sizeof(char));
-
   strcpy(tempstring, string);
   tempstring[strlen(tempstring)] = '\0';
   if (label_flag == 1) {
@@ -159,7 +159,6 @@ int find_adressing_method(char * string, int label_flag, char * command) {
     word[j++] = tempstring[i];
     if (tempstring[i] == ',') {
       commaflag = 1;
-
       break;
     }
     i++;
@@ -188,7 +187,7 @@ int find_adressing_method(char * string, int label_flag, char * command) {
       last_bits[k++] = '1';
       last_bits[k++] = '0';
     } else
-    if (strstr(command, "stop")!=NULL||strstr(command, "rts") != NULL) {
+    if (strstr(command, "stop") != NULL || strstr(command, "rts") != NULL) {
       /*if the command stop/rts*/
       last_bits[k++] = '0';
       last_bits[k++] = '0';
@@ -255,7 +254,6 @@ int find_adressing_method(char * string, int label_flag, char * command) {
   }
   last_bits[5] = '\0';
   free(tempstring); /*free temp string*/
-
   /*create last 4 bits*/
   if (word != NULL) {
     number_temp = strtol(last_bits, NULL, 2);
@@ -277,7 +275,7 @@ int find_adressing_method(char * string, int label_flag, char * command) {
 @function check_command_corrections - checks if command dest and source is correct or not by comparing them to command
 @params source - source operand number
 @param  dest   - destination operand number 
-@return 1 - success , 0 - error
+@return int
 */
 int check_command_corrections(int source, int dest, char * command) {
   int i = 0, j = 0;
@@ -290,14 +288,12 @@ int check_command_corrections(int source, int dest, char * command) {
       /*check if the command dest is the same as the params we got*/
       while (mycommands[i].dest_operands[j] != '\0') {
         if ((mycommands[i].dest_operands[j] - '0') == dest) {
-
           /*check dest*/
           dest_flag = 1;
         }
         j++;
       }
       j = 0;
-
       /*check if the command source is the same as the params we got*/
       while (mycommands[i].source_operands[j] != '\0') {
         if ((mycommands[i].source_operands[j] - '0') == source) {
@@ -323,7 +319,7 @@ int check_command_corrections(int source, int dest, char * command) {
 function code_opcode_parsing  create hex value for command bits and insert them
 @param command_code - command opcode bits 
 @param command_func - command func bits
-@return 1 - error , 0 -success
+@return int
 */
 int code_opcode_parsing(char * command_opcode, char * command_func) {
 
@@ -349,49 +345,45 @@ int code_opcode_parsing(char * command_opcode, char * command_func) {
 /*
 function check_if_number - check if the string/line we got is number
 @param string - its a line of the file
-@return 1-success , 0 - error
+@return int
 */
 int check_if_number(char * string) {
   int i = 0;
-  int number_temp=0,isnumberflag=0;
+  int number_temp = 0, isnumberflag = 0;
   while (string[i] != '\0') {
-    if(string[i]=='#'){
-        isnumberflag=1;
-        break;
-      }
-       i++;
-    }
-      if(isnumberflag==1){
-          while (string[i] != '\0') {
-    if ((string[i] == '#' && isdigit(string[i + 1]) != 0) || (string[i] == '#' && string[i + 1] == '-' && isdigit(string[i + 2]) != 0)) {
-      sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
-
-      memmove(string, string + 1, strlen(string));
-      sprintf(data_table[index_of_datatable].TAG, "%c", 'A');
-      number_temp = strtol(string, NULL, 10);
-      if (number_temp > MAX_DATA || number_temp < MIN_DATA) {
-        printf("*** ERROR at line %d  number must be between %d to %d *** \n", program_line, MIN_DATA, MAX_Data_TABLE);
-        first_pass_flag = 0;
-      }
-      sprintf(data_table[index_of_datatable].opcode, "%03X", number_temp);
-      if (number_temp < 0) {
-        data_table[index_of_datatable].opcode[0] = '\0';
-        data_table[index_of_datatable].funct[4] = '\0';
-      }
-      index_of_datatable++;
-      IC++;
-      return 1;
-    }else{
-      printf("*** ERROR at line %d invalid characters *** \n",program_line);
-      first_pass_flag=0;
+    if (string[i] == '#') {
+      isnumberflag = 1;
       break;
     }
-            i++;
-          }
-
+    i++;
+  }
+  if (isnumberflag == 1) {
+    while (string[i] != '\0') {
+      if ((string[i] == '#' && isdigit(string[i + 1]) != 0) || (string[i] == '#' && string[i + 1] == '-' && isdigit(string[i + 2]) != 0)) {
+        sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
+        memmove(string, string + 1, strlen(string));
+        sprintf(data_table[index_of_datatable].TAG, "%c", 'A');
+        number_temp = strtol(string, NULL, 10);
+        if (number_temp > MAX_DATA || number_temp < MIN_DATA) {
+          printf("*** ERROR at line %d  number must be between %d to %d *** \n", program_line, MIN_DATA, MAX_Data_TABLE);
+          first_pass_flag = 0;
+        }
+        sprintf(data_table[index_of_datatable].opcode, "%03X", number_temp);
+        if (number_temp < 0) {
+          data_table[index_of_datatable].opcode[0] = '\0';
+          data_table[index_of_datatable].funct[4] = '\0';
+        }
+        index_of_datatable++;
+        IC++;
+        return 1;
+      } else {
+        printf("*** ERROR at line %d invalid characters *** \n", program_line);
+        first_pass_flag = 0;
+        break;
       }
-
-    
+      i++;
+    }
+  }
   return 0;
 }
 
@@ -399,7 +391,7 @@ int check_if_number(char * string) {
 function check_for_reg - check if the line/string is register value
 @param string - 1 line of file
 @param add_to_table_flag - flag for testing the function if 1 we insert value if not we dont 
-@return 1 - success , 0 - error
+@return int
 */
 int check_for_reg(char * string, int add_to_table_flag) {
   int i = 0;
