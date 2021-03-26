@@ -20,6 +20,8 @@ FILE * file_pointer;
 int extern symbol_table_size;
 int extern DC;
 int extern IC;
+int extern index_of_datatable;
+
 /*
 function check_file - check if file has .as argument
 @param file_name  - the file name we want to check
@@ -74,7 +76,7 @@ void append_extern_tofile(char * filename) {
     printf("error creating file %s \n", filename);
     exit(0);
   }
-  for (i = 0; i < MAX_Data_TABLE; i++) {
+  for (i = 0; i < index_of_datatable; i++) {
     if (strstr(data_table[i].TAG, "E") != NULL) {
       fputs(data_table[i].label_name, file_pointer);
       fputs("          ", file_pointer);
@@ -92,11 +94,12 @@ function append_datatable_tofile - create and add all datatable to file(.ob)
 void append_datatable_tofile(char * filename, int instruct_size, int data_size) {
   int i = 0;
   append_size_to_file(filename, instruct_size, data_size);
-  for (i = 0; i < MAX_Data_TABLE; i++) {
+  for (i = 0; i < index_of_datatable; i++) {
     if (strlen(data_table[i].Adress) >= 1) {
       append_command_to_file(filename, data_table[i]);
     }
   }
+
 }
 /*
 function create_files - it create the output files of the program (.ob , .ext , .ent)
@@ -108,7 +111,6 @@ void create_files(char * filename) {
   filename[strlen(filename) - 3] = '\0';
   strcat(filename, ".ob");
   append_datatable_tofile(filename, (IC - DC - 100), DC);
-  printf("OB :%s\n", filename);
   filename[strlen(filename) - 3] = '\0';
   strcat(filename, ".ext");
   append_extern_tofile(filename);

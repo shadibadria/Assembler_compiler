@@ -42,7 +42,6 @@ int firstpass(char * filename) {
  command_exist_flag = 0;
  first_pass_flag = 1;
  DC=0;
- init_data_table();
   filePointer = fopen(filename, "r");
   if (filePointer == NULL) {
     printf("*** ERROR: Cant open file name :%s *** \n", filename);
@@ -538,6 +537,7 @@ int data_parsing(char * line, int i) {
       DC++;
       sprintf(data_table[index_of_datatable].Adress, "%04d", IC);
       sprintf(data_table[index_of_datatable].opcode, "%03X", val);
+
       sprintf(data_table[index_of_datatable].TAG, "%c", 'A');
       if (val < 0) {
         data_table[index_of_datatable].opcode[0] = '\0';
@@ -626,6 +626,7 @@ int string_parsing(char * line, int index) {
     sprintf(data_table[index_of_datatable].opcode, "%X", 0);
     sprintf(data_table[index_of_datatable].funct, "%X", ascii);
     sprintf(data_table[index_of_datatable].TAG, "%c", 'A');
+
     index_of_datatable++;
     IC++;
     index++;
@@ -638,6 +639,7 @@ int string_parsing(char * line, int index) {
   ascii = 0;
   DC++;
   sprintf(data_table[index_of_datatable].opcode, "%03X", ascii);
+
   sprintf(data_table[index_of_datatable].TAG, "%c", 'A');
   index_of_datatable++;
   IC++;
@@ -907,6 +909,7 @@ int check_line(char * line) {
     if (strcmp(find_label(line), "?") == 0) {
       sprintf(data_table[index_of_datatable].label_name, "%s", line);
       sprintf(data_table[index_of_datatable].opcode, "%s", "?");
+
     }
     index_of_datatable++;
     IC++;
@@ -931,6 +934,8 @@ int check_line(char * line) {
   if (strcmp(find_label(temp), "?") == 0) {
     sprintf(data_table[index_of_datatable].label_name, "%s", temp);
     sprintf(data_table[index_of_datatable].opcode, "%s", "?");
+    
+
   }
   index_of_datatable++;
   IC++;

@@ -19,6 +19,7 @@ FILE * filePointer;
 char buffer[bufferLength];
 int extern symbol_table_size;
 int second_pass_flag = 1;
+int extern index_of_datatable;
 /*
 function secondpass -  it take the file name and start to read it line by line
 and send it to parsing
@@ -26,6 +27,7 @@ and send it to parsing
 @return int
 */
 int secondpass(char * filename) {
+  second_pass_flag=1;
   filePointer = fopen(filename, "r");
   if (filePointer == NULL) {
     printf("***ERROR cant open file named %s ***\n", filename);
@@ -82,7 +84,7 @@ function fill_table -  fill the data table where is labels are missing
 void fill_table() {
   int i = 0, j, number_temp, k = 0, flag = 0, current_adress = 0;
   char tempstring[MAX_LINE];
-  for (i = 0; i < MAX_Data_TABLE; i++) {
+  for (i = 0; i < index_of_datatable; i++) {
     if (strcmp(data_table[i].opcode, "?") == 0) {
       /*if unknown value at symbol table*/
       for (j = 0; j < symbol_table_size; j++) {
@@ -105,16 +107,19 @@ void fill_table() {
           number_temp = strtol(symbol_table[j].value, NULL, 10);
           current_adress = strtol(data_table[i].Adress, NULL, 10);
           sprintf(data_table[i].opcode, "%03X", number_temp - current_adress);
+
           if (number_temp - current_adress < 0) {
             memmove(data_table[i].opcode, data_table[i].opcode + 5, strlen(data_table[i].opcode));
           }
           strcpy(data_table[i].TAG, "A");
           break;
         }
+
         if (strcmp(data_table[i].label_name, symbol_table[j].symbol) == 0) {
           number_temp = strtol(symbol_table[j].value, NULL, 10);
           sprintf(data_table[i].opcode, "%03X", number_temp);
-           
+                     sprintf(data_table[i].funct, "%s", "\0");
+
 
           if (strcmp(symbol_table[j].attribute, "external") == 0) {
             /*if external*/
@@ -145,7 +150,7 @@ function check_for_label_error - check if there is error in labels
 void check_for_label_error() {
   int i = 0;
 
-  for (i = 0; i < MAX_Data_TABLE; i++) {
+  for (i = 0; i < index_of_datatable; i++) {
     if (strcmp(data_table[i].opcode, "?") == 0) {
       printf("*** Second Pass ERROR label %s is not found in symbol table *** \n", data_table[i].label_name);
       second_pass_flag = 0;

@@ -35,6 +35,7 @@ int main(int argc, char * argv[]) {
   init_symbol_table();
   init_registers();
   init_command_database();
+          init_data_table();
 
   /*check arguments counter */
   if (argc <= 1) {
@@ -56,7 +57,6 @@ int main(int argc, char * argv[]) {
       file_flag = 1;
       strcat(newfile, ".as\0");
     }
-          printf("file:%s\n",newfile);
 
     if (file_flag == 1) {
       /*if file does not habe .as ending*/
@@ -95,8 +95,11 @@ int main(int argc, char * argv[]) {
     }
       free_symbol_table_memory(); /*free the symbol table*/
         free(newfile);
-         init_data_table();
-
+          init_symbol_table();
+          free_data_table();
+          init_data_table();
+          fflush(stdout);
+      
   } /*end loop*/
   return 0;
 }

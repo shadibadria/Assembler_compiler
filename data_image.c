@@ -20,18 +20,20 @@ append the data table to file name *.ob
 @return void 
 */
 void init_data_table(){
+  
+  index_of_datatable=0;
+}
+void free_data_table(){
   int i=0;
   for(i=0;i<index_of_datatable;i++){
-      sprintf(data_table[index_of_datatable].Adress,"%s","\0");
-      sprintf(data_table[index_of_datatable].adress_method,"%s","\0");
-      sprintf(data_table[index_of_datatable].funct,"%s","\0");
-      sprintf(data_table[index_of_datatable].opcode,"%s","\0");
-      sprintf(data_table[index_of_datatable].TAG,"%s","\0");
 
-      sprintf(data_table[index_of_datatable].label_name,"%s","\0");
-
+    data_table[i].Adress[0]='\0';
+    data_table[i].adress_method[0]='\0';
+    data_table[i].funct[0]='\0';
+    data_table[i].label_name[0]='\0';
+    data_table[i].opcode[0]='\0';
+    data_table[i].TAG[0]='\0';
   }
-  index_of_datatable=0;
 }
 void append_size_to_file(char * filename, int instruct_size,int data_size){
   char number[5];
@@ -57,11 +59,14 @@ void append_command_to_file(char * filename, data_image data) {
     printf("error creating file %s \n", filename);
     exit(0);
   }
-  
   fputs(data.Adress, file_pointer);
   fputs("      ", file_pointer);
+  
+
+  
   fputs(data.opcode, file_pointer);
   fputs(data.funct, file_pointer);
+
   fputs(data.adress_method, file_pointer);
   fputs("        ", file_pointer);
   fputs(data.TAG, file_pointer);

@@ -29,6 +29,8 @@ function init_array -  init hash table array using malloc
 @return int
 */
 int init_symbol_table() {
+  capacity_table = 1;
+ symbol_table_size = 0;
   symbol_table = (struct data * ) malloc(capacity_table * sizeof(struct data));
   if (symbol_table == NULL) {
     printf("ERROR: something went wrong while trying to use malloc at symboltable.c\n");
