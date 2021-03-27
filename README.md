@@ -15,7 +15,7 @@ Filename.ext - extern file contains all extern labels
 Filename.ent - entry file contains all entry labels.
 
 ## how to use ?
-Type in terminal:
+
 Compile the program:
 ```sh
 make
