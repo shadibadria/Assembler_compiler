@@ -2,7 +2,7 @@
 
 ## A program that compile assembly code to opcode.
 
-## The pogram does 2 passes and create output files.
+## The pogram does 2 passes and parse the code then  creates output files.
 - First pass:
 Create symbol table and some of the instruction table.
 
