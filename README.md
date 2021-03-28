@@ -9,10 +9,10 @@ Create symbol table and some of the instruction table.
 - Second pass: complete the instruction table and
 Create output files.
 
--Output files:
-Filename.ob - object file contain all the opcode in hex.
-Filename.ext - extern file contains all extern labels
-Filename.ent - entry file contains all entry labels.
+- Output files:
+- 1)Filename.ob - object file contain all the opcode in hex.
+- 2)Filename.ext - extern file contains all extern labels
+- 3)Filename.ent - entry file contains all entry labels.
 
 ## how to use ?
 
